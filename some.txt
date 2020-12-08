@@ -1,0 +1,3 @@
+Для сохранение файла сборки "start": "webpack --mode development --watch",
+
+Для запуска с обновлением "start": "webpack serve --mode development",

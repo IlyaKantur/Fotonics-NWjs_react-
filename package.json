@@ -1,0 +1,38 @@
+{
+  "name": "fotonics_nwjs_react",
+  "version": "0.0.1",
+  "description": "Создание Fotonics на основе связки NWjs + react",
+  "main": "dist/index.html",
+  "scripts": {
+    "start": "webpack --mode development --watch",
+    "build": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IlyaKantur/Fotonics-NWjs_React-.git"
+  },
+  "author": "Ilya Kantur",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IlyaKantur/Fotonics-NWjs_React-/issues"
+  },
+  "homepage": "https://github.com/IlyaKantur/Fotonics-NWjs_React-#readme",
+  "devDependencies": {
+    "css-loader": "^5.0.1",
+    "html-webpack-plugin": "^4.5.0",
+    "style-loader": "^2.0.0",
+    "svg-inline-loader": "^0.8.2",
+    "webpack": "^5.10.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
+    "@babel/preset-react": "^7.12.7",
+    "babel-loader": "^8.2.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  }
+}
