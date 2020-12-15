@@ -6,26 +6,30 @@ import './tab.css';
 
 export default class Tab extends Component {
 
-    switch = (id) => {
-        console.log(`Click tab: ${id}`)
-        // SwitchTab.switchTab(id)
+    constructor(props) {
+        super(props);
     }
 
-    close = (event) => {
-        event.stopPropagation();
-        console.log("Click close tab")
+    state = {
+        onClos: this.props.onClose
     }
+
+    onClose = (e) =>{
+        e.stopPropagation();
+        this.state.onClos();
+    }
+
+    
+
 
     render() {
-        const {nameWP, text} = this.props;
-        let tabs = window.parent.document.getElementById('panel_WP');
-
+        const { nameWP, text, onSwitch} = this.props;
+        // let tabs = window.parent.document.getElementById('panel_WP');
         return (
-            <span id={nameWP} className="tab_wp tab_wp_active" onClick={() =>{this.switch(nameWP)}}>
+            <span id={nameWP} className="tab_wp tab_wp_active" onClick={onSwitch}>
                 <span>{text ? text : 'Tab'}</span>
-                <span  onClick={this.close}> X</span>
+                <span onClick={(e) =>this.onClose(e)}> X</span>
             </span>
         )
-
     }
 }

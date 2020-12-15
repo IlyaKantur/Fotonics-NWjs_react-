@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 import Menu from '../main/manu.js';
 import TabWP from '../tab/create_tab.js';
@@ -6,21 +6,49 @@ import Choise from '../choice/choice.js';
 
 import './App.css';
 
-const App = () =>{
-    let data = {nameWP: "choice", text: "Выбор"}
+export default class App extends Component{
+
+    state = {
+        tab: [
+            {nameWP: "choice", text: "Выбор", id: '1'},
+        ],
+        frame: [
+            
+        ]
+    }
+
+    onSwitch = (id) => {
+        console.log(`Click tab: ${id}`)
+        // SwitchTab.switchTab(id)
+    }
+
+    onClose = (id) => {
+        console.log(`Click close tab: ${id}`)
+    }
         
-    return(
-        <>
-            <div id="work_place" className="panel">
-                <div id="panel_WP">
-                    <TabWP posts = {data}></TabWP>
+    render(){
+
+        const {tab} = this.state
+
+        return(
+            <>
+                <div id="work_place" className="panel">
+                    <div id="panel_WP">
+                        <TabWP 
+                            posts = {tab}
+                            onSwitch = {this.onSwitch}
+                            onClose = {this.onClose}
+                        ></TabWP>
+                    </div>
+                    <div id="frames">
+                        <Choise id = 'choice' className = "frame" zindex = '0' ></Choise>
+                    </div>
                 </div>
-                <div id="frames">
-                    <Choise id = 'choice' className = "frame" zindex = '0' ></Choise>
-                </div>
-            </div>
-        </>
-    )
+            </>
+        )
+
+    }
+    
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -85,5 +113,3 @@ window.addEventListener('DOMContentLoaded', () => {
     };
     menuBar(MENU);
 })
-
-export default App;
