@@ -19,8 +19,10 @@
   },
   "homepage": "https://github.com/IlyaKantur/Fotonics-NWjs_React-#readme",
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
     "css-loader": "^5.0.1",
     "html-webpack-plugin": "^4.5.0",
+    "reactstrap": "^8.7.1",
     "style-loader": "^2.0.0",
     "svg-inline-loader": "^0.8.2",
     "webpack": "^5.10.0",

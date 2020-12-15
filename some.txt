@@ -1,3 +1,46 @@
 Для сохранение файла сборки "start": "webpack --mode development --watch",
 
 Для запуска с обновлением "start": "webpack serve --mode development",
+
+
+вырезано из create_tab
+{
+
+    // let tab_frame, tab, tab_close, tab_name, id, jd, id_tabWP;
+        // let tabs = document.getElementById('panel_WP');
+        // let frames = document.getElementById('frames');
+        // let zindex = frames.childElementCount;
+
+        // id = text;
+        // jd = text;
+        // let count_E_O = Object.keys(SwitchTab.tab).length;
+        // for (let i = 0; i <= count_E_O; i++) {
+        //     let j = `${jd}_${i}`;
+        //     if (SwitchTab.tab[j] == undefined) {
+        //         SwitchTab.tab[j] = 1;
+        //         if (i != 0) {
+        //             nameWP = `${nameWP}_${i}`;
+        //         }
+        //         id = j;
+        //         SwitchTab.selectedTab = count_E_O;
+        //         break;
+        //     }
+        // }
+        // try {
+        //     let iframes = document.querySelectorAll('.frame')
+        //     iframes.forEach(frame => {
+        //         frame.style.display = 'none'
+        //     })
+        // } catch { }
+        
+        // SwitchTab.tab_list[id] = {
+        //     numder: count_E_O
+        // }
+        // for (let i = 0; i < tabs.childElementCount; i++) {
+        //     {
+        //         frames.children[i].style.display = 'none';
+        //         tabs.children[i].className = "tab_wp"
+        //     }
+        // }
+
+}
