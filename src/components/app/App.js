@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import Menu from '../main/manu.js';
 import TabWP from '../tab/create_tab.js';
-import Choise from '../choice/choice.js';
+import Frame from '../frams/create_frame.js';
 
 import './App.css';
 
@@ -10,15 +10,26 @@ export default class App extends Component{
 
     state = {
         tab: [
-            {nameWP: "choice", text: "Выбор", id: '1'},
-        ],
+            {nameWP: "choice", text: "Выбор", id_t: '1'},
+            {nameWP: "method_2D", text: "Обработка", id_t: '1'}
+        ], 
         frame: [
-            
-        ]
+            {nameF: "choice", id_f: '1'},
+            {nameF: "method_2D", id_f: '1'}
+        ],
+        activeFrame: {name: "choice", id: '1'}
     }
 
-    onSwitch = (id) => {
-        console.log(`Click tab: ${id}`)
+    onSwitch = (nameWP, id_t) => {
+        const {name, id} = this.state.activeFrame;
+
+        if(`${nameWP}_tab_${id_t}` == `${name}_tab_${id}`) return;
+        else{
+            this.setState({
+               activeFrame: {name: nameWP, id: id_t}
+            })
+        }
+        // console.log(`Click tab: ${id}`)
         // SwitchTab.switchTab(id)
     }
 
@@ -28,7 +39,7 @@ export default class App extends Component{
         
     render(){
 
-        const {tab} = this.state
+        const {tab, frame, activeFrame} = this.state
 
         return(
             <>
@@ -38,10 +49,14 @@ export default class App extends Component{
                             posts = {tab}
                             onSwitch = {this.onSwitch}
                             onClose = {this.onClose}
+                            activeFrame = {activeFrame}
                         ></TabWP>
                     </div>
                     <div id="frames">
-                        <Choise id = 'choice' className = "frame" zindex = '0' ></Choise>
+                        <Frame
+                            posts = {frame}
+                            activeFrame = {activeFrame}
+                        ></Frame>
                     </div>
                 </div>
             </>

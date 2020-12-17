@@ -6,10 +6,6 @@ import './tab.css';
 
 export default class Tab extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     state = {
         onClos: this.props.onClose
     }
@@ -20,13 +16,12 @@ export default class Tab extends Component {
     }
 
     
-
-
     render() {
-        const { nameWP, text, onSwitch} = this.props;
+        const {id_t, nameWP, text, onSwitch, clas} = this.props;
+        const id_tab = `${nameWP}_${id_t}`
         // let tabs = window.parent.document.getElementById('panel_WP');
         return (
-            <span id={nameWP} className="tab_wp tab_wp_active" onClick={onSwitch}>
+            <span id={id_tab} className={clas} onClick={onSwitch}>
                 <span>{text ? text : 'Tab'}</span>
                 <span onClick={(e) =>this.onClose(e)}> X</span>
             </span>

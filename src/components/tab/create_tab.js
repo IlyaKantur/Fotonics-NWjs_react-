@@ -6,15 +6,26 @@ import Tab from './tab';
 
 import './tab.css';
 
-const CreateTab = ({posts, onClose, onSwitch}) =>{
+const CreateTab = ({posts, onClose, onSwitch, activeFrame}) =>{
     const elements = posts.map((item) =>{
-        const {id, ...itemProps} = item;
+        const {nameWP, id_t} = item;
+        const {id, name} = activeFrame;
+        let clas;
+        const full_name = `${nameWP}_tab_${id_t}`
+        if(`${name}_tab_${id}` == full_name) 
+                {
+                    clas = 'tab_wp tab_wp_active'
+                }
+                else{
+                    clas = 'tab_wp'
+                }
         return(
-            <div key = {id}>
+            <div key = {full_name}>
                 <Tab 
-                    {...itemProps}
-                    onClose = {() => onClose(id)}
-                    onSwitch = {() => onSwitch(id)}
+                    {...item}
+                    clas = {clas}
+                    onClose = {() => onClose(full_name)}
+                    onSwitch = {() => onSwitch(nameWP, id_t)}
                 ></Tab>
             </div>
         )

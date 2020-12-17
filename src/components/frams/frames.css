@@ -1,0 +1,12 @@
+.frame {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: none;
+    z-index: 0;
+    opacity: 0;
+}
+.frame_active{
+    z-index: 1;
+    opacity: 1;
+}
