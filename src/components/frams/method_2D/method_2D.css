@@ -1,5 +1,359 @@
-h1{
-    color: red;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: column;
+  }
+  
+  html{
+    width: 100%;
+    height: 100%;
+  }
+  
+  body {
+    font-family: -apple-system, "Helvetica Neue", Helvetica, sans-serif;
+    background: #5f6e77e7;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .titlebar {
+    position: absolute;
+    height: 30px;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    -webkit-app-region: drag;
+  }
+  
+  #l_p_panel{
+    height: 100%;
+    width: 100%;
+    flex-direction: row;
+    display: flex;
+  }
+  
+  #left_Panel,
+  #midle_Panel {
+    vertical-align: top;
+    display: inline-block;
+  }
+  
+  #left_Panel {
+    position: relative;
+    width: 210px;
+    height: 100vh;
+  }
+  
+  #midle_Panel {
+    height: 100vh;
+    flex: 1;
+  }
+  
+  /*  Левая часть */
+  #wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 100%;
+    background: rgb(65, 65, 65);
+    z-index: 1;
+  }
+  
+  #TabOne,
+  #TabTwo {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    top: 5px;
+    left: 5px;
+    background: none;
+    border: none;
+    font-size: 20px;
     text-align: center;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-}
+    color: gray;
+    outline: none;
+  }
+  
+  #TabOne {
+    color: white;
+  }
+  
+  #TabTwo,
+  #TabThree {
+    margin-top: 5px;
+  }
+  
+  #TabOne:hover {
+    color: white !important
+  }
+  
+  #TabTwo:hover {
+    color: white !important
+  }
+  
+  #TabThree:hover {
+    color: white !important
+  }
+  
+  #coor {
+    display: none;
+    position: absolute;
+    left: 50px;
+    height: 100%;
+    width: 155px;
+    border-right: 2px solid black;
+  }
+  
+  #navbar {
+    position: absolute;
+    left: 50px;
+    border-right: 2px solid black;
+  }
+  
+  /* #navbar:target{
+    left: 50px;
+  }
+  #navbar:not(:target)
+  {
+    left: -100%;
+  } */
+  #navbar,
+  #navbar ul {
+    list-style-type: none;
+    height: 100%;
+    width: 160px;
+  }
+  
+  /* #navbar li {
+    border-bottom: 5px solid rgba(102, 102, 102, 0);
+  } */
+  
+  #navbar a,
+  input {
+    background-color: #181818cb;
+    color: #fff;
+    padding: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    /* border-left: 5px solid #33ADFF; */
+    display: block;
+  }
+  
+  #navbar input {
+    width: 137px;
+  }
+  
+  #navbar ul {
+    /* display: none; */
+    border-left: 2px solid #666;
+  }
+  
+  #navbar li:hover ul {
+    display: block;
+  }
+  
+  
+  
+  
+  .container {
+    display: block;
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    /* font-size: 20px; */
+    user-select: none;
+  }
+  
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+  }
+  
+  .container:hover input~.checkmark {
+    background-color: #ccc;
+  }
+  
+  .container input:checked~.checkmark {
+    background-color: #2196F3;
+  }
+  
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  .container input:checked~.checkmark:after {
+    display: block;
+  }
+  
+  .container .checkmark:after {
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+  /* Центр */
+  
+  
+  
+  
+  
+  .wp{
+    width: 100%;
+    height: 100%;
+  }
+  
+  /*  */
+  #up_Panel{
+    width: 100%;
+    height: 75%;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  #img {
+    position: relative;
+    width: 240px;
+    height: 100%;
+  }
+  
+  #ImgNew,
+  #ImgSum {
+    margin: 50px 0 0 30px;
+    position: relative;
+    background: #fff;
+    max-width: 200px;
+    height: 200px;
+    border: solid blue;
+  }
+
+  #hiddenimg, #hiddenimgsum{
+      opacity: 0;
+  }
+  
+  #graf {
+    flex: 1;
+    position: relative;
+    height: 100%;
+  }
+  
+  #Graf {
+    margin: 30px 0 0 50px;
+    background: #fff;
+    width: 90%;
+    height: 90%;
+    border: solid rgb(250, 87, 87);
+  }
+  
+  #myChart {
+    width: 100% !important;
+    height: 100% !important;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+  
+  #bottom_Panel {
+    position: relative;
+    border-top: 2px solid black;
+    height: 25%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #panel_mid_bot {
+    position: relative;
+    width: 100%;
+    height: 25px;
+    background-color: rgb(180, 180, 180);
+  }
+  
+  #Consol {
+    flex: 1;
+    overflow-y: auto;
+    background-color: rgb(220, 220, 220);
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  /* Нижняя часть */
+  #coordinatesPanel,
+  #CPButtom {
+    position: absolute;
+    border: 2px solid black;
+    background-color: rgb(220, 220, 220);
+    font-size: 16px;
+  }
+  
+  #coordinatesPanel {
+    position: relative;
+    height: 80vh;
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+    overflow: auto;
+  }
+  
+  #CPButtom {
+    position: relative;
+    width: 100%;
+    height: 30px;
+  }
+  
+  #apply_Coor,
+  #return_Coor {
+    position: relative;
+    height: 100%;
+    font-size: 16px;
+    background-color: rgb(220, 220, 220);
+    border: none;
+    outline: none;
+  }
+  
+  #apply_Coor {
+    margin-left: 5px;
+  }
+  
+  #apply_Coor:hover {
+    background-color: rgb(200, 200, 200)
+  }
+  
+  #return_Coor:hover {
+    background-color: rgb(200, 200, 200)
+  }
+  
+  
+  .coor_element {
+    display: inline-block;
+  }
+  
+  .y_input {
+    width: 50px;
+    background-color: rgb(220, 220, 220);
+    color: black;
+    border: none;
+    font-size: 15px;
+  }
+  /*  */
