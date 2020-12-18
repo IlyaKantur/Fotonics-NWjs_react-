@@ -29,8 +29,6 @@ export default class App extends Component{
                activeFrame: {name: nameWP, id: id_t}
             })
         }
-        // console.log(`Click tab: ${id}`)
-        // SwitchTab.switchTab(id)
     }
 
     onClose = (id) => {

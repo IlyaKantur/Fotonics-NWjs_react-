@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 
 import './method_2D.css';
@@ -39,4 +40,3 @@ export default class Method_2D extends Component {
 
 }
 
-Method_2D;
