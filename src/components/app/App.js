@@ -15,9 +15,9 @@ export default class App extends Component{
         ], 
         frame: [
             {nameF: "choice", id_f: '1'},
-            {nameF: "method_2D", id_f: '1'}
+            {nameF: "method_2D", id_f: '1'},
         ],
-        activeFrame: {name: "choice", id: '1'}
+        activeFrame: {name: "method_2D", id: '1'}
     }
 
     onSwitch = (nameWP, id_t) => {
@@ -31,8 +31,53 @@ export default class App extends Component{
         }
     }
 
-    onClose = (id) => {
-        console.log(`Click close tab: ${id}`)
+    onClose = (nameWP, id_t) => {
+        console.log(`Click close tab: ${nameWP}_tab_${id_t}`)
+        this.setState(({tab, frame, activeFrame}) => {
+            let newActiveFrame, element;
+            const index = tab.findIndex(elem => elem.nameWP === nameWP && elem.id_t === id_t);
+
+            const beforeT = tab.slice(0, index);
+            const beforeF = frame.slice(0, index);
+            const afterT = tab.slice(index + 1);
+            const afterF = frame.slice(index + 1);
+
+            const newTab = [...beforeT, ...afterT];
+            const newFrame = [...beforeF, ...afterF];
+
+            if(nameWP === activeFrame.name && id_t === activeFrame.id){
+                let name, id;
+                if(tab.length == 1)
+                {
+                    return{
+                        tab: newTab,
+                        frame: newFrame
+                    }
+                }
+                if(index == 0)
+                {
+                    element = tab.slice(1, 2)
+                }
+                else{
+                    element = tab.slice(index - 1, index);
+                }
+                name = element[0].nameWP;
+                id = element[0].id_t;
+                newActiveFrame = {name: name, id: id}
+                return{
+                    tab: newTab,
+                    frame: newFrame,
+                    activeFrame: newActiveFrame
+                }
+            }
+            return{
+                tab: newTab,
+                frame: newFrame,
+            }
+
+            
+
+        })
     }
         
     render(){

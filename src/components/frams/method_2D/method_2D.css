@@ -76,8 +76,8 @@
     outline: none;
   }
   
-  #TabOne {
-    color: white;
+  .button_active {
+    color: white !important;
   }
   
   #TabTwo,
@@ -86,19 +86,16 @@
   }
   
   #TabOne:hover {
-    color: white !important
+    color: black !important;
+    cursor: pointer;
   }
   
   #TabTwo:hover {
-    color: white !important
-  }
-  
-  #TabThree:hover {
-    color: white !important
+    color: black !important;
+    cursor: pointer;
   }
   
   #coor {
-    display: none;
     position: absolute;
     left: 50px;
     height: 100%;
@@ -248,13 +245,10 @@
     height: 200px;
     border: solid blue;
   }
-<<<<<<< HEAD
 
   #hiddenimg, #hiddenimgsum{
       opacity: 0;
   }
-=======
->>>>>>> e8171e8fca031b0bedf6c410bab9a8dcd073d6b1
   
   #graf {
     flex: 1;
@@ -359,9 +353,4 @@
     border: none;
     font-size: 15px;
   }
-<<<<<<< HEAD
-  /*  */
-=======
-  /*  */
-  
->>>>>>> e8171e8fca031b0bedf6c410bab9a8dcd073d6b1
+

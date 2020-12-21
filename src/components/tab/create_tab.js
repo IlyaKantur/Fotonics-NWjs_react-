@@ -24,7 +24,7 @@ const CreateTab = ({posts, onClose, onSwitch, activeFrame}) =>{
                 <Tab 
                     {...item}
                     clas = {clas}
-                    onClose = {() => onClose(full_name)}
+                    onClose = {() => onClose(nameWP, id_t)}
                     onSwitch = {() => onSwitch(nameWP, id_t)}
                 ></Tab>
             </div>
