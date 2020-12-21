@@ -21,25 +21,6 @@ export default class Method_2D extends Component {
         
     }
 
-    load = () =>{
-        return new Promise((resolve, reject) =>{
-            let imgFolder;
-            let i = document.createElement('input');
-
-            i.type = 'file';
-            i.nwdirectory = "directory";
-
-            i.click();
-            i.onchange = function () {
-                imgFolder = this.value;
-                imgFolder = `${imgFolder}`;
-               
-                resolve(imgFolder);
-            }
-        })
-    }
-
-
     render() {
         return (
             <L_P_Panel 
