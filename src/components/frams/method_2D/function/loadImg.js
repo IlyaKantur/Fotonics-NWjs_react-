@@ -22,10 +22,10 @@ function LoadImg() {
                 masFold[j] = i.files[j].path
             }
             let dataStart = new Date().getTime();
-            loadImg(masFold).then((dataStop) => {
+            loadImg(masFold, 0).then((dataStop) => {
                 let message = `Изображений загруженно: ${i.files.length} за ${(dataStop - dataStart)/1000} секунд`
                 console.log(message);
-                Log.log(message);
+                // Log.log(message);
             });
         }
     }
@@ -121,7 +121,6 @@ function LoadImg() {
                     console.log(message);
                 })
             }
-
             masImg[masFold.length - 1].onload = () => {resolve(new Date().getTime())};
         })
     }
@@ -145,9 +144,12 @@ function LoadImg() {
             imgFon.onerror = function () {
                 let message = 'Ошибка загрузки фона';
                 console.log(message);
-                Log.log(message);
+                // Log.log(message);
             };
         }
+    }
+    function getMasImg(){
+        return masImg;
     }
     return Object({
         loadFoldImg,
@@ -155,6 +157,7 @@ function LoadImg() {
         loadFolder,
         loadFolderImg,
         loadObservation,
+        getMasImg,
         masImg,
         imgFon
     })

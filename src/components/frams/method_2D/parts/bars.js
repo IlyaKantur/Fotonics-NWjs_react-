@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 export default class Bars extends Component{
     render(){
-        const {loadFolder} = this.props
+        const {loadFolder, loadFoldImg, loadFonImg, startPush} = this.props;
         return(
             <ul id="navbar" className="bar">
                 <li><a href="#">Режим</a>
@@ -20,7 +20,7 @@ export default class Bars extends Component{
                 <li><a href="#">Файл</a>
                     <ul>
                         <li><button id="Folder" onClick = {loadFolder}>Папка</button></li>
-                        <li><button id="Fold">Выбор</button></li>
+                        <li><button id="Fold" onClick = {loadFoldImg}>Выбор</button></li>
                         <li><button id="Save">Сохранить</button></li>
                         <li><label className="container">Только последний
                             <input id="SaveLast" type="checkbox"/>
@@ -37,7 +37,7 @@ export default class Bars extends Component{
                             <span className="checkmark"></span>
                         </label></li>
                         <li><input id="IterN" type="text"/></li>
-                        <li><button id="Start">Старт</button></li>
+                        <li><button id="Start" onClick = {startPush}>Старт</button></li>
                         <li><button id="Restart">Очистка</button></li>
                     </ul>
                 </li>
@@ -57,7 +57,7 @@ export default class Bars extends Component{
                             <input id="BPix" type="checkbox"/>
                             <span className="checkmark"></span>
                         </label></li>
-                        <li><button id="Fonfold">Фон</button></li>
+                        <li><button id="Fonfold" onClick = {loadFonImg}>Фон</button></li>
                     </ul>
                 </li>
 

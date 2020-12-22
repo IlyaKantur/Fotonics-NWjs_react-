@@ -15,12 +15,17 @@ export default class L_P_Panel extends Component {
     }
 
     render(){
-        const {loadFolder} = this.props;
+        const {loadFolder, loadFoldImg, loadFonImg, startPush} = this.props;
         const {active_l_t} = this.state;
         let element, button_active_1, button_active_2;
         if(active_l_t == 1)
         {
-            element = <Bars loadFolder = {loadFolder}></Bars>;
+            element = <Bars 
+                loadFolder = {loadFolder}
+                loadFoldImg = {loadFoldImg}
+                loadFonImg = {loadFonImg}
+                startPush = {startPush}
+            ></Bars>;
             button_active_1 = "button_active";
             button_active_2 = "";
         }
