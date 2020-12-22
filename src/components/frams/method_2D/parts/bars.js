@@ -5,11 +5,12 @@ export default class Bars extends Component{
         const {loadFolder} = this.props
         return(
             <ul id="navbar" className="bar">
-                <li><a href="#">Обработка</a>
+                <li><a href="#">Режим</a>
                     <ul>
                         <li>
                             <label className="container">Режим
-                                <input id="chek_obsorv" type="checkbox" defaultChecked='checked'/>
+                                <input id="chek_obsorv" type="checkbox" />
+                                {/* defaultChecked='checked' */}
                                 <span className="checkmark"></span>
                             </label>
                         </li>

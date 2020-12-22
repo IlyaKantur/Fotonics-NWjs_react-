@@ -1,6 +1,5 @@
 function LoadImg() {
-    // const fs = require('fs')
-    const fs = require('fs');
+    const fs = window.require('fs');
     let masImg = [];
     let imgFolder;
     let imgFon = new Image;
@@ -61,7 +60,6 @@ function LoadImg() {
                 }
                 load(imgFolder, masFold, 0).then(() => resolve());
             })
-
         })
     }
 
@@ -103,10 +101,10 @@ function LoadImg() {
             masFold = masFold.map(element => {
                 return element = `${imgFolder}/${element}`
             })
-            // let dataStart = new Date().getTime();
+            let dataStart = new Date().getTime();
             loadImg(masFold, iter).then((dataStop) => {
-                // let message = `Изображений загруженно: ${masFold.length} за ${(dataStop - dataStart)/1000} секунд`
-                // console.log(message);
+                let message = `Изображений загруженно: ${masFold.length} за ${(dataStop - dataStart)/1000} секунд`
+                console.log(message);
                 // Log.log(message);
                 resolve();
             });

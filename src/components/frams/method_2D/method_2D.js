@@ -7,7 +7,7 @@ import './method_2D.css';
 export default class Method_2D extends Component {
 
     state = {
-        imgFolder: null
+        imgFolder: null,
     }
 
     loadFolder = () => {
@@ -18,7 +18,6 @@ export default class Method_2D extends Component {
                 imgFolder: folder
             })
         });
-        
     }
 
     render() {
