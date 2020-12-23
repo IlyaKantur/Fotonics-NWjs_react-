@@ -6,28 +6,31 @@ function LoadImg() {
     let defolt_folred = './Foto';
 
     function loadFoldImg() {
-        console.log('Click Fold');
-        // finished = false;
-        let i = document.createElement('input')
+        return new Promise((resolve, reject) => {
+            console.log('Click Fold');
+            // finished = false;
+            let i = document.createElement('input')
 
-        i.type = 'file'
-        i.multiple = true;
-        i.accept = 'image/*'
+            i.type = 'file'
+            i.multiple = true;
+            i.accept = 'image/*'
 
-        i.click()
+            i.click()
 
-        i.onchange = function () {
-            let masFold = [];
-            for (let j = 0; j < i.files.length; j++) {
-                masFold[j] = i.files[j].path
+            i.onchange = function () {
+                let masFold = [];
+                for (let j = 0; j < i.files.length; j++) {
+                    masFold[j] = i.files[j].path
+                }
+                let dataStart = new Date().getTime();
+                loadImg(masFold, 0).then(({ dataStop, masImg }) => {
+                    let message = `Изображений загруженно: ${i.files.length} за ${(dataStop - dataStart) / 1000} секунд`
+                    console.log(message);
+                    resolve(masImg)
+                    // Log.log(message);
+                });
             }
-            let dataStart = new Date().getTime();
-            loadImg(masFold, 0).then((dataStop) => {
-                let message = `Изображений загруженно: ${i.files.length} за ${(dataStop - dataStart)/1000} секунд`
-                console.log(message);
-                // Log.log(message);
-            });
-        }
+        })
     }
 
     function loadFolder(checked) {
@@ -58,16 +61,14 @@ function LoadImg() {
                     console.error(err);
                     return
                 }
-                load(imgFolder, masFold, 0).then(() => resolve());
+                load(imgFolder, masFold, 0).then((masImg) => resolve(masImg));
             })
         })
     }
 
     function loadObservation(imgFolder, iter) {
         return new Promise((resolve, reject) => {
-            observation(imgFolder, iter).then(() => {
-                resolve()
-            });
+            observation(imgFolder, iter).then((masImg) => { resolve(masImg) });
         });
     }
 
@@ -85,7 +86,7 @@ function LoadImg() {
                     if (length_new == length_old) obs();
                     else {
                         length_old = length_new;
-                        load(imgFolder, masFold, iter).then(() => resolve());
+                        load(imgFolder, masFold, iter).then((masImg) => resolve(masImg));
                     }
                 })
             }
@@ -102,11 +103,11 @@ function LoadImg() {
                 return element = `${imgFolder}/${element}`
             })
             let dataStart = new Date().getTime();
-            loadImg(masFold, iter).then((dataStop) => {
-                let message = `Изображений загруженно: ${masFold.length} за ${(dataStop - dataStart)/1000} секунд`
+            loadImg(masFold, iter).then(({ dataStop, masImg }) => {
+                let message = `Изображений загруженно: ${masFold.length} за ${(dataStop - dataStart) / 1000} секунд`
                 console.log(message);
                 // Log.log(message);
-                resolve();
+                resolve(masImg);
             });
         });
     }
@@ -121,35 +122,36 @@ function LoadImg() {
                     console.log(message);
                 })
             }
-            masImg[masFold.length - 1].onload = () => {resolve(new Date().getTime())};
+            let dataStop = new Date().getTime();
+            masImg[masFold.length - 1].onload = () => { resolve({ dataStop, masImg }) };
         })
     }
 
     function loadFonImg() {
-        console.log('Click Fon')
-        // pfon = 1;
-        //
-        let i = document.createElement('input')
+        return new Promise((resolve, reject) => {
+            console.log('Click Fon')
+            // pfon = 1;
+            //
+            let i = document.createElement('input')
 
-        i.type = 'file'
-        i.accept = 'image/*'
-        i.click()
-        i.onchange = function () {
-            imgFon.src = i.files[0].path;
-            imgFon.onload = function () {
-                let message = `Фон загружен`
-                console.log(message);
-                Log.log(message);
-            };
-            imgFon.onerror = function () {
-                let message = 'Ошибка загрузки фона';
-                console.log(message);
-                // Log.log(message);
-            };
-        }
-    }
-    function getMasImg(){
-        return masImg;
+            i.type = 'file'
+            i.accept = 'image/*'
+            i.click()
+            i.onchange = function () {
+                imgFon.src = i.files[0].path;
+                imgFon.onload = function () {
+                    let message = `Фон загружен`
+                    console.log(message);
+                    // Log.log(message);
+                    resolve(imgFon);
+                };
+                imgFon.onerror = function () {
+                    let message = 'Ошибка загрузки фона';
+                    console.log(message);
+                    // Log.log(message);
+                };
+            }
+        })
     }
     return Object({
         loadFoldImg,
@@ -157,7 +159,6 @@ function LoadImg() {
         loadFolder,
         loadFolderImg,
         loadObservation,
-        getMasImg,
         masImg,
         imgFon
     })

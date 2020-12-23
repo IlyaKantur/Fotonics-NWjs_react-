@@ -8,7 +8,7 @@ export default class Bars extends Component{
                 <li><a href="#">Режим</a>
                     <ul>
                         <li>
-                            <label className="container">Режим
+                            <label className="container">Наблюдение
                                 <input id="chek_obsorv" type="checkbox" />
                                 {/* defaultChecked='checked' */}
                                 <span className="checkmark"></span>

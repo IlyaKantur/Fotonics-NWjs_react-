@@ -15,7 +15,7 @@ export default class L_P_Panel extends Component {
     }
 
     render(){
-        const {loadFolder, loadFoldImg, loadFonImg, startPush} = this.props;
+        const {loadFolder, loadFoldImg, loadFonImg, startPush, massum, applyCoor, returnCoor} = this.props;
         const {active_l_t} = this.state;
         let element, button_active_1, button_active_2;
         if(active_l_t == 1)
@@ -30,7 +30,12 @@ export default class L_P_Panel extends Component {
             button_active_2 = "";
         }
         else{
-            element = <Coor></Coor>
+            element = <Coor
+                massum = {massum}
+                applyCoor = {applyCoor}
+                returnCoor = {returnCoor}
+            >
+            </Coor>
             button_active_1 = "";
             button_active_2 = "button_active";
         }
