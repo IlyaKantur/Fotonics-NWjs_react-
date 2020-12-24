@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import L_P_Panel from './parts/l_p_panel.js';
 import loadImg from './function/loadImg.js';
+import processing from './function/processing.js';
 
 import './method_2D.css';
 
@@ -16,17 +17,10 @@ export default class Method_2D extends Component {
     state = {
         imgFolder: null,
         masImg: [],
+        massum: [],
         imgFon: null,
         finished: false,
-        massum: [],
-        masx: [],
-        oldX: [],
-        oldY: [],
-        imgnum: 0,
-        iy: 0,
-        ix: 0,
-        cx: 0,
-        cy: 0
+        imgnum: 0
     }
 
     loadFolder = () => {
@@ -86,7 +80,7 @@ export default class Method_2D extends Component {
     }
 
     returnCoor = () => {
-        const {finished, massum, oldY} = this.state;
+        const {finished, oldY} = this.state;
         if(finished == true)
         {
             let masInput = document.querySelectorAll('.y_input');
@@ -102,11 +96,12 @@ export default class Method_2D extends Component {
 
     start = () => {
         console.log("Click Start");
-        const {masImg, imgFon, imgnum} = this.state;
         this.setState({
             finished: false,
             imgnum: 0
         });
+        const {masImg, imgFon, imgnum, finished} = this.state;
+        processing().start({mas: masImg, fon: imgFon, num: imgnum, finish: finished})
 
     }
 

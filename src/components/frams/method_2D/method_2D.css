@@ -247,7 +247,7 @@
   }
 
   #hiddenimg, #hiddenimgsum{
-      opacity: 0;
+    display: none;
   }
   
   #graf {
