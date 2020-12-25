@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Bars from './bars.js';
 import Coor from './coor.js';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
+
+import V, { VictoryBar, VictoryLine, VictoryChart, VictoryTheme, VictoryZoomContainer, VictoryTooltip, VictoryScatter } from 'victory';
 
 export default class L_P_Panel extends Component {
 
@@ -16,17 +17,37 @@ export default class L_P_Panel extends Component {
     }
 
     render() {
-        const { loadFolder, loadFoldImg, loadFonImg, startPush, massum, applyCoor, returnCoor } = this.props;
+        const { loadFolder, loadFoldImg, loadFonImg, startPush, massum, applyCoor, returnCoor, data } = this.props;
         const { active_l_t } = this.state;
-        const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}];
-        const renderLineChart = (
-            <LineChart width={400} height={300} data={data}>
-              <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-              <CartesianGrid stroke="#ccc" />
-              <XAxis dataKey="name" />
-              <YAxis />
-            </LineChart>
-          );
+        let graph;
+        if (data.length != 0) {
+            graph = (
+                <VictoryChart
+                    theme={VictoryTheme.material}
+                    containerComponent={
+                        <VictoryZoomContainer />
+                    }
+                >
+                    <VictoryLine
+                        style = {{data: {strokeWidth: 1}}}
+                        data={data}
+                        x='x'
+                        y='y'
+                    />
+                    <VictoryScatter
+                        size={({ active }) => active ? 2 : 1}
+                        labels={({ datum }) => `x:${datum.x} y:${datum.y}`}
+                        labelComponent={<VictoryTooltip />}
+                        data={data}
+                        x='x'
+                        y='y'
+
+                    />
+
+                </VictoryChart>
+            )
+
+        }
         let element, button_active_1, button_active_2;
         if (active_l_t == 1) {
             element = <Bars
@@ -65,7 +86,7 @@ export default class L_P_Panel extends Component {
                         </div>
                         <div id="graf">
                             <div id="Graf">
-                                {renderLineChart}
+                                {graph}
                                 {/* <canvas id="myChart">
                                 </canvas> */}
                             </div>

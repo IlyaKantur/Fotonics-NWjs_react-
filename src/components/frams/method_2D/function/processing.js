@@ -33,37 +33,36 @@ function Processing(){
     let oldX = [],
         oldY = [];
 
-
-    let myChart = document.getElementById('myChart');
-
-
     function start({mas, fon, num, finish}){
-        masImg = mas;
-        imgFon = fon;
-        imgnum = num;
-        finished = finish;
-        iy = masImg[0].height;
-        ix = masImg[0].width;
-        cx = ImgNew.width;
-        cy = ImgNew.height;
-        himg.height = iy;
-        himg.width = ix;
-        himgsum.height = iy;
-        himgsum.width = ix;
-        imgsum = masImg[0];
-        ctxsum.drawImage(imgsum, 0, 0, cx, cy);
-        ctxhs.drawImage(imgsum, 0, 0);
-        imgSum = ctxhs.getImageData(0, 0, ix, iy);
-        if (pfon == 1) {
-            ctxhs.drawImage(imgFon, 0, 0);
-            imgfon = ctxhs.getImageData(0, 0, ix, iy).data;
-        }
-        startOb = new Date().getTime();
-        proces = true;
-        workOnImg();
+        return new Promise((resolve, reject) => {
+            masImg = mas;
+            imgFon = fon;
+            imgnum = num;
+            finished = finish;
+            iy = masImg[0].height;
+            ix = masImg[0].width;
+            cx = ImgNew.width;
+            cy = ImgNew.height;
+            himg.height = iy;
+            himg.width = ix;
+            himgsum.height = iy;
+            himgsum.width = ix;
+            imgsum = masImg[0];
+            ctxsum.drawImage(imgsum, 0, 0, cx, cy);
+            ctxhs.drawImage(imgsum, 0, 0);
+            imgSum = ctxhs.getImageData(0, 0, ix, iy);
+            if (pfon == 1) {
+                ctxhs.drawImage(imgFon, 0, 0);
+                imgfon = ctxhs.getImageData(0, 0, ix, iy).data;
+            }
+            startOb = new Date().getTime();
+            proces = true;
+            workOnImg(resolve);
+
+        })
     }
 
-    function workOnImg(){
+    function workOnImg(resolve){
         if (imgnum == masImg.length && chek_obsorv.checked) {
             check();
 
@@ -73,15 +72,15 @@ function Processing(){
                     if (imgnum == masImg.length) {
                         check()
                     } else {
-                        processing()
+                        processing(resolve)
                     }
                 })
             }
         } else {
-            processing();
+            processing(resolve);
         }
 
-        function processing(){
+        function processing(resolve){
             let img = masImg[imgnum];
             ctx.drawImage(img, 0, 0, cx, cy);
             ctxh.drawImage(img, 0, 0);
@@ -204,9 +203,9 @@ function Processing(){
                 //     coordinat.write(masx[i], massum[i])
                 // }
 
-
                 finished = true;
                 cancelAnimationFrame(req);
+                resolve(massum);
             }
         }
     }
