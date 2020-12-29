@@ -19,11 +19,24 @@ export default class Method_2D extends Component {
         imgFolder: null,
         masImg: [],
         massum: [],
+        masx: [],
         data: [],
         imgFon: null,
         finished: false,
         imgnum: 0,
+        oldY: [],
+    }
 
+    reloadData = (masx, massum) => {
+        const data = [
+            {
+                x: masx,
+                y: massum,
+                type: 'scatter',
+                mode: 'lines+markers',
+                marker: {color: 'red'}
+            }];
+        return data;
     }
 
     loadFolder = () => {
@@ -68,26 +81,30 @@ export default class Method_2D extends Component {
     }
 
     applyCoor = () => {
-        const { finished, massum } = this.state;
+        const { finished, massum, masx} = this.state;
         if (finished == true) {
             let masInput = document.querySelectorAll('.y_input');
             for (let i = 0; i < masInput.length; i++) {
                 massum[i] = masInput[i].value;
             }
+            const data = this.reloadData(masx, massum)
             this.setState({
+                data: data,
                 massum: massum
             })
         }
     }
 
     returnCoor = () => {
-        const { finished, oldY } = this.state;
+        const { finished, oldY, masx} = this.state;
         if (finished == true) {
             let masInput = document.querySelectorAll('.y_input');
             for (let i = 0; i < masInput.length; i++) {
                 masInput[i].value = oldY[i]
             }
+            const data = this.reloadData(masx, oldY)
             this.setState({
+                data: data,
                 massum: oldY
             })
         }
@@ -100,20 +117,15 @@ export default class Method_2D extends Component {
             imgnum: 0
         });
         const { masImg, imgFon, imgnum, finished } = this.state;
-        let massum;
-        processing().start({ mas: masImg, fon: imgFon, num: imgnum, finish: finished }).then((massum, masx) => {
+        processing().start({ mas: masImg, fon: imgFon, num: imgnum, finish: finished }).then(({massum, masx, finished, oldY}) => {
 
-            const data = [
-            {
-                x: masx,
-                y: massum,
-                type: 'scatter',
-                mode: 'lines+markers',
-                marker: {color: 'red'}
-            }];
+            const data = this.reloadData(masx, massum)
             this.setState({
+                masx: masx,
                 data: data,
-                finished: true
+                oldY: oldY,
+                massum: massum,
+                finished: finished
             })
         })
 
@@ -121,14 +133,14 @@ export default class Method_2D extends Component {
     }
 
     render() {
-        const { data } = this.state
+        const {data, massum} = this.state
         return (
             <L_P_Panel
                 loadFolder={this.loadFolder}
                 loadFoldImg={this.loadFoldImg}
                 loadFonImg={this.loadFonImg}
                 startPush={this.startPush}
-                massum={this.state.massum}
+                massum={massum}
                 applyCoor={this.applyCoor}
                 returnCoor={this.returnCoor}
                 data={data}

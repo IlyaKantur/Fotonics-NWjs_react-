@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import Bars from './bars.js';
 import Coor from './coor.js';
 
-import Plot from 'react-plotly.js';
+import Plotly from 'plotly.js/lib/core';
+import createPlotlyComponent from 'react-plotly.js/factory';
+const Plot = createPlotlyComponent(Plotly);
+
+
 
 export default class L_P_Panel extends Component {
 
     state = {
         active_l_t: 1,
-        value: false
     }
 
     switch_l_t = (id) => {
@@ -19,19 +22,9 @@ export default class L_P_Panel extends Component {
 
     render() {
         const { loadFolder, loadFoldImg, loadFonImg, startPush, massum, applyCoor, returnCoor, data } = this.props;
-        const { active_l_t, value } = this.state;
-        let graph;
+        const { active_l_t } = this.state;
         // if (data.length != 0) {
-        graph =
-            <div id="React_Chart">
-                <Plot
-                    data={data}
-                    layout={{ title: 'Intensivity' }}
-                    className={'plot'}
-                />
-            </div>
-
-        // }
+            // }
         let element, button_active_1, button_active_2;
         if (active_l_t == 1) {
             element = <Bars
@@ -69,7 +62,9 @@ export default class L_P_Panel extends Component {
                             <canvas id="ImgSum"></canvas>
                         </div>
                         <div id="graf">
-                            {graph}
+                            <div id="React_Chart">
+                                <Grafic data = {data}></Grafic>
+                            </div>
                             {/* <div id="Graf"> */}
 
                             {/* <canvas id="myChart">
@@ -94,3 +89,12 @@ export default class L_P_Panel extends Component {
     }
 
 }
+ const Grafic = ({data}) =>{
+    console.log(data[0])
+     return(
+        <Plot
+        data={data}
+        layout={{ title: 'Intensivity' }}
+    />
+     )
+ }

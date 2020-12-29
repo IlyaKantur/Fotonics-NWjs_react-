@@ -1,4 +1,3 @@
-import Chart from 'chartjs';
 import loadImg from './loadImg.js';
 function Processing(){
 
@@ -205,8 +204,9 @@ function Processing(){
 
                 finished = true;
                 cancelAnimationFrame(req);
-                resolve(massum, masx);
+                resolve({massum, masx, finished, oldY});
             }
+            resolve({massum, masx, finished, oldY});
         }
     }
 

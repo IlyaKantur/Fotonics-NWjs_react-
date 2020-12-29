@@ -21,7 +21,7 @@ export default class Coor extends Component{
 const Coordinat = ({massum}) => {
     const element = massum.map((count, x) =>{
         return(
-            <>
+            <div key = {`x_${x}`} >
                 <div className = 'coor_element'>    x: {x}   y:</div> 
                 <div className = 'coor_element'> 
                     <input 
@@ -31,10 +31,10 @@ const Coordinat = ({massum}) => {
                         defaultValue = {count}
                     />
                 </div>
-            </>
+            </div>
         )
     })
     return(
-        {element}
+        element
     )
 }
