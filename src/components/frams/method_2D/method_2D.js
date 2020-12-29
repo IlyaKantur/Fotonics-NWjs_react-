@@ -101,19 +101,16 @@ export default class Method_2D extends Component {
         });
         const { masImg, imgFon, imgnum, finished } = this.state;
         let massum;
-        processing().start({ mas: masImg, fon: imgFon, num: imgnum, finish: finished }).then((massum) => {
-            let data = [];
-            // data = [{
-            //     'id': 'Intensivity',
-            //     'color': 'red',
-            //     'data':[]
-            // }]
-            // for (let x = 0; x < massum.length; x++) {
-            //     data[0]['data'].push({ x: x, y: massum[x]})
-            // }
-            for (let x = 0; x < massum.length; x++) {
-                data.push({ x: x, y: massum[x]})
-            }
+        processing().start({ mas: masImg, fon: imgFon, num: imgnum, finish: finished }).then((massum, masx) => {
+
+            const data = [
+            {
+                x: masx,
+                y: massum,
+                type: 'scatter',
+                mode: 'lines+markers',
+                marker: {color: 'red'}
+            }];
             this.setState({
                 data: data,
                 finished: true

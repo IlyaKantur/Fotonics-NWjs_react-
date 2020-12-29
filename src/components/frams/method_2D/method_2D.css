@@ -264,9 +264,13 @@
     border: solid rgb(250, 87, 87);
   }
 
-  #VIS{
-    margin: 10px 0 0 50px;
+  #React_Chart{
+    width: 90%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
   }
+
   
   #myChart {
     width: 100% !important;

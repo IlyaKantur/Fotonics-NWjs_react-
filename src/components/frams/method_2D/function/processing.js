@@ -205,7 +205,7 @@ function Processing(){
 
                 finished = true;
                 cancelAnimationFrame(req);
-                resolve(massum);
+                resolve(massum, masx);
             }
         }
     }
