@@ -263,6 +263,10 @@
     height: 90%;
     border: solid rgb(250, 87, 87);
   }
+
+  #VIS{
+    margin: 10px 0 0 50px;
+  }
   
   #myChart {
     width: 100% !important;

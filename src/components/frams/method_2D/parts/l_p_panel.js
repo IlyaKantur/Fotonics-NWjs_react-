@@ -2,12 +2,20 @@ import React, { Component } from 'react';
 import Bars from './bars.js';
 import Coor from './coor.js';
 
-import V, { VictoryBar, VictoryLine, VictoryChart, VictoryTheme, VictoryZoomContainer, VictoryTooltip, VictoryScatter } from 'victory';
+// import V, { VictoryBar, VictoryLine, VictoryChart, VictoryTheme, VictoryZoomContainer, VictoryTooltip, VictoryScatter } from 'victory';
+// import {ResponsiveLine} from '@nivo/line';
+// import { XYPlot, LineSeries, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, Crosshair} from 'react-vis';
+
+import { Label, Connector, CircleSubject, LineSubject } from '@visx/annotation';
+import { LinePath } from '@visx/shape';
+import ExampleControls from './ExampleControls';
+import findNearestDatum from './findNearestDatum';
 
 export default class L_P_Panel extends Component {
 
     state = {
-        active_l_t: 1
+        active_l_t: 1,
+        value: false
     }
 
     switch_l_t = (id) => {
@@ -18,34 +26,119 @@ export default class L_P_Panel extends Component {
 
     render() {
         const { loadFolder, loadFoldImg, loadFonImg, startPush, massum, applyCoor, returnCoor, data } = this.props;
-        const { active_l_t } = this.state;
+        const { active_l_t, value } = this.state;
         let graph;
         if (data.length != 0) {
-            graph = (
-                <VictoryChart
-                    theme={VictoryTheme.material}
-                    containerComponent={
-                        <VictoryZoomContainer />
-                    }
-                >
-                    <VictoryLine
-                        style = {{data: {strokeWidth: 1}}}
-                        data={data}
-                        x='x'
-                        y='y'
-                    />
-                    <VictoryScatter
-                        size={({ active }) => active ? 2 : 1}
-                        labels={({ datum }) => `x:${datum.x} y:${datum.y}`}
-                        labelComponent={<VictoryTooltip />}
-                        data={data}
-                        x='x'
-                        y='y'
+            // graph = (
+            //     <VictoryChart
+            //         theme={VictoryTheme.material}
+            //         containerComponent={
+            //             <VictoryZoomContainer />
+            //         }
+            //     >
+            //         <VictoryLine
+            //             style = {{data: {strokeWidth: 1}}}
+            //             data={data}
+            //             x='x'
+            //             y='y'
+            //         />
+            //         <VictoryScatter
+            //             size={({ active }) => active ? 2 : 1}
+            //             labels={({ datum }) => `x:${datum.x} y:${datum.y}`}
+            //             labelComponent={<VictoryTooltip />}
+            //             data={data}
+            //             x='x'
+            //             y='y'
 
-                    />
+            //         />
 
-                </VictoryChart>
-            )
+            //     </VictoryChart>
+            // )
+            // graph = (
+            //     <ResponsiveLine
+            //         data={data}
+            //         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+            //         xScale={{ type: 'point' }}
+            //         yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
+            //         yFormat=" >-.2f"
+            //         axisTop={null}
+            //         axisRight={null}
+            //         axisBottom={{
+            //             orient: 'bottom',
+            //             tickSize: 5,
+            //             tickPadding: 5,
+            //             tickRotation: 0,
+            //             legend: 'transportation',
+            //             legendOffset: 36,
+            //             legendPosition: 'middle'
+            //         }}
+            //         axisLeft={{
+            //             orient: 'left',
+            //             tickSize: 5,
+            //             tickPadding: 5,
+            //             tickRotation: 0,
+            //             legend: 'count',
+            //             legendOffset: -40,
+            //             legendPosition: 'middle'
+            //         }}
+            //         pointSize={10}
+            //         pointColor={{ theme: 'background' }}
+            //         pointBorderWidth={2}
+            //         pointBorderColor={{ from: 'serieColor' }}
+            //         pointLabelYOffset={-12}
+            //         useMesh={true}
+            //         legends={[
+            //             {
+            //                 anchor: 'bottom-right',
+            //                 direction: 'column',
+            //                 justify: false,
+            //                 translateX: 100,
+            //                 translateY: 0,
+            //                 itemsSpacing: 0,
+            //                 itemDirection: 'left-to-right',
+            //                 itemWidth: 80,
+            //                 itemHeight: 20,
+            //                 itemOpacity: 0.75,
+            //                 symbolSize: 12,
+            //                 symbolShape: 'circle',
+            //                 symbolBorderColor: 'rgba(0, 0, 0, .5)',
+            //                 effects: [
+            //                     {
+            //                         on: 'hover',
+            //                         style: {
+            //                             itemBackground: 'rgba(0, 0, 0, .03)',
+            //                             itemOpacity: 1
+            //                         }
+            //                     }
+            //                 ]
+            //             }
+            //         ]}
+            //     />
+            // )
+            // const lineSeriesProps = {
+            //     animation: true,
+            //     opacityType: 'literal',
+            //     strokeWidth: 1,
+            //     data,
+            //     onNearestX: d => this.setState({value: d})
+            //   };
+            // graph = (
+            //     <div id = 'VIS'>
+            //         <XYPlot 
+            //             onMouseLeave={() => this.setState({value: false})}
+            //             width={700} 
+            //             height={600} 
+            //         >
+            //             <VerticalGridLines />
+            //             <HorizontalGridLines />
+            //             <XAxis />
+            //             <YAxis />
+            //             <LineSeries data={data} {...lineSeriesProps}/>
+            //             {value && <Crosshair values={[value]} />}
+            //         </XYPlot>
+            //     </div>
+
+            // )
 
         }
         let element, button_active_1, button_active_2;
@@ -108,5 +201,9 @@ export default class L_P_Panel extends Component {
         )
     }
 
+}
+
+const visx = () =>{
+    
 }
 

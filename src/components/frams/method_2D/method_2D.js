@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import L_P_Panel from './parts/l_p_panel.js';
 import loadImg from './function/loadImg.js';
 import processing from './function/processing.js';
-import regeneratorRuntime from "regenerator-runtime";
+// import regeneratorRuntime from "regenerator-runtime";
 
 import './method_2D.css';
 
@@ -102,7 +102,15 @@ export default class Method_2D extends Component {
         const { masImg, imgFon, imgnum, finished } = this.state;
         let massum;
         processing().start({ mas: masImg, fon: imgFon, num: imgnum, finish: finished }).then((massum) => {
-            const data = [];
+            let data = [];
+            // data = [{
+            //     'id': 'Intensivity',
+            //     'color': 'red',
+            //     'data':[]
+            // }]
+            // for (let x = 0; x < massum.length; x++) {
+            //     data[0]['data'].push({ x: x, y: massum[x]})
+            // }
             for (let x = 0; x < massum.length; x++) {
                 data.push({ x: x, y: massum[x]})
             }
