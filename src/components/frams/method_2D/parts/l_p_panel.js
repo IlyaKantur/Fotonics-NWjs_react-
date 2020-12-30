@@ -90,7 +90,6 @@ export default class L_P_Panel extends Component {
 
 }
  const Grafic = ({data}) =>{
-    console.log(data[0])
      return(
         <Plot
         data={data}

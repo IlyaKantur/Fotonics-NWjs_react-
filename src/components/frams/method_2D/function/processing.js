@@ -57,25 +57,25 @@ function Processing(){
             startOb = new Date().getTime();
             proces = true;
             workOnImg(resolve);
-
         })
     }
 
     function workOnImg(resolve){
         if (imgnum == masImg.length && chek_obsorv.checked) {
-            check();
+            check(resolve);
 
-            function check() {
+            function check(resolve) {
                 let folder = imgFolder || defolt_folred
                 loadImg.loadObservation(folder, imgnum).then(() => {
                     if (imgnum == masImg.length) {
-                        check()
+                        check(resolve)
                     } else {
                         processing(resolve)
                     }
                 })
             }
         } else {
+            debugger
             processing(resolve);
         }
 

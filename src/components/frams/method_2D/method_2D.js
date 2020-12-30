@@ -81,7 +81,8 @@ export default class Method_2D extends Component {
     }
 
     applyCoor = () => {
-        const { finished, massum, masx} = this.state;
+        const {finished, masx} = this.state;
+        let massum = [];
         if (finished == true) {
             let masInput = document.querySelectorAll('.y_input');
             for (let i = 0; i < masInput.length; i++) {
@@ -97,15 +98,17 @@ export default class Method_2D extends Component {
 
     returnCoor = () => {
         const { finished, oldY, masx} = this.state;
+        let massum = [];
         if (finished == true) {
             let masInput = document.querySelectorAll('.y_input');
             for (let i = 0; i < masInput.length; i++) {
-                masInput[i].value = oldY[i]
+                masInput[i].value = oldY[i];
+                massum[i] = masInput[i].value;
             }
             const data = this.reloadData(masx, oldY)
             this.setState({
                 data: data,
-                massum: oldY
+                massum: massum
             })
         }
     }
