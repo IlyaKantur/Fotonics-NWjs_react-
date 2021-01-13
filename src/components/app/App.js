@@ -79,9 +79,12 @@ export default class App extends Component{
                 tab: newTab,
                 frame: newFrame,
             }
+        })
+    }
 
+    onAlert = (message) =>{
+        this.setState(()=>{
             
-
         })
     }
         
