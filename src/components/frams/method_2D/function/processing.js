@@ -75,7 +75,6 @@ function Processing(){
                 })
             }
         } else {
-            debugger
             processing(resolve);
         }
 

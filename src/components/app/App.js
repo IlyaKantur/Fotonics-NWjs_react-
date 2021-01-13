@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import Menu from '../main/manu.js';
 import TabWP from '../tab/create_tab.js';
 import Frame from '../frams/create_frame.js';
+import Alert from '../alert/alert.js';
 
 import './App.css';
 
@@ -17,7 +18,11 @@ export default class App extends Component{
             {nameF: "choice", id_f: '1'},
             {nameF: "method_2D", id_f: '1'},
         ],
-        activeFrame: {name: "method_2D", id: '1'}
+        activeFrame: {name: "method_2D", id: '1'},
+        activeAlert: [
+            {text: 'Hello', id: '1'},
+            {text: 'World', id: '2'}
+        ] 
     }
 
     onSwitch = (nameWP, id_t) => {
@@ -82,10 +87,10 @@ export default class App extends Component{
         
     render(){
 
-        const {tab, frame, activeFrame} = this.state
-
+        const {tab, frame, activeFrame, activeAlert} = this.state
         return(
             <>
+                <Alert activeAlert = {activeAlert}/>
                 <div id="work_place" className="panel">
                     <div id="panel_WP">
                         <TabWP 
