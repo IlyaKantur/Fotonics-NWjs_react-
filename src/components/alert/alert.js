@@ -4,6 +4,19 @@ import "./alert.css";
 
 export default class Alert extends Component {
 
+    constructor(props){
+        super(props);
+    }
+
+    componentDidMount(){
+
+    }
+
+    componentWillUnmount(){
+        const {closeAlert} = this.props;
+        
+    }
+
     render() {
         const { activeAlert } = this.props;
         return (

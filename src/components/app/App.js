@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import Menu from '../main/manu.js';
 import TabWP from '../tab/create_tab.js';
@@ -7,38 +7,36 @@ import Alert from '../alert/alert.js';
 
 import './App.css';
 
-export default class App extends Component{
+export default class App extends Component {
 
     state = {
         tab: [
-            {nameWP: "choice", text: "Выбор", id_t: '1'},
-            {nameWP: "method_2D", text: "Обработка", id_t: '1'}
-        ], 
-        frame: [
-            {nameF: "choice", id_f: '1'},
-            {nameF: "method_2D", id_f: '1'},
+            { nameWP: "choice", text: "Выбор", id_t: '1' },
+            { nameWP: "method_2D", text: "Обработка", id_t: '1' }
         ],
-        activeFrame: {name: "method_2D", id: '1'},
+        frame: [
+            { nameF: "choice", id_f: '1' },
+            { nameF: "method_2D", id_f: '1' },
+        ],
+        activeFrame: { name: "method_2D", id: '1' },
         activeAlert: [
-            {text: 'Hello', id: '1'},
-            {text: 'World', id: '2'}
-        ] 
+        ]
     }
 
     onSwitch = (nameWP, id_t) => {
-        const {name, id} = this.state.activeFrame;
+        const { name, id } = this.state.activeFrame;
 
-        if(`${nameWP}_tab_${id_t}` == `${name}_tab_${id}`) return;
-        else{
+        if (`${nameWP}_tab_${id_t}` == `${name}_tab_${id}`) return;
+        else {
             this.setState({
-               activeFrame: {name: nameWP, id: id_t}
+                activeFrame: { name: nameWP, id: id_t }
             })
         }
     }
 
     onClose = (nameWP, id_t) => {
         console.log(`Click close tab: ${nameWP}_tab_${id_t}`)
-        this.setState(({tab, frame, activeFrame}) => {
+        this.setState(({ tab, frame, activeFrame }) => {
             let newActiveFrame, element;
             const index = tab.findIndex(elem => elem.nameWP === nameWP && elem.id_t === id_t);
 
@@ -50,63 +48,88 @@ export default class App extends Component{
             const newTab = [...beforeT, ...afterT];
             const newFrame = [...beforeF, ...afterF];
 
-            if(nameWP === activeFrame.name && id_t === activeFrame.id){
+            if (nameWP === activeFrame.name && id_t === activeFrame.id) {
                 let name, id;
-                if(tab.length == 1)
-                {
-                    return{
+                if (tab.length == 1) {
+                    return {
                         tab: newTab,
                         frame: newFrame
                     }
                 }
-                if(index == 0)
-                {
+                if (index == 0) {
                     element = tab.slice(1, 2)
                 }
-                else{
+                else {
                     element = tab.slice(index - 1, index);
                 }
                 name = element[0].nameWP;
                 id = element[0].id_t;
-                newActiveFrame = {name: name, id: id}
-                return{
+                newActiveFrame = { name: name, id: id }
+                return {
                     tab: newTab,
                     frame: newFrame,
                     activeFrame: newActiveFrame
                 }
             }
-            return{
+            return {
                 tab: newTab,
                 frame: newFrame,
             }
         })
     }
 
-    onAlert = (message) =>{
-        this.setState(()=>{
-            
+    onAlert = (message) => {
+        this.setState(({ activeAlert }) => {
+            const before = activeAlert;
+            const newAlert = { text: message, id: activeAlert.length + 1 };
+            const after = [...before, newAlert];
+            // setTimeout(() =>{
+            //     this.setState(({activeAlert}) =>{
+            //         let after_1s = []
+            //         if(!activeAlert.length == 1) after_1s = activeAlert.slice(activeAlert.length - 1);
+            //         return{
+            //             activeAlert: after_1s
+            //         }
+            //     })
+            // },1000)
+            return {
+                activeAlert: after
+            }
         })
     }
-        
-    render(){
 
-        const {tab, frame, activeFrame, activeAlert} = this.state
-        return(
+    closeAlert = (id) => {
+        this.setState(({ activeAlert }) => {
+            const before = activeAlert.slice(0, id);
+            const after = activeAlert.slice(id + 1);
+            const neew = [... before, ...after];
+
+            return {
+                activeAlert: neew
+            }
+        })
+    }
+
+    render() {
+
+        const { tab, frame, activeFrame, activeAlert } = this.state
+        return (
             <>
-                <Alert activeAlert = {activeAlert}/>
+                <Alert activeAlert={activeAlert} closeAlert = {this.closeAlert}/>
                 <div id="work_place" className="panel">
                     <div id="panel_WP">
-                        <TabWP 
-                            posts = {tab}
-                            onSwitch = {this.onSwitch}
-                            onClose = {this.onClose}
-                            activeFrame = {activeFrame}
+                        <TabWP
+                            posts={tab}
+                            onSwitch={this.onSwitch}
+                            onClose={this.onClose}
+                            activeFrame={activeFrame}
                         ></TabWP>
                     </div>
                     <div id="frames">
                         <Frame
-                            posts = {frame}
-                            activeFrame = {activeFrame}
+                            posts={frame}
+                            activeFrame={activeFrame}
+                            onAlert={this.onAlert}
                         ></Frame>
                     </div>
                 </div>
@@ -114,11 +137,11 @@ export default class App extends Component{
         )
 
     }
-    
+
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    
+
     let menuBar = Menu().create;
     // let createTab = CreateTab().create;
 
@@ -136,20 +159,20 @@ window.addEventListener('DOMContentLoaded', () => {
         file: {
             label: 'Файл',
             submenu: [{
-                    label: 'Файлы',
-                    click: () => {}
-                },
-                {
-                    label: 'Сохранить',
-                    click: () => {}
-                },
-                {
-                    label: 'Закрыть',
-                    click: () => {
-                        window.close();
-                    }
-
+                label: 'Файлы',
+                click: () => { }
+            },
+            {
+                label: 'Сохранить',
+                click: () => { }
+            },
+            {
+                label: 'Закрыть',
+                click: () => {
+                    window.close();
                 }
+
+            }
             ]
         },
         choice: {

@@ -5,7 +5,7 @@ import Method_2D from './method_2D/method_2D.js';
 
 import './frames.css'
 
-const CreateFrame = ({posts, activeFrame}) =>{
+const CreateFrame = ({posts, activeFrame, onAlert}) =>{
     const elements = posts.map((item) =>{
         const {id_f, nameF} = item;
         const {id, name} = activeFrame;
@@ -24,7 +24,11 @@ const CreateFrame = ({posts, activeFrame}) =>{
                         key = {`${nameF}_${id_f}`} 
                         className={clas} 
                     >
-                        <Choice {...item}></Choice>
+                        <Choice 
+                            {...item}
+                            onAlert = {onAlert}
+                        >    
+                        </Choice>
                     </div>
                 )
                 break;
