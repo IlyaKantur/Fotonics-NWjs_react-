@@ -19,7 +19,7 @@ export default class App extends Component {
             { nameF: "method_2D", id_f: '1' },
         ],
         activeFrame: { name: "method_2D", id: '1' },
-        activeAlert: [
+        activeAlert: [ {text: 'test крестика', id: '0'}
         ]
     }
 
@@ -80,8 +80,15 @@ export default class App extends Component {
 
     onAlert = (message) => {
         this.setState(({ activeAlert }) => {
+            let id;
+            try{
+                id = activeAlert[activeAlert.length - 1].id + 1;
+            }
+            catch{
+                id = 0;
+            }
             const before = activeAlert;
-            const newAlert = { text: message, id: activeAlert.length + 1 };
+            const newAlert = { text: message, id: id};
             const after = [...before, newAlert];
             // setTimeout(() =>{
             //     this.setState(({activeAlert}) =>{
@@ -100,8 +107,9 @@ export default class App extends Component {
 
     closeAlert = (id) => {
         this.setState(({ activeAlert }) => {
-            const before = activeAlert.slice(0, id);
-            const after = activeAlert.slice(id + 1);
+            const index = activeAlert.findIndex((item) => item.id == id)
+            const before = activeAlert.slice(0, index);
+            const after = activeAlert.slice(index + 1);
             const neew = [... before, ...after];
 
             return {

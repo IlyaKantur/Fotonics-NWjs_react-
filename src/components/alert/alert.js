@@ -2,44 +2,47 @@ import React, { Component } from 'react';
 
 import "./alert.css";
 
-export default class Alert extends Component {
+class Al extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
-    componentDidMount(){
-
-    }
-
-    componentWillUnmount(){
-        const {closeAlert} = this.props;
-        
+    componentDidMount() {
+        const {closeAlert, id} = this.props;
+        setTimeout(() => closeAlert(id), 2000)
     }
 
     render() {
-        const { activeAlert } = this.props;
+        const { text, id, closeAlert} = this.props;
         return (
-            <div id = "alert_Cont">
-                <Al activeAlert = {activeAlert}></Al>
+            <div id={`alert_win_${id}`} className='alert_win'>
+                <span id={`alert_text_${id}`} className='alert_text'>{`${text}_${id}`}</span>
+                <div className = 'close_alert' onClick = {() => {closeAlert(id)}}>X</div>
             </div>
-            
         )
     }
 }
 
-const Al = ({ activeAlert }) => {
+const Alert = ({ activeAlert, closeAlert }) => {
     const element = activeAlert.map((item) => {
-        const {text, id} = item
+        const { text, id } = item
         return (
-            <div key = {id}>
-                <div id={`alert_win_${id}`} className = 'alert_win'>
-                    <span id={`alert_text_${id}`} className = 'alert_text'>{text}</span>
-                </div>
+            <div key = {`alert_${id}`}>
+                <Al
+                    text={text}
+                    id={id}
+                    closeAlert = {closeAlert}
+                >
+                </Al>
             </div>
         )
     })
-    return(
-        element
+    return (
+        <div id="alert_Cont">
+            {element}
+        </div>
     )
 }
+
+export default Alert;

@@ -44,3 +44,10 @@
     0% {display: flex};
     100% {display: none};
 }
+
+.close_alert{
+    position: relative;
+    border: 1px solid black;
+    right: 2px;
+    cursor: pointer;
+}
