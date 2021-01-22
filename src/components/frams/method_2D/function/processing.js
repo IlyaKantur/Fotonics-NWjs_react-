@@ -1,5 +1,5 @@
 import loadImg from './loadImg.js';
-function Processing(){
+function Processing({onConsoleMessage}){
 
     const chek_obsorv = document.getElementById("chek_obsorv");
 
@@ -56,6 +56,7 @@ function Processing(){
             }
             startOb = new Date().getTime();
             proces = true;
+            onConsoleMessage('Start')
             workOnImg(resolve);
         })
     }
@@ -193,6 +194,7 @@ function Processing(){
             if (imgnum == masImg.length && !chek_obsorv.checked) {
                 let message = `Обработана за: ${((new Date().getTime() - startOb) / 1000).toFixed(3)} секунд`
                 console.log(message)
+                onConsoleMessage(message)
                 // log(message);
                 processing = false;
 

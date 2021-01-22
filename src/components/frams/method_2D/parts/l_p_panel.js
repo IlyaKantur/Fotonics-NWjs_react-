@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Bars from './bars.js';
 import Coor from './coor.js';
+import Console from '../../../console/console.js';
 
 import Plotly from 'plotly.js/lib/core';
 import createPlotlyComponent from 'react-plotly.js/factory';
@@ -21,10 +22,8 @@ export default class L_P_Panel extends Component {
     }
 
     render() {
-        const { loadFolder, loadFoldImg, loadFonImg, startPush, massum, applyCoor, returnCoor, data } = this.props;
+        const { loadFolder, loadFoldImg, loadFonImg, startPush, massum, applyCoor, returnCoor, data, consoleMessage, onConsoleMessage } = this.props;
         const { active_l_t } = this.state;
-        // if (data.length != 0) {
-            // }
         let element, button_active_1, button_active_2;
         if (active_l_t == 1) {
             element = <Bars
@@ -63,7 +62,7 @@ export default class L_P_Panel extends Component {
                         </div>
                         <div id="graf">
                             <div id="React_Chart">
-                                <Grafic data = {data}></Grafic>
+                                <Grafic data={data}></Grafic>
                             </div>
                             {/* <div id="Graf"> */}
 
@@ -81,7 +80,11 @@ export default class L_P_Panel extends Component {
                         <div id="panel_mid_bot">
                             <div className="tab">Консоль</div>
                         </div>
-                        <div id="Consol"></div>
+                        <div id="Consol">
+                            <Console
+                                consoleMessage = {consoleMessage}
+                            ></Console>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -89,11 +92,11 @@ export default class L_P_Panel extends Component {
     }
 
 }
- const Grafic = ({data}) =>{
-     return(
+const Grafic = ({ data }) => {
+    return (
         <Plot
-        data={data}
-        layout={{ title: 'Intensivity' }}
-    />
-     )
- }
+            data={data}
+            layout={{ title: 'Intensivity' }}
+        />
+    )
+}

@@ -25,6 +25,7 @@ export default class Method_2D extends Component {
         finished: false,
         imgnum: 0,
         oldY: [],
+        consoleMessage: []
     }
 
     reloadData = (masx, massum) => {
@@ -120,7 +121,7 @@ export default class Method_2D extends Component {
             imgnum: 0
         });
         const { masImg, imgFon, imgnum, finished } = this.state;
-        processing().start({ mas: masImg, fon: imgFon, num: imgnum, finish: finished }).then(({massum, masx, finished, oldY}) => {
+        processing({onConsoleMessage: this.onConsoleMessage}).start({ mas: masImg, fon: imgFon, num: imgnum, finish: finished,  }).then(({massum, masx, finished, oldY}) => {
 
             const data = this.reloadData(masx, massum)
             this.setState({
@@ -131,12 +132,31 @@ export default class Method_2D extends Component {
                 finished: finished
             })
         })
+    }
 
-
+    onConsoleMessage = (message) => {
+        this.setState(({ consoleMessage }) => {
+            let id;
+            if (consoleMessage.length == 0) { id = 0; }
+            else { id = consoleMessage[consoleMessage.length - 1].id + 1; }
+            let hours = new Date().getHours();
+            let minutes = new Date().getMinutes();
+            let seconds = new Date().getSeconds();
+            if (hours < 10) hours = `0${hours}`;
+            if (minutes < 10) minutes = `0${minutes}`;
+            if (seconds < 10) seconds = `0${seconds}`;
+            const time = `${hours}:${minutes}:${seconds}`
+            const before = consoleMessage;
+            const newMessage = { message: message, id: id, time: time };
+            const newM = [...before, newMessage];
+            return{
+                consoleMessage: newM
+            } 
+        })
     }
 
     render() {
-        const {data, massum} = this.state
+        const {data, massum, consoleMessage} = this.state
         return (
             <L_P_Panel
                 loadFolder={this.loadFolder}
@@ -147,6 +167,9 @@ export default class Method_2D extends Component {
                 applyCoor={this.applyCoor}
                 returnCoor={this.returnCoor}
                 data={data}
+                consoleMessage = {consoleMessage}
+                onConsoleMessage = {this.onConsoleMessage}
+
             ></L_P_Panel>
         )
     }

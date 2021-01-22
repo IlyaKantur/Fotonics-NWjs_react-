@@ -1,64 +1,50 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import Choice from './choice/choice.js';
 import Method_2D from './method_2D/method_2D.js';
 
 import './frames.css'
 
-const CreateFrame = ({posts, activeFrame, onAlert}) =>{
-    const elements = posts.map((item) =>{
-        const {id_f, nameF} = item;
-        const {id, name} = activeFrame;
-        let clas;
-        switch(nameF){
+const CreateFrame = ({ posts, activeFrame, onAlert }) => {
+    const elements = posts.map((item) => {
+        const { id_f, nameF } = item;
+        const { id, name } = activeFrame;
+        let clas, element;
+        if (`${name}_${id}` == `${nameF}_${id_f}`) {
+            clas = 'frame frame_active'
+        }
+        else {
+            clas = 'frame'
+        }
+        switch (nameF) {
             case 'choice':
-                if(`${name}_${id}` == `${nameF}_${id_f}`) 
-                {
-                    clas = 'frame frame_active'
-                }
-                else{
-                    clas = 'frame'
-                }
-                return(
-                    <div 
-                        key = {`${nameF}_${id_f}`} 
-                        className={clas} 
-                    >
-                        <Choice 
-                            {...item}
-                            onAlert = {onAlert}
-                        >    
-                        </Choice>
-                    </div>
-                )
+                element = <Choice
+                    {...item}
+                    onAlert={onAlert}
+                    ></Choice>
                 break;
             case 'method_2D':
-                if(`${name}_${id}` == `${nameF}_${id_f}`) 
-                {
-                    clas = 'frame frame_active'
-                }
-                else{
-                    clas = 'frame'
-                }
-                return(
-                    <div 
-                        key = {`${nameF}_${id_f}`} 
-                        className={clas} 
-                    >
-                        <Method_2D {...item}></Method_2D>
-                    </div>
-                )
+                element = <Method_2D
+                    {...item}
+                    onAlert={onAlert}
+                    ></Method_2D>
                 break;
         }
+        return (
+            <div
+                key={`${nameF}_${id_f}`}
+                className={clas}
+            >
+                {element}
+            </div>
+        )
     })
 
-    return(
+    return (
         <>
             {elements}
         </>
     )
-
-
 }
 
 export default CreateFrame;

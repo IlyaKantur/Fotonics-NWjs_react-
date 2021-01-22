@@ -81,15 +81,16 @@ export default class App extends Component {
     onAlert = (message) => {
         this.setState(({ activeAlert }) => {
             let id;
-            try{
-                id = activeAlert[activeAlert.length - 1].id + 1;
-            }
-            catch{
+            if(activeAlert.length == 0)
+            {
                 id = 0;
+            }
+            else{
+                id = activeAlert[activeAlert.length - 1].id + 1;
             }
             const before = activeAlert;
             const newAlert = { text: message, id: id};
-            const after = [...before, newAlert];
+            const newM = [...before, newAlert];
             // setTimeout(() =>{
             //     this.setState(({activeAlert}) =>{
             //         let after_1s = []
@@ -100,7 +101,7 @@ export default class App extends Component {
             //     })
             // },1000)
             return {
-                activeAlert: after
+                activeAlert: newM
             }
         })
     }
