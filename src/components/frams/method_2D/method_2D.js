@@ -8,23 +8,22 @@ import './method_2D.css';
 
 export default class Method_2D extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.defolt_folder_base = './Foto/Foto_base';
         this.defolt_folder_observ = './Foto/Foto_observ';
-        this.lI = new loadImg;
+        this.imgFolder = null;
+        this.masImg = [],
+        this.imgFon = [],
+        this.finished = false,
+        this.imgnum = 0
     }
 
     state = {
-        imgFolder: null,
-        masImg: [],
-        massum: [],
         masx: [],
         data: [],
-        imgFon: null,
-        finished: false,
-        imgnum: 0,
         oldY: [],
+        massum: [],
         consoleMessage: []
     }
 
@@ -43,36 +42,36 @@ export default class Method_2D extends Component {
     loadFolder = () => {
         const chek_obsorv = document.getElementById("chek_obsorv");
         loadImg().loadFolder(chek_obsorv.checked).then((folder) => {
-            this.setState({ imgFolder: folder })
+            this.imgFolder = folder;
         });
     }
 
     loadFoldImg = () => {
         loadImg().loadFoldImg().then((mas) => {
-            this.setState({ masImg: mas })
+            this.masImg = mas;
         })
     }
 
     loadFonImg = () => {
         loadImg().loadFonImg().then((fon) => {
-            this.setState({ imgFon: fon })
+            this.imgFon = fon;
         })
     }
 
     startPush = () => {
         const chek_obsorv = document.getElementById("chek_obsorv");
-        const { imgFolder, masImg } = this.state;
+        const { imgFolder } = this.state;
         if (chek_obsorv.checked) {
             console.log("Наблюдение")
             let folder = imgFolder || this.defolt_folder_observ;
             loadImg().loadObservation(folder, 0).then((mas) => {
-                this.setState({ masImg: mas })
+                this.masImg = mas
                 this.start();
             })
         } else {
-            if (masImg.length == 0) {
+            if (this.masImg.length == 0) {
                 loadImg().loadFolderImg(this.defolt_folder_base).then((mas) => {
-                    this.setState({ masImg: mas })
+                    this.masImg = mas;
                     this.start();
                 })
             } else {
@@ -82,9 +81,9 @@ export default class Method_2D extends Component {
     }
 
     applyCoor = () => {
-        const {finished, masx} = this.state;
+        const {masx} = this.state;
         let massum = [];
-        if (finished == true) {
+        if (this.finished == true) {
             let masInput = document.querySelectorAll('.y_input');
             for (let i = 0; i < masInput.length; i++) {
                 massum[i] = masInput[i].value;
@@ -98,9 +97,9 @@ export default class Method_2D extends Component {
     }
 
     returnCoor = () => {
-        const { finished, oldY, masx} = this.state;
+        const {oldY, masx} = this.state;
         let massum = [];
-        if (finished == true) {
+        if (this.finished == true) {
             let masInput = document.querySelectorAll('.y_input');
             for (let i = 0; i < masInput.length; i++) {
                 masInput[i].value = oldY[i];
@@ -120,16 +119,17 @@ export default class Method_2D extends Component {
             finished: false,
             imgnum: 0
         });
-        const { masImg, imgFon, imgnum, finished } = this.state;
-        processing({onConsoleMessage: this.onConsoleMessage}).start({ mas: masImg, fon: imgFon, num: imgnum, finish: finished,  }).then(({massum, masx, finished, oldY}) => {
+        this.finished = false;
+        this.imgnum = 0;
+        processing({onConsoleMessage: this.onConsoleMessage}).start({ mas: this.masImg, fon: this.imgFon, num: this.imgnum, finish: this.finished,  }).then(({massum, masx, finished, oldY}) => {
 
             const data = this.reloadData(masx, massum)
+            this.finished = finished;
             this.setState({
                 masx: masx,
                 data: data,
                 oldY: oldY,
                 massum: massum,
-                finished: finished
             })
         })
     }
