@@ -20,7 +20,7 @@ button{
     border-radius: 5px;
     font-size: 20px;
 }
-#but{
+.but{
     position: relative;
     margin: 0;
     top: 35%;
@@ -28,10 +28,10 @@ button{
     height: max-content;
     width: 150px;
 }
-#Continue{
+.Continue{
     margin: 0px 0px;
 }
-#DD{
+.DD{
     margin: 40px 0px;
 }
 

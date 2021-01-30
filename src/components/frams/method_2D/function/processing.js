@@ -1,30 +1,40 @@
 import loadImg from './loadImg.js';
-function Processing({onConsoleMessage}){
+function Processing({onConsoleMessage, id_f_nameF, chek_obsorv}){
 
-    const chek_obsorv = document.getElementById("chek_obsorv");
+    // Image
+    const ImgNew = document.getElementById(`ImgNew_${id_f_nameF}`);
+    const ImgSum = document.getElementById(`ImgSum_${id_f_nameF}`);
+    const himg = document.getElementById(`hiddenimg_${id_f_nameF}`);
+    const himgsum = document.getElementById(`hiddenimgsum_${id_f_nameF}`);
+    const ctx = ImgNew.getContext("2d");
+    const ctxsum = ImgSum.getContext("2d");
+    const ctxh = himg.getContext("2d");
+    const ctxhs = himgsum.getContext("2d");
 
-    let ImgNew = document.getElementById("ImgNew");
-    let ImgSum = document.getElementById("ImgSum");
-    let himg = document.getElementById("hiddenimg");
-    let himgsum = document.getElementById("hiddenimgsum");
-    let ctx = ImgNew.getContext("2d");
-    let ctxsum = ImgSum.getContext("2d");
-    let ctxh = himg.getContext("2d");
-    let ctxhs = himgsum.getContext("2d");
-    let iy;
-    let ix;
-    let cx;
-    let cy;
-    let imgnum;
-    let imgSum;
-    let imgfon;
-    let startOb;
+    // Checkbox
+    const saveLast = document.getElementById(`SaveLast_${id_f_nameF}`).checked;
+    const iter = document.getElementById(`Iter_${id_f_nameF}`).checked; // Ограничение
+    const bf = document.getElementById(`BF_${id_f_nameF}`).checked; // Без фона
+    const delta = document.getElementById(`Delta_${id_f_nameF}`).checked; // Вычет шума
+    const bpix = document.getElementById(`BPix_${id_f_nameF}`).checked; // Вычет битого
+    const gran = document.getElementById(`Gran_${id_f_nameF}`).checked; // Границы
+
+
+    // Введеные значения
+    const iterN = document.getElementById(`IterN_${id_f_nameF}`).value; // Ограничение по количеству обработанных снимков
+    const dfon = document.getElementById(`DFon_${id_f_nameF}`).value; // Значение вычитаемого шума
+    const g_Xx = document.getElementById(`Xx_${id_f_nameF}`).value;
+    const g_XX = document.getElementById(`XX_${id_f_nameF}`).value;
+    const g_Yy = document.getElementById(`Yy_${id_f_nameF}`).value;
+    const g_YY = document.getElementById(`YY_${id_f_nameF}`).value;
+
+    // Переменные
+    let iy, ix, cx ,cy ,imgnum, imgSum, imgfon, startOb;
     let masImg = [];
     let imgsum = new Image();
-    let imgFon = new Image();
-    let dfon = DFon.value;
     let pfon = 0;
     let proces = false;
+    let fon_load = false;
     let finished;
 
     let massum = [],
@@ -35,7 +45,6 @@ function Processing({onConsoleMessage}){
     function start({mas, fon, num, finish}){
         return new Promise((resolve, reject) => {
             masImg = mas;
-            imgFon = fon;
             imgnum = num;
             finished = finish;
             iy = masImg[0].height;
@@ -50,8 +59,9 @@ function Processing({onConsoleMessage}){
             ctxsum.drawImage(imgsum, 0, 0, cx, cy);
             ctxhs.drawImage(imgsum, 0, 0);
             imgSum = ctxhs.getImageData(0, 0, ix, iy);
-            if (pfon == 1) {
-                ctxhs.drawImage(imgFon, 0, 0);
+            if (fon.length == undefined){
+                fon_load = true
+                ctxhs.drawImage(fon, 0, 0);
                 imgfon = ctxhs.getImageData(0, 0, ix, iy).data;
             }
             startOb = new Date().getTime();
@@ -62,7 +72,7 @@ function Processing({onConsoleMessage}){
     }
 
     function workOnImg(resolve){
-        if (imgnum == masImg.length && chek_obsorv.checked) {
+        if (imgnum == masImg.length && chek_obsorv) {
             check(resolve);
 
             function check(resolve) {
@@ -91,22 +101,22 @@ function Processing({onConsoleMessage}){
             let ii = 0;
             for (let i = 0; i < imgData.length; i += 4) {
                 mas0[ii] = imgData[i];
-                if (pfon == 1 && mas0[ii] >= imgfon[i]) {
+                if (!bf && fon_load && mas0[ii] >= imgfon[i]) {
                     mas0[ii] -= imgfon[i];
                 }
-                if (Delta.checked && mas0[ii] >= dfon) {
+                if (delta && mas0[ii] >= dfon) {
                     mas0[ii] -= dfon;
                 }
                 ii++;
             }
-            if (BPix.checked) {
+            if (bpix) {
                 for (let i = 0; i < mas0.length; i++) {
                     let del = ((mas0[i - 1] + mas0[i + iy] + mas0[i + 1]) / 3);
                     if (mas0[i] > del + 40 && del == 0) {
-                        let t = mas0[i];
+                        // let t = mas0[i];
                         mas0[i] -= mas0[i];
                     } else if (mas0[i] > del + 40 && del > 0) {
-                        let t = mas0[i];
+                        // let t = mas0[i];
                         mas0[i] -= (mas0[i] - del).toFixed(0);
                         mas0[i];
                     }
@@ -183,15 +193,8 @@ function Processing({onConsoleMessage}){
             // log(`Обработанано ${imgnum} снимков из ${masImg.length}`)
 
 
-            // if (imgnum == masImg.length) {
-            //     cp.innerHTML = '';
-            //     for (let i = 0; i < ix; i++) {
-            //         coordinat.write(masx[i], massum[i])
-            //     }
-            // }
 
-
-            if (imgnum == masImg.length && !chek_obsorv.checked) {
+            if ((imgnum == masImg.length && !chek_obsorv) || (iter && imgnum == iterN)) {
                 let message = `Обработана за: ${((new Date().getTime() - startOb) / 1000).toFixed(3)} секунд`
                 console.log(message)
                 onConsoleMessage(message)

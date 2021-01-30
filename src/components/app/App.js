@@ -12,17 +12,14 @@ export default class App extends Component {
     state = {
         tab: [
             { nameWP: "choice", text: "Выбор", id_t: '1' },
-            { nameWP: "method_2D", text: "Обработка", id_t: '1' },
-            { nameWP: "method_2D", text: "Обработка", id_t: '2' }
+            { nameWP: "method_2D", text: "Обработка", id_t: '1' }
         ],
         frame: [
             { nameF: "choice", id_f: '1' },
-            { nameF: "method_2D", id_f: '1' },
-            { nameF: "method_2D", id_f: '2' }
+            { nameF: "method_2D", id_f: '1' }
         ],
         activeFrame: { name: "method_2D", id: '1' },
-        activeAlert: [ {text: 'test крестика', id: '0'}
-        ]
+        activeAlert: [ {text: 'test крестика', id: '0'}]
     }
 
     onSwitch = (nameWP, id_t) => {

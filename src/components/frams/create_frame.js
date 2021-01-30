@@ -21,12 +21,14 @@ const CreateFrame = ({ posts, activeFrame, onAlert }) => {
                 element = <Choice
                     {...item}
                     onAlert={onAlert}
+                    id_item = {item}
                     ></Choice>
                 break;
             case 'method_2D':
                 element = <Method_2D
                     {...item}
                     onAlert={onAlert}
+                    id_item = {item}
                     ></Method_2D>
                 break;
         }

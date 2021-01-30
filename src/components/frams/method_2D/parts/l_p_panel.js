@@ -22,8 +22,10 @@ export default class L_P_Panel extends Component {
     }
 
     render() {
-        const { loadFolder, loadFoldImg, loadFonImg, startPush, massum, applyCoor, returnCoor, data, consoleMessage, onConsoleMessage } = this.props;
+        const { loadFolder, loadFoldImg, loadFonImg, startPush, massum, applyCoor, returnCoor, data, consoleMessage, onConsoleMessage, id_item} = this.props;
         const { active_l_t } = this.state;
+        const { id_f, nameF } = id_item;
+        const id_f_nameF = `${nameF}_${id_f}`;
         let element, button_active_1, button_active_2;
         if (active_l_t == 1) {
             element = <Bars
@@ -31,6 +33,7 @@ export default class L_P_Panel extends Component {
                 loadFoldImg={loadFoldImg}
                 loadFonImg={loadFonImg}
                 startPush={startPush}
+                id_item = {id_item}
             ></Bars>;
             button_active_1 = "button_active";
             button_active_2 = "";
@@ -40,6 +43,7 @@ export default class L_P_Panel extends Component {
                 massum={massum}
                 applyCoor={applyCoor}
                 returnCoor={returnCoor}
+                id_item = {id_item}
             >
             </Coor>
             button_active_1 = "";
@@ -57,11 +61,11 @@ export default class L_P_Panel extends Component {
                 <div id="midle_Panel">
                     <div id="up_Panel" className="panel">
                         <div id="img">
-                            <canvas id="ImgNew"></canvas>
-                            <canvas id="ImgSum"></canvas>
+                            <canvas className = "ImgNew" id={`ImgNew_${id_f_nameF}`}></canvas>
+                            <canvas className = "ImgSum" id={`ImgSum_${id_f_nameF}`}></canvas>
                         </div>
                         <div id="graf">
-                            <div id="React_Chart">
+                            <div className = "React_Chart" id={`React_Chart_${id_f_nameF}`}>
                                 <Grafic data={data}></Grafic>
                             </div>
                             {/* <div id="Graf"> */}
@@ -71,8 +75,8 @@ export default class L_P_Panel extends Component {
                             {/* </div> */}
                         </div>
                         <div id="hidden_elem">
-                            <canvas id="hiddenimg"></canvas>
-                            <canvas id="hiddenimgsum"></canvas>
+                            <canvas className = "hiddenimg" id={`hiddenimg_${id_f_nameF}`}></canvas>
+                            <canvas className = "hiddenimgsum" id={`hiddenimgsum_${id_f_nameF}`}></canvas>
                         </div>
                     </div>
 

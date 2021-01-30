@@ -10,13 +10,14 @@ export default class Method_2D extends Component {
 
     constructor(props) {
         super(props);
-        this.defolt_folder_base = './Foto/Foto_base';
-        this.defolt_folder_observ = './Foto/Foto_observ';
+        this.defolt_folder_base = './Foto/Foto_base',
+        this.defolt_folder_observ = './Foto/Foto_observ',
+
+        this.imgnum = 0,
         this.imgFolder = null;
         this.masImg = [],
         this.imgFon = [],
-        this.finished = false,
-        this.imgnum = 0
+        this.finished = false
     }
 
     state = {
@@ -26,6 +27,7 @@ export default class Method_2D extends Component {
         massum: [],
         consoleMessage: []
     }
+
 
     reloadData = (masx, massum) => {
         const data = [
@@ -39,43 +41,46 @@ export default class Method_2D extends Component {
         return data;
     }
 
-    loadFolder = () => {
-        const chek_obsorv = document.getElementById("chek_obsorv");
-        loadImg().loadFolder(chek_obsorv.checked).then((folder) => {
+    loadFolder = (id_f_nameF) => {
+        const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked
+        loadImg().loadFolder(chek_obsorv).then((folder) => {
             this.imgFolder = folder;
         });
     }
 
-    loadFoldImg = () => {
+    loadFoldImg = (id_f_nameF) => {
+        const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked
         loadImg().loadFoldImg().then((mas) => {
             this.masImg = mas;
         })
     }
 
-    loadFonImg = () => {
+    loadFonImg = (id_f_nameF) => {
+        const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked
         loadImg().loadFonImg().then((fon) => {
             this.imgFon = fon;
         })
     }
 
-    startPush = () => {
-        const chek_obsorv = document.getElementById("chek_obsorv");
+    startPush = (id_f_nameF) => {
         const { imgFolder } = this.state;
-        if (chek_obsorv.checked) {
+        const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked;
+        if (chek_obsorv) {
+            // вставить надпись в консоль о начале наблюдения
             console.log("Наблюдение")
             let folder = imgFolder || this.defolt_folder_observ;
             loadImg().loadObservation(folder, 0).then((mas) => {
                 this.masImg = mas
-                this.start();
+                this.start({id_f_nameF, chek_obsorv});
             })
         } else {
             if (this.masImg.length == 0) {
                 loadImg().loadFolderImg(this.defolt_folder_base).then((mas) => {
                     this.masImg = mas;
-                    this.start();
+                    this.start({id_f_nameF, chek_obsorv});
                 })
             } else {
-                this.start();
+                this.start({id_f_nameF, chek_obsorv});
             }
         }
     }
@@ -113,7 +118,7 @@ export default class Method_2D extends Component {
         }
     }
 
-    start = () => {
+    start = ({id_f_nameF, chek_obsorv}) => {
         console.log("Click Start");
         this.setState({
             finished: false,
@@ -121,7 +126,7 @@ export default class Method_2D extends Component {
         });
         this.finished = false;
         this.imgnum = 0;
-        processing({onConsoleMessage: this.onConsoleMessage}).start({ mas: this.masImg, fon: this.imgFon, num: this.imgnum, finish: this.finished,  }).then(({massum, masx, finished, oldY}) => {
+        processing({onConsoleMessage: this.onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv}).start({ mas: this.masImg, fon: this.imgFon, num: this.imgnum}).then(({massum, masx, finished, oldY}) => {
 
             const data = this.reloadData(masx, massum)
             this.finished = finished;
@@ -156,6 +161,7 @@ export default class Method_2D extends Component {
     }
 
     render() {
+        const {id_item} = this.props;
         const {data, massum, consoleMessage} = this.state
         return (
             <L_P_Panel
@@ -169,7 +175,7 @@ export default class Method_2D extends Component {
                 data={data}
                 consoleMessage = {consoleMessage}
                 onConsoleMessage = {this.onConsoleMessage}
-
+                id_item = {id_item}
             ></L_P_Panel>
         )
     }
