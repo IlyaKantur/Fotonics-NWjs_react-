@@ -26,29 +26,38 @@ export default class L_P_Panel extends Component {
         const { active_l_t } = this.state;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
-        let element, button_active_1, button_active_2;
+        let element, button_active_1, button_active_2, z1, z2;
         if (active_l_t == 1) {
-            element = <Bars
+            button_active_1 = "button_active";
+            button_active_2 = "";
+            z1 = "active_l_t"
+            z2 = "l_t"
+        }
+        else {
+            button_active_1 = "";
+            button_active_2 = "button_active";
+            z1 = "l_t"
+            z2 = "active_l_t"
+        }
+        element =
+        <>
+            <Bars 
+                className = {z1}
                 loadFolder={loadFolder}
                 loadFoldImg={loadFoldImg}
                 loadFonImg={loadFonImg}
                 startPush={startPush}
                 id_item = {id_item}
             ></Bars>;
-            button_active_1 = "button_active";
-            button_active_2 = "";
-        }
-        else {
-            element = <Coor
+            <Coor
+                className = {z2}
                 massum={massum}
                 applyCoor={applyCoor}
                 returnCoor={returnCoor}
                 id_item = {id_item}
             >
             </Coor>
-            button_active_1 = "";
-            button_active_2 = "button_active";
-        }
+        </>
         return (
             <div id="l_p_panel">
                 <div id="left_Panel" className="panel">

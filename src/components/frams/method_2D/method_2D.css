@@ -79,6 +79,7 @@
   .button_active {
     color: white !important;
   }
+
   
   #TabTwo,
   #TabThree {
@@ -101,12 +102,22 @@
     height: 100%;
     width: 155px;
     border-right: 2px solid black;
+    top: 0;
   }
   
   #navbar {
     position: absolute;
     left: 50px;
     border-right: 2px solid black;
+  }
+
+  .l_t{
+    z-index: 0;
+    opacity: 0;
+  }
+  .active_l_t{
+    z-index: 1 !important;
+    opacity: 1 !important;
   }
   
   /* #navbar:target{

@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 
 export default class Coor extends Component{
     render(){
-        const {massum, applyCoor, returnCoor} = this.props;
+        const {className, massum, applyCoor, returnCoor} = this.props;
         return(
-            <ul id="coor" className="bar">
+            <ul id="coor" className={`bar ${className}`}>
                 <div id="coordinatesPanel">
                     <Coordinat
                         massum = {massum}

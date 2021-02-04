@@ -126,7 +126,7 @@ export default class Method_2D extends Component {
         });
         this.finished = false;
         this.imgnum = 0;
-        processing({onConsoleMessage: this.onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv}).start({ mas: this.masImg, fon: this.imgFon, num: this.imgnum}).then(({massum, masx, finished, oldY}) => {
+        processing({onConsoleMessage: this.onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv, imgFolder: this.imgFolder}).start({ mas: this.masImg, fon: this.imgFon, num: this.imgnum}).then(({massum, masx, finished, oldY}) => {
 
             const data = this.reloadData(masx, massum)
             this.finished = finished;
