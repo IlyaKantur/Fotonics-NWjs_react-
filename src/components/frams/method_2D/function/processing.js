@@ -1,5 +1,5 @@
 import loadImg from './loadImg.js';
-function Processing({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder}){
+function Processing({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder, imgnum, masImg, fon}){
 
     // Image
     const ImgNew = document.getElementById(`ImgNew_${id_f_nameF}`);
@@ -29,13 +29,12 @@ function Processing({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder}){
     const g_YY = document.getElementById(`YY_${id_f_nameF}`).value;
 
     // Переменные
-    let iy, ix, cx ,cy ,imgnum, imgSum, imgfon, startOb;
-    let masImg = [];
+    let iy, ix, cx ,cy, imgSum, imgfon, startOb;
     let imgsum = new Image();
     let pfon = 0;
     let proces = false;
     let fon_load = false;
-    let finished;
+    let finished = false;
 
     let defolt_folred = './Foto/Foto_observ'
 
@@ -44,15 +43,16 @@ function Processing({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder}){
     let oldX = [],
         oldY = [];
 
-    function start({mas, fon, num, finish}){
+    function read_x_y(){
+        iy = masImg[0].height;
+        ix = masImg[0].width;
+        cx = ImgNew.width;
+        cy = ImgNew.height;
+    }
+
+    function start(){
         return new Promise((resolve, reject) => {
-            masImg = mas;
-            imgnum = num;
-            finished = finish;
-            iy = masImg[0].height;
-            ix = masImg[0].width;
-            cx = ImgNew.width;
-            cy = ImgNew.height;
+            read_x_y();
             himg.height = iy;
             himg.width = ix;
             himgsum.height = iy;
@@ -69,7 +69,7 @@ function Processing({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder}){
             startOb = new Date().getTime();
             proces = true;
             onConsoleMessage('Start')
-            workOnImg().then(() => resolve({massum, masx, finished, oldY}));
+            workOnImg().then(() => resolve({massum, masx, finished, oldY, imgnum}));
         })
     }
 
@@ -84,18 +84,21 @@ function Processing({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder}){
                         if (imgnum == masImg.length) {
                             check()
                         } else {
-                            processing().then(({massum, masx, finished, oldY}) => { resolve({massum, masx, finished, oldY})})
+                            processing().then(({massum, masx, finished, oldY, imgnum}) => { resolve({massum, masx, finished, oldY, imgnum})})
                         }
                     })
                 }
             } else {
-                processing().then(({massum, masx, finished, oldY}) => { resolve({massum, masx, finished, oldY})});
+                processing().then(({massum, masx, finished, oldY, imgnum}) => { resolve({massum, masx, finished, oldY, imgnum})});
             }
     
             function processing(){
-                let img = masImg[imgnum];
-                ctx.drawImage(img, 0, 0, cx, cy);
-                ctxh.drawImage(img, 0, 0);
+                read_x_y();
+                let imgg = masImg[imgnum];
+                ctx.clearRect(0, 0, cx, cy); 
+                ctx.drawImage(imgg, 0, 0, cx, cy);
+                ctxh.clearRect(0, 0, himg.width, himg.height);
+                ctxh.drawImage(imgg, 0, 0);
                 let imgData = ctxh.getImageData(0, 0, ix, iy).data;
                 let Img = ctx.getImageData(0, 0, cx, cy);
                 let Imgsum = ctxsum.getImageData(0, 0, cx, cy);
@@ -190,10 +193,9 @@ function Processing({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder}){
                 //     }
         
                 // });
-                let req = requestAnimationFrame(workOnImg);
                 // coordinat.updateChart(masx, massum)
                 imgnum++;
-                // log(`Обработанано ${imgnum} снимков из ${masImg.length}`)
+                console.log(`Обработанано ${imgnum} снимков из ${masImg.length}`)
     
     
     
@@ -210,10 +212,9 @@ function Processing({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder}){
                     // }
     
                     finished = true;
-                    cancelAnimationFrame(req);
-                    resolve({massum, masx, finished, oldY});
+                    resolve({massum, masx, finished, oldY, imgnum});
                 }
-                resolve({massum, masx, finished, oldY});
+                resolve({massum, masx, finished, oldY, imgnum});
             }
         })
     }
@@ -221,6 +222,7 @@ function Processing({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder}){
     
     return Object({
         start,
+        workOnImg
     })
 }
 

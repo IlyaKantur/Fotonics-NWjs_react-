@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import L_P_Panel from './parts/l_p_panel.js';
 import loadImg from './function/loadImg.js';
 import processing from './function/processing.js';
+import p from './function/p.js'
 // import regeneratorRuntime from "regenerator-runtime";
 
 import './method_2D.css';
@@ -36,22 +37,26 @@ export default class Method_2D extends Component {
                 y: massum,
                 type: 'scatter',
                 mode: 'lines+markers',
-                marker: {color: 'red'}
+                marker: { color: 'red' }
             }];
         return data;
     }
 
     loadFolder = (id_f_nameF) => {
         const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked
-        loadImg().loadFolder(chek_obsorv).then((folder) => {
-            this.imgFolder = folder;
+        loadImg().loadFolder(chek_obsorv).then(({masImg, imgFolder}) => {
+            this.imgFolder = imgFolder;
+            if(!chek_obsorv){
+                this.masImg = masImg
+            }
         });
     }
 
     loadFoldImg = (id_f_nameF) => {
         const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked
-        loadImg().loadFoldImg().then((mas) => {
-            this.masImg = mas;
+        loadImg().loadFoldImg().then(({masImg, imgFolder}) => {
+            this.masImg = masImg;
+            this.imgFolder = imgFolder;
         })
     }
 
@@ -71,22 +76,22 @@ export default class Method_2D extends Component {
             let folder = imgFolder || this.defolt_folder_observ;
             loadImg().loadObservation(folder, 0).then((mas) => {
                 this.masImg = mas
-                this.start({id_f_nameF, chek_obsorv});
+                this.start({ id_f_nameF, chek_obsorv });
             })
         } else {
             if (this.masImg.length == 0) {
                 loadImg().loadFolderImg(this.defolt_folder_base).then((mas) => {
                     this.masImg = mas;
-                    this.start({id_f_nameF, chek_obsorv});
+                    this.start({ id_f_nameF, chek_obsorv });
                 })
             } else {
-                this.start({id_f_nameF, chek_obsorv});
+                this.start({ id_f_nameF, chek_obsorv });
             }
         }
     }
 
     applyCoor = () => {
-        const {masx} = this.state;
+        const { masx } = this.state;
         let massum = [];
         if (this.finished == true) {
             let masInput = document.querySelectorAll('.y_input');
@@ -102,7 +107,7 @@ export default class Method_2D extends Component {
     }
 
     returnCoor = () => {
-        const {oldY, masx} = this.state;
+        const { oldY, masx } = this.state;
         let massum = [];
         if (this.finished == true) {
             let masInput = document.querySelectorAll('.y_input');
@@ -118,25 +123,53 @@ export default class Method_2D extends Component {
         }
     }
 
-    start = ({id_f_nameF, chek_obsorv}) => {
+    start = ({ id_f_nameF, chek_obsorv }) => {
         console.log("Click Start");
-        this.setState({
-            finished: false,
-            imgnum: 0
-        });
         this.finished = false;
         this.imgnum = 0;
-        processing({onConsoleMessage: this.onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv, imgFolder: this.imgFolder}).start({ mas: this.masImg, fon: this.imgFon, num: this.imgnum}).then(({massum, masx, finished, oldY}) => {
+        this.work(id_f_nameF, chek_obsorv)
+    }
+    work = (id_f_nameF, chek_obsorv) => {
 
-            const data = this.reloadData(masx, massum)
-            this.finished = finished;
-            this.setState({
-                masx: masx,
-                data: data,
-                oldY: oldY,
-                massum: massum,
-            })
-        })
+        const onConsoleMessage = this.onConsoleMessage;
+        const imgnum = this.imgnum;
+        const imgFolder = this.imgFolder;
+        const masImg = this.masImg;
+        const proces = new p(masImg, id_f_nameF)
+        proces.read_x_y();
+        // if (this.imgnum == 0)
+        //     processing({ onConsoleMessage: onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv: chek_obsorv, imgFolder: imgFolder, imgnum: imgnum, masImg: masImg, fon: this.imgFon })
+        //         .start()
+        //         .then(({ massum, masx, finished, oldY, imgnum }) => {
+        //             const data = this.reloadData(masx, massum)
+        //             this.imgnum = imgnum;
+        //             this.finished = finished;
+        //             this.setState({
+        //                 masx: masx,
+        //                 data: data,
+        //                 oldY: oldY,
+        //                 massum: massum,
+        //             })
+        //         })
+        // else {
+        //     processing({ onConsoleMessage: onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv: chek_obsorv, imgFolder: imgFolder, imgnum: imgnum, masImg: masImg, fon: this.imgFon })
+        //         .workOnImg()
+        //         .then(({ massum, masx, finished, oldY, imgnum }) => {
+        //             const data = this.reloadData(masx, massum)
+        //             this.imgnum = imgnum;
+        //             this.finished = finished;
+        //             this.setState({
+        //                 masx: masx,
+        //                 data: data,
+        //                 oldY: oldY,
+        //                 massum: massum,
+        //             })
+        //         })
+        // }
+        let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
+        if (this.finished) {
+            cancelAnimationFrame(req);
+        }
     }
 
     onConsoleMessage = (message) => {
@@ -154,15 +187,15 @@ export default class Method_2D extends Component {
             const before = consoleMessage;
             const newMessage = { message: message, id: id, time: time };
             const newM = [...before, newMessage];
-            return{
+            return {
                 consoleMessage: newM
-            } 
+            }
         })
     }
 
     render() {
-        const {id_item} = this.props;
-        const {data, massum, consoleMessage} = this.state
+        const { id_item } = this.props;
+        const { data, massum, consoleMessage } = this.state
         return (
             <L_P_Panel
                 loadFolder={this.loadFolder}
@@ -173,9 +206,9 @@ export default class Method_2D extends Component {
                 applyCoor={this.applyCoor}
                 returnCoor={this.returnCoor}
                 data={data}
-                consoleMessage = {consoleMessage}
-                onConsoleMessage = {this.onConsoleMessage}
-                id_item = {id_item}
+                consoleMessage={consoleMessage}
+                onConsoleMessage={this.onConsoleMessage}
+                id_item={id_item}
             ></L_P_Panel>
         )
     }

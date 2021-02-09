@@ -8,7 +8,6 @@ function LoadImg() {
     function loadFoldImg() {
         return new Promise((resolve, reject) => {
             console.log('Click Fold');
-            // finished = false;
             let i = document.createElement('input')
 
             i.type = 'file'
@@ -21,13 +20,13 @@ function LoadImg() {
                 let masFold = [];
                 for (let j = 0; j < i.files.length; j++) {
                     masFold[j] = i.files[j].path
+                    imgFolder = i.files[j].path.replace(i.files[j].name, '')
                 }
                 let dataStart = new Date().getTime();
-                loadImg(masFold, 0).then(({ dataStop, masImg }) => {
+                loadImg(masFold, 0).then(({ dataStop, masImg}) => {
                     let message = `Изображений загруженно: ${i.files.length} за ${(dataStop - dataStart) / 1000} секунд`
                     console.log(message);
-                    resolve(masImg)
-                    // Log.log(message);
+                    resolve({masImg, imgFolder});
                 });
             }
         })
@@ -47,7 +46,7 @@ function LoadImg() {
                 if (checked) {
                     resolve(imgFolder);
                 } else {
-                    loadFolderImg(imgFolder);
+                    loadFolderImg(imgFolder).then(({masImg}) => resolve({masImg, imgFolder}));
                 }
 
             }
@@ -61,7 +60,7 @@ function LoadImg() {
                     console.error(err);
                     return
                 }
-                load(imgFolder, masFold, 0).then((masImg) => resolve(masImg));
+                load(imgFolder, masFold, 0).then((masImg) => resolve(masImg, imgFolder));
             })
         })
     }
@@ -103,11 +102,10 @@ function LoadImg() {
                 return element = `${imgFolder}/${element}`
             })
             let dataStart = new Date().getTime();
-            loadImg(masFold, iter).then(({ dataStop, masImg }) => {
+            loadImg(masFold, iter).then(({ dataStop, masImg, imgFolder }) => {
                 let message = `Изображений загруженно: ${masFold.length} за ${(dataStop - dataStart) / 1000} секунд`
                 console.log(message);
-                // Log.log(message);
-                resolve(masImg);
+                resolve({masImg});
             });
         });
     }
@@ -123,7 +121,7 @@ function LoadImg() {
                 })
             }
             let dataStop = new Date().getTime();
-            masImg[masFold.length - 1].onload = () => { resolve({ dataStop, masImg }) };
+            masImg[masFold.length - 1].onload = () => { resolve({ dataStop, masImg}) };
         })
     }
 
@@ -142,13 +140,11 @@ function LoadImg() {
                 imgFon.onload = function () {
                     let message = `Фон загружен`
                     console.log(message);
-                    // Log.log(message);
                     resolve(imgFon);
                 };
                 imgFon.onerror = function () {
                     let message = 'Ошибка загрузки фона';
                     console.log(message);
-                    // Log.log(message);
                 };
             }
         })
