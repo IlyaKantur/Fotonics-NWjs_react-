@@ -74,7 +74,8 @@ function Processing({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder, imgnu
     }
 
     function workOnImg(){
-        return new Promise((resolve, reject) =>{
+        return new Promise((resolve, reject) =>
+        {
             if (imgnum == masImg.length && chek_obsorv) {
                 check();
     

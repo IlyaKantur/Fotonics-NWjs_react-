@@ -11,14 +11,16 @@ export default class Method_2D extends Component {
 
     constructor(props) {
         super(props);
-        this.defolt_folder_base = './Foto/Foto_base',
-        this.defolt_folder_observ = './Foto/Foto_observ',
+        this.defolt_folder_base = './Foto/Foto_base';
+        this.defolt_folder_observ = './Foto/Foto_observ';
 
-        this.imgnum = 0,
+        this.imgnum = 0;
         this.imgFolder = null;
-        this.masImg = [],
-        this.imgFon = [],
+        this.masImg = [];
+        this.imgFon = [];
         this.finished = false
+
+        this.proces;
     }
 
     state = {
@@ -44,9 +46,9 @@ export default class Method_2D extends Component {
 
     loadFolder = (id_f_nameF) => {
         const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked
-        loadImg().loadFolder(chek_obsorv).then(({masImg, imgFolder}) => {
+        loadImg().loadFolder(chek_obsorv).then(({ masImg, imgFolder }) => {
             this.imgFolder = imgFolder;
-            if(!chek_obsorv){
+            if (!chek_obsorv) {
                 this.masImg = masImg
             }
         });
@@ -54,7 +56,7 @@ export default class Method_2D extends Component {
 
     loadFoldImg = (id_f_nameF) => {
         const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked
-        loadImg().loadFoldImg().then(({masImg, imgFolder}) => {
+        loadImg().loadFoldImg().then(({ masImg, imgFolder }) => {
             this.masImg = masImg;
             this.imgFolder = imgFolder;
         })
@@ -127,45 +129,45 @@ export default class Method_2D extends Component {
         console.log("Click Start");
         this.finished = false;
         this.imgnum = 0;
-        this.work(id_f_nameF, chek_obsorv)
-    }
-    work = (id_f_nameF, chek_obsorv) => {
 
         const onConsoleMessage = this.onConsoleMessage;
         const imgnum = this.imgnum;
         const imgFolder = this.imgFolder;
         const masImg = this.masImg;
-        const proces = new p(masImg, id_f_nameF)
-        proces.read_x_y();
-        // if (this.imgnum == 0)
-        //     processing({ onConsoleMessage: onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv: chek_obsorv, imgFolder: imgFolder, imgnum: imgnum, masImg: masImg, fon: this.imgFon })
-        //         .start()
-        //         .then(({ massum, masx, finished, oldY, imgnum }) => {
-        //             const data = this.reloadData(masx, massum)
-        //             this.imgnum = imgnum;
-        //             this.finished = finished;
-        //             this.setState({
-        //                 masx: masx,
-        //                 data: data,
-        //                 oldY: oldY,
-        //                 massum: massum,
-        //             })
-        //         })
-        // else {
-        //     processing({ onConsoleMessage: onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv: chek_obsorv, imgFolder: imgFolder, imgnum: imgnum, masImg: masImg, fon: this.imgFon })
-        //         .workOnImg()
-        //         .then(({ massum, masx, finished, oldY, imgnum }) => {
-        //             const data = this.reloadData(masx, massum)
-        //             this.imgnum = imgnum;
-        //             this.finished = finished;
-        //             this.setState({
-        //                 masx: masx,
-        //                 data: data,
-        //                 oldY: oldY,
-        //                 massum: massum,
-        //             })
-        //         })
-        // }
+        this.proces = new p({ onConsoleMessage: onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv: chek_obsorv, imgFolder: imgFolder, imgnum: imgnum, masImg: masImg, fon: this.imgFon })
+
+        this.work(id_f_nameF, chek_obsorv)
+
+        
+    }
+    work = (id_f_nameF, chek_obsorv) => {
+        if (this.imgnum == 0)
+        {
+            this.proces.start().then(({ massum, masx, finished, oldY, imgnum }) => {
+                const data = this.reloadData(masx, massum)
+                this.imgnum = imgnum;
+                this.finished = finished;
+                this.setState({
+                    masx: masx,
+                    data: data,
+                    oldY: oldY,
+                    massum: massum,
+                })
+            })
+        }
+        else {
+            this.proces.workOnImg().then(({ massum, masx, finished, oldY, imgnum }) => {
+                const data = this.reloadData(masx, massum)
+                this.imgnum = imgnum;
+                this.finished = finished;
+                this.setState({
+                    masx: masx,
+                    data: data,
+                    oldY: oldY,
+                    massum: massum,
+                })
+            })
+        }
         let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
         if (this.finished) {
             cancelAnimationFrame(req);
