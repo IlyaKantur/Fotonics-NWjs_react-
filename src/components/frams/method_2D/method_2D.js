@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import L_P_Panel from './parts/l_p_panel.js';
 import loadImg from './function/loadImg.js';
-import processing from './function/processing.js';
-import p from './function/p.js'
+import Processing from './function/processing.js'
 // import regeneratorRuntime from "regenerator-runtime";
 
 import './method_2D.css';
@@ -134,44 +133,41 @@ export default class Method_2D extends Component {
         const imgnum = this.imgnum;
         const imgFolder = this.imgFolder;
         const masImg = this.masImg;
-        this.proces = new p({ onConsoleMessage: onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv: chek_obsorv, imgFolder: imgFolder, imgnum: imgnum, masImg: masImg, fon: this.imgFon })
+        this.proces = new Processing({ onConsoleMessage: onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv: chek_obsorv, imgFolder: imgFolder, imgnum: imgnum, masImg: masImg, fon: this.imgFon })
 
-        this.work(id_f_nameF, chek_obsorv)
-
-        
+        this.proces.start().then(({ massum, masx, finished, oldY, imgnum }) => {
+            const data = this.reloadData(masx, massum)
+            this.imgnum = imgnum;
+            this.finished = finished;
+            this.setState({
+                masx: masx,
+                data: data,
+                oldY: oldY,
+                massum: massum,
+            })
+            if(!finished){
+                this.work(id_f_nameF, chek_obsorv)
+            }
+            
+        })
     }
     work = (id_f_nameF, chek_obsorv) => {
-        if (this.imgnum == 0)
-        {
-            this.proces.start().then(({ massum, masx, finished, oldY, imgnum }) => {
-                const data = this.reloadData(masx, massum)
-                this.imgnum = imgnum;
-                this.finished = finished;
-                this.setState({
-                    masx: masx,
-                    data: data,
-                    oldY: oldY,
-                    massum: massum,
-                })
+        this.proces.workOnImg().then(({ massum, masx, finished, oldY, imgnum }) => {
+            const data = this.reloadData(masx, massum)
+            this.imgnum = imgnum;
+            this.finished = finished;
+            this.setState({
+                masx: masx,
+                data: data,
+                oldY: oldY,
+                massum: massum,
             })
-        }
-        else {
-            this.proces.workOnImg().then(({ massum, masx, finished, oldY, imgnum }) => {
-                const data = this.reloadData(masx, massum)
-                this.imgnum = imgnum;
-                this.finished = finished;
-                this.setState({
-                    masx: masx,
-                    data: data,
-                    oldY: oldY,
-                    massum: massum,
-                })
-            })
-        }
-        if (this.finished) {
-            cancelAnimationFrame(req);
-        }
-        let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
+            let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
+            if (finished) {
+                this.returnCoor()
+                cancelAnimationFrame(req);
+            }
+        })
     }
 
     onConsoleMessage = (message) => {
