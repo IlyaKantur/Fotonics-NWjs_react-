@@ -168,10 +168,10 @@ export default class Method_2D extends Component {
                 })
             })
         }
-        let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
         if (this.finished) {
             cancelAnimationFrame(req);
         }
+        let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
     }
 
     onConsoleMessage = (message) => {
