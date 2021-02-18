@@ -162,9 +162,9 @@ export default class Method_2D extends Component {
                 oldY: oldY,
                 massum: massum,
             })
+            this.returnCoor()
             let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
             if (finished) {
-                this.returnCoor()
                 cancelAnimationFrame(req);
             }
         })
