@@ -25,6 +25,7 @@ export default class Method_2D extends Component {
     state = {
         masx: [],
         data: [],
+        revision: 0,
         oldY: [],
         massum: [],
         consoleMessage: []
@@ -40,7 +41,10 @@ export default class Method_2D extends Component {
                 mode: 'lines+markers',
                 marker: { color: 'red' }
             }];
-        return data;
+        this.setState({
+            data: data,
+            revision: this.state.revision + 1
+        })
     }
 
     loadFolder = (id_f_nameF) => {
@@ -136,37 +140,38 @@ export default class Method_2D extends Component {
         this.proces = new Processing({ onConsoleMessage: onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv: chek_obsorv, imgFolder: imgFolder, imgnum: imgnum, masImg: masImg, fon: this.imgFon })
 
         this.proces.start().then(({ massum, masx, finished, oldY, imgnum }) => {
-            const data = this.reloadData(masx, massum)
+            this.reloadData(masx, massum)
             this.imgnum = imgnum;
             this.finished = finished;
             this.setState({
                 masx: masx,
-                data: data,
                 oldY: oldY,
                 massum: massum,
             })
-            if(!finished){
-                this.work(id_f_nameF, chek_obsorv)
+            if (!finished) {
+                this.timerId = setInterval(this.work, 10)
             }
-            
+
         })
     }
-    work = (id_f_nameF, chek_obsorv) => {
+    work = () => {
         this.proces.workOnImg().then(({ massum, masx, finished, oldY, imgnum }) => {
-            const data = this.reloadData(masx, massum)
+            this.reloadData(masx, massum)
             this.imgnum = imgnum;
             this.finished = finished;
             this.setState({
                 masx: masx,
-                data: data,
                 oldY: oldY,
                 massum: massum,
             })
-            this.returnCoor()
-            let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
             if (finished) {
-                cancelAnimationFrame(req);
+                this.timerId = clearInterval(this.timerId)
             }
+
+            // let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
+            // if (finished) {
+            //     cancelAnimationFrame(req);
+            // }
         })
     }
 
@@ -193,7 +198,7 @@ export default class Method_2D extends Component {
 
     render() {
         const { id_item } = this.props;
-        const { data, massum, consoleMessage } = this.state
+        const { data, revision, massum, consoleMessage } = this.state
         return (
             <L_P_Panel
                 loadFolder={this.loadFolder}
@@ -204,9 +209,11 @@ export default class Method_2D extends Component {
                 applyCoor={this.applyCoor}
                 returnCoor={this.returnCoor}
                 data={data}
+                revision={revision}
                 consoleMessage={consoleMessage}
                 onConsoleMessage={this.onConsoleMessage}
                 id_item={id_item}
+                finished={this.finished}
             ></L_P_Panel>
         )
     }
