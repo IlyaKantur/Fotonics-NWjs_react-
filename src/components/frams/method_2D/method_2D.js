@@ -72,29 +72,6 @@ export default class Method_2D extends Component {
         })
     }
 
-    startPush = (id_f_nameF) => {
-        const { imgFolder } = this.state;
-        const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked;
-        if (chek_obsorv) {
-            // вставить надпись в консоль о начале наблюдения
-            console.log("Наблюдение")
-            let folder = imgFolder || this.defolt_folder_observ;
-            loadImg().loadObservation(folder, 0).then((mas) => {
-                this.masImg = mas
-                this.start({ id_f_nameF, chek_obsorv });
-            })
-        } else {
-            if (this.masImg.length == 0) {
-                loadImg().loadFolderImg(this.defolt_folder_base).then((mas) => {
-                    this.masImg = mas;
-                    this.start({ id_f_nameF, chek_obsorv });
-                })
-            } else {
-                this.start({ id_f_nameF, chek_obsorv });
-            }
-        }
-    }
-
     applyCoor = () => {
         const { masx } = this.state;
         let massum = [];
@@ -125,6 +102,29 @@ export default class Method_2D extends Component {
                 data: data,
                 massum: massum
             })
+        }
+    }
+
+    startPush = (id_f_nameF) => {
+        const { imgFolder } = this.state;
+        const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked;
+        if (chek_obsorv) {
+            // вставить надпись в консоль о начале наблюдения
+            console.log("Наблюдение")
+            let folder = imgFolder || this.defolt_folder_observ;
+            loadImg().loadObservation(folder, 0).then(({masImg}) => {
+                this.masImg = masImg
+                this.start({ id_f_nameF, chek_obsorv });
+            })
+        } else {
+            if (this.masImg.length == 0) {
+                loadImg().loadFolderImg(this.defolt_folder_base).then(({masImg}) => {
+                    this.masImg = masImg;
+                    this.start({ id_f_nameF, chek_obsorv });
+                })
+            } else {
+                this.start({ id_f_nameF, chek_obsorv });
+            }
         }
     }
 

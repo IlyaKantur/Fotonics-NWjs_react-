@@ -2,6 +2,27 @@ import React, { Component } from 'react';
 
 import "./alert.css";
 
+const Alert = ({ activeAlert, closeAlert }) => {
+    const element = activeAlert.map((item) => {
+        const { text, id } = item
+        return (
+            <div key = {`alert_${id}`}>
+                <Al
+                    text={text}
+                    id={id}
+                    closeAlert = {closeAlert}
+                >
+                </Al>
+            </div>
+        )
+    })
+    return (
+        <div id="alert_Cont">
+            {element}
+        </div>
+    )
+}
+
 class Al extends Component {
 
     constructor(props) {
@@ -22,27 +43,6 @@ class Al extends Component {
             </div>
         )
     }
-}
-
-const Alert = ({ activeAlert, closeAlert }) => {
-    const element = activeAlert.map((item) => {
-        const { text, id } = item
-        return (
-            <div key = {`alert_${id}`}>
-                <Al
-                    text={text}
-                    id={id}
-                    closeAlert = {closeAlert}
-                >
-                </Al>
-            </div>
-        )
-    })
-    return (
-        <div id="alert_Cont">
-            {element}
-        </div>
-    )
 }
 
 export default Alert;

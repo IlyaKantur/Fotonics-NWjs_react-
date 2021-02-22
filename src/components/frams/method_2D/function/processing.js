@@ -2,7 +2,7 @@ import loadImg from './loadImg.js';
 
 export default class Processing {
 
-    constructor({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder, imgnum, masImg, fon}) {
+    constructor({ onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder, imgnum, masImg, fon }) {
         // Image
         this.ImgNew = document.getElementById(`ImgNew_${id_f_nameF}`);
         this.ImgSum = document.getElementById(`ImgSum_${id_f_nameF}`);
@@ -85,7 +85,7 @@ export default class Processing {
             this.ctxsum.drawImage(this.imgsum, 0, 0, this.cx, this.cy);
             this.ctxhs.drawImage(this.imgsum, 0, 0);
             this.imgSum = this.ctxhs.getImageData(0, 0, this.ix, this.iy);
-            if (this.fon.length == undefined){
+            if (this.fon.length == undefined) {
                 this.fon_load = true
                 this.ctxhs.drawImage(this.fon, 0, 0);
                 this.imgfon = this.ctxhs.getImageData(0, 0, this.ix, this.iy).data;
@@ -93,40 +93,47 @@ export default class Processing {
             this.startOb = new Date().getTime();
             this.proces = true;
             this.onConsoleMessage('Start')
-            this.workOnImg().then(({massum, masx, finished, oldY, imgnum}) => resolve({massum, masx, finished, oldY, imgnum}));
+            this.workOnImg().then(({ massum, masx, finished, oldY, imgnum }) => resolve({ massum, masx, finished, oldY, imgnum }));
         })
     }
 
     workOnImg = () => {
-        return new Promise((resolve, reject) =>{
+        return new Promise((resolve, reject) => {
             if (this.imgnum == this.masImg.length && this.chek_obsorv) {
-                this.check();
-                check = () => {
-                    let folder = this.imgFolder || this.defolt_folred;
-                    loadImg.loadObservation(folder, this.imgnum).then(() => {
-                        if (this.imgnum == this.masImg.length) {
-                            this.check()
-                        } else {
-                            this.processing().then(({massum, masx, finished, oldY, imgnum}) => { 
-                                this.save_proces(massum, masx, finished, oldY, imgnum);
-                                resolve({massum, masx, finished, oldY, imgnum})
-                            })
-                        }
-                    })
-                }
-            } else {
-                this.processing().then(({massum, masx, finished, oldY, imgnum}) => { 
+                this.check().then(({ massum, masx, finished, oldY, imgnum }) => {
                     this.save_proces(massum, masx, finished, oldY, imgnum);
-                    resolve({massum, masx, finished, oldY, imgnum})
+                    resolve({ massum, masx, finished, oldY, imgnum })
+                });
+            } else {
+                this.processing().then(({ massum, masx, finished, oldY, imgnum }) => {
+                    this.save_proces(massum, masx, finished, oldY, imgnum);
+                    resolve({ massum, masx, finished, oldY, imgnum })
                 });
             }
         })
     }
+
+    check = () => {
+        return new Promise((resolve, reject) => {
+            let folder = this.imgFolder || this.defolt_folred;
+            loadImg().loadObservation(folder, this.imgnum).then(({masImg}) => {
+                if (this.imgnum == masImg.length) {
+                    this.check();
+                } else {
+                    this.masImg = masImg;
+                    this.processing().then(({ massum, masx, finished, oldY, imgnum }) => {
+                        this.save_proces(massum, masx, finished, oldY, imgnum);
+                        resolve({ massum, masx, finished, oldY, imgnum })
+                    })
+                }
+            })
+        })
+    }
+
     processing = () => {
-        return new Promise((resolve, reject) => 
-        {
+        return new Promise((resolve, reject) => {
             let imgg = this.masImg[this.imgnum];
-            this.ctx.clearRect(0, 0, this.cx, this.cy); 
+            this.ctx.clearRect(0, 0, this.cx, this.cy);
             this.ctx.drawImage(imgg, 0, 0, this.cx, this.cy);
             this.ctxh.clearRect(0, 0, this.himg.width, this.himg.height);
             this.ctxh.drawImage(imgg, 0, 0);
@@ -224,7 +231,7 @@ export default class Processing {
             //     }
 
             // });
-            
+
             this.imgnum++;
             console.log(`Обработанано ${this.imgnum} снимков из ${this.masImg.length}`)
 
@@ -241,7 +248,7 @@ export default class Processing {
 
                 finished = true;
             }
-            resolve({massum, masx, finished, oldY, imgnum});
+            resolve({ massum, masx, finished, oldY, imgnum });
         })
     }
 }

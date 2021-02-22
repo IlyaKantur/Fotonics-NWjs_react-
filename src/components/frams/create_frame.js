@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Choice from './choice/choice.js';
 import Method_2D from './method_2D/method_2D.js';
+import PTE from './PTE/PTE.js';
 
 import './frames.css'
 
@@ -31,6 +32,11 @@ const CreateFrame = ({ posts, activeFrame, onAlert }) => {
                     id_item = {item}
                     ></Method_2D>
                 break;
+            case 'PTE':
+                element = <PTE
+                    test = {'Same Text'}
+                >
+                    </PTE>
         }
         return (
             <div
