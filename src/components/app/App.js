@@ -13,12 +13,14 @@ export default class App extends Component {
         tab: [
             { nameWP: "choice", text: "Выбор", id_t: '1' },
             { nameWP: "method_2D", text: "Обработка", id_t: '1' },
+            { nameWP: "PTE", text: "PTE", id_t: '1'}
         ],
         frame: [
             { nameF: "choice", id_f: '1' },
             { nameF: "method_2D", id_f: '1' },
+            { nameF: "PTE", id_f: '1'}
         ],
-        activeFrame: { name: "method_2D", id: '1' },
+        activeFrame: { name: "PTE", id: '1' },
         activeAlert: [ {text: 'test крестика', id: '0'}]
     }
 

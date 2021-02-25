@@ -1,0 +1,288 @@
+html {
+    width: 100%;
+    height: 100%;
+    cursor: default;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: column;
+    width: 100%;
+    height: 100%;
+    /* background: #5f6e77e7; */
+}
+
+#Panel_PT {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+#left_panel {
+    height: 100%;
+    width: 200px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid black;
+}
+
+#PT {
+    overflow: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    height: max-content;
+    margin: 50px 30px 0 0;
+    /* border: 1px solid black; */
+}
+
+/* В left_panel */
+#search_element{
+    display: flex;
+    flex-direction: row;
+}
+#inp_ser_el{
+    width: 82%;
+}
+#part_e_b-g{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+/* part_e_b-g */
+#element{
+    height: 130px;
+    width: 130px !important; 
+    border: 1px solid black;
+    margin: 15px 0 0 15px;
+    display: flex;
+    flex-direction: row;
+}
+#but_gr_el{
+    display: none;
+    margin-left: 5px;
+    margin-top: 35%;
+    max-width: max-content;
+    max-height: 25px;
+}
+#panel_gr_el{
+    position: absolute;
+    margin: -23px 100%;
+    width: 500px;
+    height: 400px;
+    background-color:white;
+    border-bottom: 2px solid black;
+    border-right: 2px solid black;
+    z-index: 1;
+    display: none;
+}
+#gr_el{
+    height: 150px;
+    width: 300px;
+    border: 2px solid red;
+    margin: 10px 0 0 20%;
+}
+/* part_e_b-g */
+#left_part_el div{
+    width: 100px;
+    font-size: 18px;
+    padding: 8px 0 0 5px;
+}
+#right_part_el div{
+    /* padding-left: 20px; */
+    width: 30%;
+    text-align: right;
+}
+#info_element{
+    margin-top: 6px;
+    border-top: 2px solid black;
+}
+#info_element div{
+    border-bottom: 0.5px solid grey;
+    padding: 10px 0 5px 10px;
+    font-size: 18px;
+}
+.n_E{
+    font-weight: bold;
+    font-size: 20px;
+}
+
+
+/* В left_panel */
+
+/* в PT */
+#up {
+    position: relative;
+    height: min-content;
+    width: min-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#up div {
+    width: 100px;
+    height: 40px;
+    text-align: center;
+    position: relative;
+    border: 1px solid black
+}
+
+
+#G8 {
+    width: 300px !important;
+}
+
+#midle {
+    position: relative;
+    height: max-content;
+    width: max-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#left {
+    position: relative;
+    height: max-content;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.M_L_C {
+    height: max-content;
+    width: max-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.m_l_c {
+    text-align: center;
+    position: relative;
+    height: 60px;
+    width: 49px !important;
+    border: 1px solid black;
+}
+
+.m_l_c div {
+    margin-top: 20px;
+}
+
+#per {
+    height: 122px !important;
+}
+
+#per div {
+    margin-top: 50px;
+}
+
+#row {
+    height: max-content;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.m_l_c_r {
+    text-align: center;
+    position: relative;
+    height: 60px;
+    width: 49px !important;
+    border: 1px solid black;
+}
+
+.m_l_c_r div {
+    margin-top: 20px;
+}
+
+#right {
+    position: relative;
+    height: max-content;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.Row {
+    display: flex;
+    flex-direction: row;
+}
+
+.cell {
+    position: relative;
+    width: 100px;
+    height: 60px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+}
+.cell:focus{
+    border: 1px solid lime;
+    outline: -webkit-focus-ring-color auto 0px;
+}
+
+
+.c_t {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.c_t div {
+    padding-right: 5px;
+}
+
+.red_cell {
+    background-color: red;
+}
+
+.yellow_cell {
+    background-color: yellow;
+}
+
+.blue_cell {
+    background-color: skyblue
+}
+
+.n_e {
+    font-weight: bold
+}
+
+#bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.b_n {
+    margin-left: 500px;
+}
+
+.b_c {
+    width: 78px !important;
+}
+
+#lanthanides,
+#actinide {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Частный случай */
+#He {
+    margin-left: 612px;
+}
+
+/* В PT */
