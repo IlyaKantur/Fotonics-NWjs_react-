@@ -46,7 +46,7 @@ body {
     display: flex;
     flex-direction: row;
 }
-#inp_ser_el{
+.inp_ser_el{
     width: 82%;
 }
 #part_e_b-g{

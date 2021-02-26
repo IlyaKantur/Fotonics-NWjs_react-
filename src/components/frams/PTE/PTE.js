@@ -13,14 +13,26 @@ export default class PTE extends Component {
 
     }
 
+    search_but = (id_f_nameF) => {
+        let inp_search = document.getElementById(`inp_ser_el_${id_f_nameF}`)
+        let name_search_el = inp_search.value;
+        this.search(name_search_el)
+    }
+    
+    search = (name_search_el) => {
+
+    }
+
     render() {
+        const { id_f, nameF } = this.props.id_item;
+        const id_f_nameF = `${nameF}_${id_f}`;
 
         return (
             <div id="Panel_PT">
                 <div id="left_panel">
                     <div id="search_element">
-                        <input id="inp_ser_el" type="search" placeholder="Поиск, в формате H" maxLength="2" />
-                        <button id="but_ser_el">🔍</button>
+                        <input className = 'inp_ser_el' id={`inp_ser_el_${id_f_nameF}`} type="search" placeholder="Поиск, в формате H" maxLength="2" />
+                        <button id="but_ser_el" onClick = {() => {this.search_but(id_f_nameF)}}>🔍</button>
                     </div>
                     <div>
                         <div id="part_e_b-g">
@@ -174,4 +186,8 @@ export default class PTE extends Component {
             </div>
         )
     }
+}
+
+const cell_PTE = () =>{
+    
 }

@@ -34,7 +34,7 @@ const CreateFrame = ({ posts, activeFrame, onAlert }) => {
                 break;
             case 'PTE':
                 element = <PTE
-                    test = {'Same Text'}
+                    id_item = {item}
                 >
                     </PTE>
         }
