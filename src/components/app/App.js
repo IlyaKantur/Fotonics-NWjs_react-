@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+const fs = window.require('fs');
 import Menu from '../main/manu.js';
 import TabWP from '../tab/create_tab.js';
 import Frame from '../frams/create_frame.js';
@@ -13,15 +13,104 @@ export default class App extends Component {
         tab: [
             { nameWP: "choice", text: "Выбор", id_t: '1' },
             { nameWP: "method_2D", text: "Обработка", id_t: '1' },
-            { nameWP: "PTE", text: "PTE", id_t: '1'}
+            { nameWP: "PTE", text: "PTE", id_t: '1' },
+            { nameWP: "PTE", text: "PTE", id_t: '2' }
+
         ],
         frame: [
             { nameF: "choice", id_f: '1' },
             { nameF: "method_2D", id_f: '1' },
-            { nameF: "PTE", id_f: '1'}
+            { nameF: "PTE", id_f: '1' },
+            { nameF: "PTE", id_f: '2' },
         ],
         activeFrame: { name: "PTE", id: '1' },
-        activeAlert: [ {text: 'test крестика', id: '0'}]
+        activeAlert: [{ text: 'test крестика', id: '0' }],
+        baseElement: []
+    }
+
+    componentDidMount() {
+        this.load_base().then((baseElement) => {
+            this.setState({
+                baseElement: baseElement
+            })
+        })
+    }
+
+    load_base = () => {
+        return new Promise((resolve, reject) => {
+            const baseFolder = './Base';
+            fs.readdir(baseFolder, (err, masFold) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                this.load_element(baseFolder, masFold).then((baseElement) => {
+                    resolve(baseElement)
+                });
+            })
+        });
+    }
+
+    load_element = (baseFolder, masFold) => {
+        return new Promise((resolve, reject) => {
+            let baseElement = [];
+            for (let i = 0; i < masFold.length; i++) {
+                let row_el, class_el, number_el, weight_el, f_name_el, l_r_el, name_el;
+                let file = new File(`${baseFolder}/${masFold[i]}/${masFold[i]}.dat`, `${masFold[i]}.dat`)
+                let reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = function () {
+                    let result = reader.result.split('\n');
+                    result.forEach((str, i, result) => {
+                        let from = str.search('/');
+                        str = str.substring(from + 1, str.length)
+                        result[i] = str;
+                    })
+                    row_el = result[0].trim();
+                    class_el = result[1].trim();
+                    number_el = result[3];
+                    name_el = result[4].trim();
+                    weight_el = result[6];
+                    f_name_el = result[5].trim();
+                    l_r_el = result[2].trim();
+                    baseElement[i] = {
+                            row_el: row_el,
+                            class_el: class_el,
+                            number_el: number_el,
+                            name_el: name_el,
+                            weight_el: weight_el,
+                            f_name_el: f_name_el,
+                            energy_lvl: result[7],
+                            full_name_inf: result[8],
+                            group_inf: result[9],
+                            period_inf: result[10],
+                            family_inf: result[11],
+                            oxid_deg_inf: result[12],
+                            el_conf_inf: result[13],
+                            l_r_el: l_r_el
+                        }
+                    // baseElement[masFold[i]] = {
+                    //     row_el: row_el,
+                    //     class_el: class_el,
+                    //     number_el: number_el,
+                    //     name_el: name_el,
+                    //     weight_el: weight_el,
+                    //     f_name_el: f_name_el,
+                    //     energy_lvl: result[7],
+                    //     full_name_inf: result[8],
+                    //     group_inf: result[9],
+                    //     period_inf: result[10],
+                    //     family_inf: result[11],
+                    //     oxid_deg_inf: result[12],
+                    //     el_conf_inf: result[13]
+                    // }
+                    if (i == masFold.length - 1) {
+                        resolve(baseElement)
+                    }
+                }
+            }
+
+        })
     }
 
     onSwitch = (nameWP, id_t) => {
@@ -82,15 +171,14 @@ export default class App extends Component {
     onAlert = (message) => {
         this.setState(({ activeAlert }) => {
             let id;
-            if(activeAlert.length == 0)
-            {
+            if (activeAlert.length == 0) {
                 id = 0;
             }
-            else{
+            else {
                 id = activeAlert[activeAlert.length - 1].id + 1;
             }
             const before = activeAlert;
-            const newAlert = { text: message, id: id};
+            const newAlert = { text: message, id: id };
             const newM = [...before, newAlert];
             // setTimeout(() =>{
             //     this.setState(({activeAlert}) =>{
@@ -112,7 +200,7 @@ export default class App extends Component {
             const index = activeAlert.findIndex((item) => item.id == id)
             const before = activeAlert.slice(0, index);
             const after = activeAlert.slice(index + 1);
-            const neew = [... before, ...after];
+            const neew = [...before, ...after];
 
             return {
                 activeAlert: neew
@@ -121,11 +209,10 @@ export default class App extends Component {
     }
 
     render() {
-
-        const { tab, frame, activeFrame, activeAlert } = this.state
+        const { tab, frame, activeFrame, activeAlert, baseElement } = this.state
         return (
             <>
-                <Alert activeAlert={activeAlert} closeAlert = {this.closeAlert}/>
+                <Alert activeAlert={activeAlert} closeAlert={this.closeAlert} />
                 <div id="work_place" className="panel">
                     <div id="panel_WP">
                         <TabWP
@@ -140,6 +227,7 @@ export default class App extends Component {
                             posts={frame}
                             activeFrame={activeFrame}
                             onAlert={this.onAlert}
+                            baseElement={baseElement}
                         ></Frame>
                     </div>
                 </div>

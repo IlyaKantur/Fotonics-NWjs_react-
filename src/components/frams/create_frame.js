@@ -6,7 +6,7 @@ import PTE from './PTE/PTE.js';
 
 import './frames.css'
 
-const CreateFrame = ({ posts, activeFrame, onAlert }) => {
+const CreateFrame = ({ posts, activeFrame, onAlert, baseElement }) => {
     const elements = posts.map((item) => {
         const { id_f, nameF } = item;
         const { id, name } = activeFrame;
@@ -35,8 +35,8 @@ const CreateFrame = ({ posts, activeFrame, onAlert }) => {
             case 'PTE':
                 element = <PTE
                     id_item = {item}
-                >
-                    </PTE>
+                    baseElement = {baseElement}
+                ></PTE>
         }
         return (
             <div
