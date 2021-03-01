@@ -8,16 +8,22 @@ export default class PTE extends Component {
     }
 
     state = {
-        info_element_name: 'H'
+        info_element_name: 'H',
+        search_name: ''
     }
 
-    search_but = (id_f_nameF) => {
-        let inp_search = document.getElementById(`inp_ser_el_${id_f_nameF}`)
+    search_but = () => {
+        let inp_search = document.getElementById(`inp_ser_el`)
         let name_search_el = inp_search.value;
         this.search(name_search_el)
     }
 
     search = (name_search_el) => {
+        if(name_search_el){
+            const {baseElement} = this.props;
+            name_search_el = name_search_el[0].toUpperCase() + name_search_el.slice(1).toLowerCase();
+
+        }
 
     }
 
@@ -27,18 +33,48 @@ export default class PTE extends Component {
         })
     }
 
+    chek_name = (e) =>{
+        const char = /["a-zA-Z]/;
+        const val = e.currentTarget.value;
+        const test1 = char.test(val[0])
+        const test2 = char.test(val[1])
+
+        if(test1 && test2){
+            this.setState({
+                search_name: val
+            })
+        }
+        else{
+            if(test1)
+            {
+                this.setState({
+                    search_name: val[0]
+                })
+            }
+        }
+    }
+
     render() {
         const { baseElement } = this.props;
         const { id_f, nameF } = this.props.id_item;
-        const { info_element_name } = this.state;
+        const { info_element_name, search_name } = this.state;
         const id_f_nameF = `${nameF}_${id_f}`;
 
         return (
             <div id="Panel_PT">
                 <div id="left_panel">
                     <div id="search_element">
-                        <input className='inp_ser_el' id={`inp_ser_el_${id_f_nameF}`} type="search" placeholder="Поиск, в формате H" maxLength="2" />
-                        <button id="but_ser_el" onClick={() => { this.search_but(id_f_nameF) }}>🔍</button>
+                        <input className='inp_ser_el' 
+                            id={`inp_ser_el`} 
+                            type="search" 
+                            placeholder="Поиск, в формате H" 
+                            maxLength="2"
+                            value = {search_name}
+                            onChange = {(e) => {
+                                this.chek_name(e)
+                            }} 
+                        />
+                        <button id="but_ser_el" onClick={() => { this.search_but() }}>🔍</button>
                     </div>
                     <div>
                         {info_element(info_element_name, baseElement)}
@@ -249,7 +285,7 @@ const info_element = (info_element_name, baseElement) => {
         const id = baseElement.findIndex((item) => item.name_el == info_element_name)
         let style = baseElement[id].class_el.split(' ')
         const element = (
-            <s>
+            <>
                 <div id="left_part_el">
                     <div>{baseElement[id].number_el}</div>
                     <div className="n_e">{baseElement[id].name_el}</div>
@@ -261,18 +297,18 @@ const info_element = (info_element_name, baseElement) => {
                         {baseElement[id].energy_lvl}
                     </div>
                 </div>
-            </s>
+            </>
         )
         let el_con = baseElement[id].el_conf_inf
-        el_con.replace('<sup>, '(''); 
-        // el_con.replace("</sup>", ")")
+        el_con =  el_con.replace(/<sup>/g, '('); 
+        el_con = el_con.replace(/<\/sup>/g, ")")
 
         const info = (
             <>
                 <div id="info_number">Номер: <b className="n_E">{baseElement[id].number_el}</b> </div>
                 <div id="info_name">Имя: <b className="n_E">{baseElement[id].full_name_inf}</b> </div>
                 <div id="info_weight">Масса: <b className="n_E">{baseElement[id].weight_el} а.е.м.</b> </div>
-                <div id="info_g_p">Группа: <b className="n_E">{baseElement[id].group_inf}</b> Период: <b className="n_e">${baseElement[id].period_inf}</b></div>
+                <div id="info_g_p">Группа: <b className="n_E">{baseElement[id].group_inf}</b> Период: <b className="n_e">{baseElement[id].period_inf}</b></div>
                 <div id="info_e-l">Эн. уровни: <b className="n_E">{baseElement[id].energy_lvl}</b></div>
                 <div id="info_family">Семейство: <b className="n_E">{baseElement[id].family_inf}</b></div>
                 <div id="info_o-d">Степень окис: <b className="n_E">{baseElement[id].oxid_deg_inf}</b></div>
