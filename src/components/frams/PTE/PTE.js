@@ -9,7 +9,8 @@ export default class PTE extends Component {
 
     state = {
         info_element_name: 'H',
-        search_name: ''
+        search_name: '',
+        search_alert_text: ''
     }
 
     search_but = () => {
@@ -22,7 +23,11 @@ export default class PTE extends Component {
         if(name_search_el){
             const {baseElement} = this.props;
             name_search_el = name_search_el[0].toUpperCase() + name_search_el.slice(1).toLowerCase();
-
+            if(baseElement.find(item => item.name_el == name_search_el)){
+                this.setState({
+                    info_element_name: name_search_el
+                })
+            }
         }
 
     }
@@ -57,7 +62,7 @@ export default class PTE extends Component {
     render() {
         const { baseElement } = this.props;
         const { id_f, nameF } = this.props.id_item;
-        const { info_element_name, search_name } = this.state;
+        const { info_element_name, search_name, search_alert_text } = this.state;
         const id_f_nameF = `${nameF}_${id_f}`;
 
         return (
@@ -75,6 +80,9 @@ export default class PTE extends Component {
                             }} 
                         />
                         <button id="but_ser_el" onClick={() => { this.search_but() }}>🔍</button>
+                    </div>
+                    <div id= 'search_alert'>
+                        
                     </div>
                     <div>
                         {info_element(info_element_name, baseElement)}
@@ -214,6 +222,17 @@ export default class PTE extends Component {
                 </div>
             </div>
         )
+    }
+}
+
+class Search_alert extends Component{
+    constructor(props)
+    {
+        super(props)
+    }
+
+    render(){
+        
     }
 }
 
