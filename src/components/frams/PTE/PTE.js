@@ -10,7 +10,7 @@ export default class PTE extends Component {
     state = {
         info_element_name: 'H',
         search_name: '',
-        search_alert_text: ''
+        search_alert_text: []
     }
 
     search_but = () => {
@@ -20,10 +20,10 @@ export default class PTE extends Component {
     }
 
     search = (name_search_el) => {
-        if(name_search_el){
-            const {baseElement} = this.props;
+        if (name_search_el) {
+            const { baseElement } = this.props;
             name_search_el = name_search_el[0].toUpperCase() + name_search_el.slice(1).toLowerCase();
-            if(baseElement.find(item => item.name_el == name_search_el)){
+            if (baseElement.find(item => item.name_el == name_search_el)) {
                 this.setState({
                     info_element_name: name_search_el
                 })
@@ -38,20 +38,28 @@ export default class PTE extends Component {
         })
     }
 
-    chek_name = (e) =>{
+    close_search_alert = () => {
+        this.setState({
+            search_alert_text: []
+        })
+    }
+
+    chek_name = (e) => {
         const char = /["a-zA-Z]/;
         const val = e.currentTarget.value;
         const test1 = char.test(val[0])
         const test2 = char.test(val[1])
 
-        if(test1 && test2){
+        if (test1 && test2) {
             this.setState({
                 search_name: val
             })
         }
-        else{
-            if(test1)
-            {
+        else {
+            this.setState({
+                search_alert_text: [{ text: 'Смени язык', id: '0' }]
+            })
+            if (test1) {
                 this.setState({
                     search_name: val[0]
                 })
@@ -69,21 +77,22 @@ export default class PTE extends Component {
             <div id="Panel_PT">
                 <div id="left_panel">
                     <div id="search_element">
-                        <input className='inp_ser_el' 
-                            id={`inp_ser_el`} 
-                            type="search" 
-                            placeholder="Поиск, в формате H" 
+                        <input className='inp_ser_el'
+                            id={`inp_ser_el`}
+                            type="search"
+                            placeholder="Поиск, в формате H"
                             maxLength="2"
-                            value = {search_name}
-                            onChange = {(e) => {
+                            value={search_name}
+                            onChange={(e) => {
                                 this.chek_name(e)
-                            }} 
+                            }}
                         />
                         <button id="but_ser_el" onClick={() => { this.search_but() }}>🔍</button>
                     </div>
-                    <div id= 'search_alert'>
-                        
-                    </div>
+                    <Search_alert
+                        alert={search_alert_text}
+                        close={this.close_search_alert}
+                    />
                     <div>
                         {info_element(info_element_name, baseElement)}
                     </div>
@@ -225,14 +234,44 @@ export default class PTE extends Component {
     }
 }
 
-class Search_alert extends Component{
-    constructor(props)
-    {
+const Search_alert = ({ close, alert }) => {
+    const element = alert.map((item) => {
+        const { text, id } = item
+        return (
+            <div key={`search_alert_${id}`}>
+                <S_a
+                    close = {close}
+                    text = {text}
+                />
+            </div>
+        )
+    })
+    return (
+        <div>
+            { element}
+        </div>
+
+    )
+}
+
+class S_a extends Component {
+    constructor(props) {
         super(props)
     }
 
-    render(){
-        
+    componentDidMount() {
+        const { close } = this.props;
+        setTimeout(close, 1000)
+    }
+
+    render() {
+        const {text} = this.props;
+        return (
+            <div id="search_alert">
+                <span>{text}</span>
+            </div>
+        )
+
     }
 }
 
@@ -319,7 +358,7 @@ const info_element = (info_element_name, baseElement) => {
             </>
         )
         let el_con = baseElement[id].el_conf_inf
-        el_con =  el_con.replace(/<sup>/g, '('); 
+        el_con = el_con.replace(/<sup>/g, '(');
         el_con = el_con.replace(/<\/sup>/g, ")")
 
         const info = (
