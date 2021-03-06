@@ -11,8 +11,8 @@ const Alert = ({ activeAlert, closeAlert }) => {
                     text={text}
                     id={id}
                     closeAlert = {closeAlert}
-                >
-                </Al>
+                />
+
             </div>
         )
     })

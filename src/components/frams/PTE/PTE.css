@@ -46,6 +46,20 @@ body {
     display: flex;
     flex-direction: row;
 }
+
+#search_alert{
+    /* margin-top: 25px; */
+    background-color:white;
+    border: 1px solid black;
+    position: absolute;
+    width: 100%;
+    height: max-content;
+    z-index: 2;
+}
+#search_alert span{
+    margin-left: 5px;
+}
+
 .inp_ser_el{
     width: 82%;
 }
