@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import Choice from './choice/choice.js';
 import Method_2D from './method_2D/method_2D.js';
@@ -38,10 +38,12 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement }) => {
                     id_item = {item}
                     baseElement = {baseElement}
                 ></PTE>
+                break;
             case 'camera': 
                 element = <Camera>
-                    
+
                 </Camera>
+                break;
         }
         return (
             <div

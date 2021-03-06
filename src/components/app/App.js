@@ -89,21 +89,6 @@ export default class App extends Component {
                             el_conf_inf: result[13],
                             l_r_el: l_r_el
                         }
-                    // baseElement[masFold[i]] = {
-                    //     row_el: row_el,
-                    //     class_el: class_el,
-                    //     number_el: number_el,
-                    //     name_el: name_el,
-                    //     weight_el: weight_el,
-                    //     f_name_el: f_name_el,
-                    //     energy_lvl: result[7],
-                    //     full_name_inf: result[8],
-                    //     group_inf: result[9],
-                    //     period_inf: result[10],
-                    //     family_inf: result[11],
-                    //     oxid_deg_inf: result[12],
-                    //     el_conf_inf: result[13]
-                    // }
                     if (i == masFold.length - 1) {
                         resolve(baseElement)
                     }

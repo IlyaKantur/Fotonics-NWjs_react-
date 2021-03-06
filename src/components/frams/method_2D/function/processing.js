@@ -1,4 +1,5 @@
 import loadImg from './loadImg.js';
+const fs = window.require('fs');
 
 export default class Processing {
 
@@ -222,8 +223,8 @@ export default class Processing {
 
             this.ctxhs.putImageData(this.imgSum, 0, 0);
             this.ctxsum.putImageData(Imgsum, 0, 0);
-            const url = this.himgsum.toDataURL('image/jpg');
-            const base64Data = url.replace(/^data:image\/png;base64,/, "");
+            // const url = this.himgsum.toDataURL('image/jpg');
+            // const base64Data = url.replace(/^data:image\/png;base64,/, "");
             //Созранение фото
             // fs.writeFile(`result/image/${imgnum}.jpg`, base64Data, 'base64', function (err) {
             //     if (err != null) {
