@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Choice from './choice/choice.js';
 import Method_2D from './method_2D/method_2D.js';
 import PTE from './PTE/PTE.js';
+import Camera from './camera/camera.js';
 
 import './frames.css'
 
@@ -37,6 +38,10 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement }) => {
                     id_item = {item}
                     baseElement = {baseElement}
                 ></PTE>
+            case 'camera': 
+                element = <Camera>
+                    
+                </Camera>
         }
         return (
             <div
