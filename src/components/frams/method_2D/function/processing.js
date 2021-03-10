@@ -144,6 +144,7 @@ export default class Processing {
             let mas0 = [];
             let mas = [];
             let ii = 0;
+            let xbeg, xfin, ybeg, yfin;
             for (let i = 0; i < imgData.length; i += 4) {
                 mas0[ii] = imgData[i];
                 if (!this.bf && this.fon_load && mas0[ii] >= this.imgfon[i]) {
@@ -154,7 +155,23 @@ export default class Processing {
                 }
                 ii++;
             }
+            let yy = 0;
+            if(this.gran)
+            {
+                xbeg = +this.g_Xx;
+                xfin = +this.g_XX;
+                ybeg = +this.g_Yy;
+                yfin = +this.g_YY;
+                yy = (ybeg - 1) * this.ix + xbeg;
+            }
+            else{
+                xbeg = 0;
+                xfin = this.ix;
+                ybeg = 0;
+                yfin = this.iy
+            }
             if (this.bpix) {
+                // Есть вопрос к этой части
                 for (let i = 0; i < mas0.length; i++) {
                     let del = ((mas0[i - 1] + mas0[i + this.iy] + mas0[i + 1]) / 3);
                     if (mas0[i] > del + 40 && del == 0) {
@@ -168,7 +185,7 @@ export default class Processing {
                 }
             }
 
-            for (let x = 0; x < this.ix; x++) {
+            for (let x = xbeg; x < xfin; x++) {
                 if (this.imgnum == 0) {
                     this.massum[x] = 0;
                 }
@@ -176,16 +193,18 @@ export default class Processing {
                 this.masx[x] = x;
                 this.oldX[x] = this.masx[x];
             }
-
-            let yy = 0;
-            for (let y = 0; y < this.iy; y++) {
-                for (let x = 0; x < this.ix; x++) {
+            for (let y = ybeg; y < yfin; y++) {
+                for (let x = xbeg; x < xfin; x++) {
                     mas[x] += mas0[yy];
                     yy += 1;
                 }
+                if(this.gran)
+                {
+                    yy += (this.ix - xfin) + xbeg 
+                }
             }
 
-            for (let x = 0; x < this.ix; x++) {
+            for (let x = xbeg; x < xfin; x++) {
                 this.massum[x] += mas[x];
                 this.oldY[x] = this.massum[x];
             }
