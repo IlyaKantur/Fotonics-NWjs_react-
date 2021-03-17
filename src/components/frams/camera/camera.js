@@ -39,13 +39,24 @@ export default class Camera extends Component {
   }
 
   render() {
-    const {active} = this.state;
+    const {active, imgSrc} = this.state;
     let element;
-    if(active){element = (<Webcam
-      audio={false}
-      ref={this.webcamRef}
-      screenshotFormat="image/png"
-    />)}
+    if(active){element = 
+    (<>
+      <Webcam
+        audio={false}
+        ref={this.webcamRef}
+        screenshotFormat="image/png"
+        width = {800}
+        height = {600}
+      />
+      {imgSrc && (
+        <img id='snapshot'
+          src={imgSrc}
+        />
+      )}
+    </>
+    )}
     else{element = (<></>)}
     return (
       <div id='camera_place'>
