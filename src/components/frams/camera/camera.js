@@ -7,107 +7,104 @@ import './camera.css';
 export default class Camera extends Component {
   constructor(props) {
     super(props);
+    this.webcamRef = React.createRef();
+    this.iter;
   }
 
   state = {
-
+    active: false,
+    imgSrc: null
   }
 
-  // componentDidMount() {
-  //     this.start_watch();
-  // }
+  active_cam = () =>{
+    this.setState({
+      active: !this.state.active
+    })
+  }
 
-  // start_watch = () => {
-  //     const video = document.getElementById('video');
-  //     // Получаем доступ к камере
-  //     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  //         // Не включаем аудио опцией `{ audio: true }` поскольку сейчас мы работаем только с изображениями
-  //         navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
-  //             if (!video.srcObject) {
-  //                 video.srcObject = stream;
-  //                 video.play()
-  //             }
-  //             // var playPromise = video.play();
+  capture = () => {
+    let i = 0;
+    // if(!this.iter){
+    //   this.iter = setInterval(() =>{
+        
+    //   })
+    // }
 
-  //             // if (playPromise !== undefined) {
-  //             //     playPromise.then(_ => {
-  //             //     })
-  //             //         .catch(error => {
-  //             //             // Auto-play was prevented
-  //             //             // Show paused UI.
-  //             //         });
-  //             // }
-
-  //         });
-  //     }
-  // }
-
-  // click_snapshot = () => {
-  //     const context = document.getElementById('canvas').getContext('2d');
-  //     const video = document.getElementById('video');
-
-  //     context.drawImage(video, 0, 0, 640, 480);
-  // }
-
+    const imageSrc = this.webcamRef.current.getScreenshot();
+    this.setState({
+      imgSrc: imageSrc
+    })
+    const base64Data = imageSrc.replace(/data:image\/png;base64,/,"");
+    fs.writeFile(`result/image/test_${i++}.jpg`, base64Data, 'base64', err => {if(err !== null)console.log(err)})
+  }
 
   render() {
-
+    const {active} = this.state;
+    let element;
+    if(active){element = (<Webcam
+      audio={false}
+      ref={this.webcamRef}
+      screenshotFormat="image/png"
+    />)}
+    else{element = (<></>)}
     return (
-      <div id='camera'>
-        <WebcamCapture></WebcamCapture>
-        {/* <video id="video" width="640" height="480" autoPlay={true} controls></video> */}
-        {/* <button id="snap">Сделать снимок</button> */}
-        <canvas id="canvas" width="640" height="480"></canvas>
+      <div id='camera_place'>
+        <div id = "control">
+          <button onClick={this.active_cam}>Watch</button>
+          <button onClick={this.capture}>Capture photo</button>
+          {/* <button onClick={stop}>Stop</button> */}
+        </div>
+        <div id = "place">
+          {element}
+        </div>        
       </div>
     )
   }
 }
 
-const WebcamCapture = () => {
-  const webcamRef = React.useRef(null);
-  const [imgSrc, setImgSrc] = React.useState(null);
+// const WebcamCapture = () => {
+//   const webcamRef = React.useRef(null);
+//   const [imgSrc, setImgSrc] = React.useState(null);
 
-let inter
+// let inter
 
-  const capture = React.useCallback(() => {
-    let i = 0
-    if(!inter)
-    {
-      inter = setInterval(() => {
-        const imageSrc = webcamRef.current.getScreenshot();
-        setImgSrc(imageSrc);
+//   const capture = React.useCallback(() => {
+//     let i = 0
+//     if(!inter)
+//     {
+//       inter = setInterval(() => {
+//         const imageSrc = webcamRef.current.getScreenshot();
+//         setImgSrc(imageSrc);
   
-        const base64Data = imageSrc.replace(/data:image\/png;base64,/, "");
-        // Созранение фото
-        fs.writeFile(`result/image/test_${i++}.jpg`, base64Data, 'base64', function (err) {
-          if (err != null) {
-            console.log(err);
-          }
+//         const base64Data = imageSrc.replace(/data:image\/png;base64,/, "");
+//         // Созранение фото
+//         fs.writeFile(`result/image/test_${i++}.jpg`, base64Data, 'base64', function (err) {
+//           if (err != null) {
+//             console.log(err);
+//           }
   
-        });
-      },1000)
-    }else{
-      clearInterval(inter)
-    }
+//         });
+//       },1000)
+//     }else{
+//       clearInterval(inter)
+//     }
     
-  }, [webcamRef, setImgSrc]);
+//   }, [webcamRef, setImgSrc]);
 
 
-  return (
-    <>
-      <Webcam
-        audio={false}
-        ref={webcamRef}
-        screenshotFormat="image/png"
-      />
-      <button onClick={capture}>Capture photo</button>
-      <button onClick={stop}>Stop</button>
-      {imgSrc && (
-        <img id='snapshot'
-          src={imgSrc}
-        />
-      )}
-    </>
-  );
-};
+//   return (
+//     <>
+//       <Webcam
+//         audio={false}
+//         ref={webcamRef}
+//         screenshotFormat="image/png"
+//       />
+//       {imgSrc && (
+//         <img id='snapshot'
+//           src={imgSrc}
+//         />
+//       )}
+//     </>
+//   );
+// };
 
