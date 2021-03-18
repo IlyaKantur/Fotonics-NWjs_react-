@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Choice from './choice/choice.js';
+import Method_1D from './method_1D/method_1D.js';
 import Method_2D from './method_2D/method_2D.js';
 import PTE from './PTE/PTE.js';
 import Camera from './camera/camera.js';
@@ -25,6 +26,12 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement }) => {
                     onAlert={onAlert}
                     id_item = {item}
                     ></Choice>
+                break;
+            case 'method_1D':
+                element = <Method_1D>
+                    onAlert = {onAlert}
+                    id_item = {item}
+                </Method_1D>
                 break;
             case 'method_2D':
                 element = <Method_2D
