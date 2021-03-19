@@ -5,10 +5,13 @@ import createPlotlyComponent from 'react-plotly.js/factory';
 const Plot = createPlotlyComponent(Plotly);
 
 import './method_1D.css';
+const fs = window.require('fs');
 
 export default class Method_1D extends Component {
     constructor(props) {
         super(props)
+
+        this.masData = []
     }
 
     state = {
@@ -31,6 +34,79 @@ export default class Method_1D extends Component {
         })
     }
 
+    click_loadFolder = () => {
+        this.loadFolder(this.loadFolderData).then(({masData}) =>{
+            this.masData = masData;
+            console.log(masData)
+        })
+    }
+
+    loadFolder = (loadFolderData) => {
+        return new Promise((resolve) => {
+            let i = document.createElement('input')
+
+            i.type = 'file';
+            i.nwdirectory = 'directory';
+
+            i.click();
+            i.onchange = function() {
+                let dataFolder = String(this.value)
+                loadFolderData(dataFolder).then(({masData}) =>{
+                    resolve({masData})
+                })
+            }
+        })
+    } 
+
+    loadFolderData = (dataFolder) =>{
+        return new Promise((resolve) => {
+            fs.readdir(dataFolder, (err, masFold) => {
+                if (err) {
+                    console.error(err);
+                    return
+                }
+                this.loadData(dataFolder, masFold).then((masData) => {
+                    resolve({masData})
+                })
+            })
+        })
+    }
+
+    // load = (dataFolder, masFold) => {
+    //     return new Promise((resolve) => {
+    //         masFold.sort(function (a, b){
+    //             return a.length - b.length;
+    //         });
+    //         if (dataFolder[0] == '.') dataFolder = `.${dataFolder}`;
+    //         masFold = masFold.map(element => {
+    //             return element = `${dataFolder}/${element}`
+    //         })
+    //         this.loadData(masFold).then(({masData}) => {
+    //             resolve({masData})
+    //         })
+    //     })
+    // }
+
+    loadData = (dataFolder, masFold) => {
+        return new Promise((resolve) => {
+            let masData = [];
+            for(let i = 0; i < masFold.length; i++)
+            {
+                let file = new File(`${dataFolder}/${masFold}`, `${masFold}`)
+                let reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = function(){
+                    let result = reader.result.split('\n');
+                    //Пока что пропускать первые 3 строчки
+                    result = result.filter(item => !/[a-zа-яё]/i.test(item))
+                    masData[i] = result;
+                }
+                if(i == masFold.length - 1){resolve(masData)}
+            }
+        })
+    }
+
+
     render() {
         const { revision } = this.state;
         const data = [];
@@ -39,10 +115,16 @@ export default class Method_1D extends Component {
             <div id="work_panel">
                 <div id="control_panel">
                     <h3>Файл</h3>
-                    <button>Открыть</button>
+                    <button onClick = {this.click_loadFolder}>Папка</button>
+                    <button >Выбрать</button>
                     <button>Сохранить</button>
                     <h3>Обработка</h3>
                     <button>Суммировать</button>
+                    <h3>Калибровка</h3>
+                    <input id = 'en_first_point' type = 'number' placeholder = "Эн. первой точки"></input>
+                    <input id = 'en_second_point' type = 'number' placeholder = "Эн. второй точки"></input>
+                    <input id = 'n_first_point' type = 'number' placeholder = "N первой точки"></input>
+                    <input id = 'n_second_point' type = 'number' placeholder = "N второй точки"></input>
                 </div>
                 <div id="view_panel">
                     <div id="graph">
