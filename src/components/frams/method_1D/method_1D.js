@@ -34,10 +34,12 @@ export default class Method_1D extends Component {
         })
     }
 
+// Начала считывания
+
     click_loadFolder = () => {
         this.loadFolder(this.loadFolderData).then(({masData}) =>{
             this.masData = masData;
-            console.log(masData)
+            console.log(masData);
         })
     }
 
@@ -92,7 +94,7 @@ export default class Method_1D extends Component {
             let masData = [];
             for(let i = 0; i < masFold.length; i++)
             {
-                let file = new File(`${dataFolder}/${masFold}`, `${masFold}`)
+                let file = new File(`${dataFolder}/${masFold[i]}`, `${masFold[i]}`)
                 let reader = new FileReader();
                 reader.readAsText(file);
                 reader.onload = function(){
@@ -106,6 +108,11 @@ export default class Method_1D extends Component {
         })
     }
 
+// Конец считывания
+
+    click_sum = () => {
+        
+    }
 
     render() {
         const { revision } = this.state;
