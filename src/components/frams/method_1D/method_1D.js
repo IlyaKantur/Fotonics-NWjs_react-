@@ -111,6 +111,7 @@ export default class Method_1D extends Component {
         const { revision } = this.state;
         const data = [];
         const massum = [];
+        
         return (
             <div id="work_panel">
                 <div id="control_panel">
