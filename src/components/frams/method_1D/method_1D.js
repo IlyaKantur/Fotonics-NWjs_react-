@@ -13,18 +13,33 @@ export default class Method_1D extends Component {
     }
 
     state = {
+        active_tab: 1,
         data: [],
         masDataX: [],
         masDataY: [],
         revision: 0,
         massum: [],
-        countSum: 5
+        coor: [],
+        data_file: [],
+        coor_file: [],
+        massum_file: [],
+        countSum: 1,
+        en_first_point: 0,
+        en_second_point: 0,
+        n_first_point: 0,
+        n_second_point: 0
     }
 
-    stored_value = (name, value) =>{
+    switch_tab = (id) => {
+        this.setState({
+            active_tab: id
+        })
+    }
+
+    stored_value = (name, value) => {
         this.setState((state) => {
             return state[name] = value
-          });
+        });
     }
 
     reloadData = (masx, massum) => {
@@ -118,7 +133,7 @@ export default class Method_1D extends Component {
                     console.error(err);
                     return
                 }
-                this.loadData(dataFolder, masFold).then((masData) => {
+                this.loadData(dataFolder, masFold).then(({ masData }) => {
                     resolve({ masData })
                 })
             })
@@ -138,7 +153,7 @@ export default class Method_1D extends Component {
                     result = result.filter(item => !/[a-zа-яё]/i.test(item))
                     result = result.filter(item => item.length !== 0)
                     masData[i] = result;
-                    if (i == masFold.length - 1) { resolve(masData) }
+                    if (i == masFold.length - 1) { resolve({ masData }) }
                 }
             }
         })
@@ -146,93 +161,178 @@ export default class Method_1D extends Component {
 
     // Конец считывания
 
+    click_save = () => {
+        const { coor, massum } = this.state;
+        const path_save = './result/TestObr/1D/test.dat';
+
+        let file = fs.createWriteStream(path_save);
+        file.on('error', function (err) { console.log(err) })
+        coor.forEach((item, i) => file.write(`${item} ${massum[i]} \n`));
+        file.end();
+    }
+
     click_sum = () => {
         if (this.state.masDataX.length !== 0 && this.state.masDataX.length !== 0) {
-            const {masDataX, masDataY, countSum} = this.state;
-            let sum = [];
+            const { masDataX, masDataY, countSum } = this.state;
+            let sum = [], coor = [];
             masDataY.map((item, j) => {
-                if(j === 0) sum = Array.apply(null, Array(Math.ceil(item.length/countSum))).map(Number.prototype.valueOf, 0);
-                let midle = 0, k = 0;
+                if (j === 0) sum = Array.apply(null, Array(Math.ceil(item.length / countSum))).map(Number.prototype.valueOf, 0);
+                let midle = 0, k = 0, x = 0;
                 item.map((y, i) => {
                     midle += Number(y);
                     k++;
-                    if(k == countSum || i == item.length - 1)
-                    {
-                        sum[i] = sum[i] + midle;
-                        k = 0;
-                        midle = 0;
+                    if (k == countSum || i == item.length - 1) {
+                        // sum[x] = sum[x] + Math.round(midle/countSum);
+                        sum[x] = sum[x] + midle
+                        coor[x] = x;
+                        k = 0; midle = 0; x++;
                     }
                 })
             })
-            this.reloadData(masDataX[0], sum);
+            this.reloadData(coor, sum);
             this.setState({
+                coor: coor,
                 massum: sum
             })
         }
     }
 
-    render() {
-        const {data ,revision, massum, countSum } = this.state;
+    click_calibration = () => {
+        const { coor, massum, en_first_point, en_second_point, n_first_point, n_second_point } = this.state;
+        let del_en = (en_second_point - en_first_point) / (n_second_point - n_first_point);
+        let newCoor = [];
+        newCoor[0] = en_first_point - del_en.toFixed(5) * n_first_point
+        for (let i = 1; i < coor.length; i++) {
+            newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(5));
+        }
+        this.reloadData(newCoor, massum);
+        this.setState({
+            coor: newCoor
+        })
+    }
 
-        return (
-            <div id="work_panel">
-                <div id="control_panel">
-                    <h3>Файл</h3>
-                    <button onClick={this.click_loadFolder}>Папка</button>
-                    <button onClick={this.click_loadFile}>Выбрать</button>
-                    <button>Сохранить</button>
-                    <h3>Обработка</h3>
-                    <button onClick = {this.click_sum}>Суммировать</button>
-                    <input id = 'countSum' type='number' placeholder="Сумма по" 
-                        onChange = {(e) => this.stored_value(e.target.id,e.target.value)}
-                        value = {countSum}
-                    ></input>
-                    <button>Калибровка</button>
-                    <h3>Парам. Калибровки</h3>
-                    <input id='en_first_point' type='number' placeholder="Эн. первой точки"></input>
-                    <input id='en_second_point' type='number' placeholder="Эн. второй точки"></input>
-                    <input id='n_first_point' type='number' placeholder="N первой точки"></input>
-                    <input id='n_second_point' type='number' placeholder="N второй точки"></input>
-                </div>
-                <div id="view_panel">
-                    <div id="graph">
-                        <Plot
-                            data={data}
-                            graphDiv="graph"
-                            layout={{ title: 'Intensivity', datarevision: { revision }, width: 800, height: 600 }}
-                            revision={revision}
-                        />
+    render() {
+        const { active_tab, data, revision, coor, massum, data_file, coor_file, massum_file, countSum } = this.state;
+        let element, button_active_1, button_active_2;
+        if (active_tab == 1) {
+            button_active_1 = "button_tab_1D button_active_1D";
+            button_active_2 = "button_tab_1D";
+            let class_HT = 
+            element =
+                (
+                    <div id="sum_graph">
+                        <div id="control_panel">
+                            <h3>Файл</h3>
+                            <div className = {`hidden_menu ${class_HT}`}>
+                                <button onClick={this.click_loadFolder}>Папка</button>
+                                <button onClick={this.click_loadFile}>Выбрать</button>
+                                <button onClick={this.click_save}>Сохранить</button>
+                            </div>
+                            <h3>Обработка</h3>
+                            <div className = {`hidden_menu ${class_HT}`}>
+                                <button id="click_sum" onClick={this.click_sum}>Суммировать</button>
+                                <input id='countSum' type='number' placeholder="Сумма по"
+                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+                                    value={countSum}
+                                ></input>
+                                <button id="click_calibration" onClick={this.click_calibration}>Калибровка</button>
+                                <input id='en_first_point' type='number' placeholder="Эн. первой точки"
+                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+                                ></input>
+                                <input id='en_second_point' type='number' placeholder="Эн. второй точки"
+                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+                                ></input>
+                                <input id='n_first_point' type='number' placeholder="N первой точки"
+                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+                                ></input>
+                                <input id='n_second_point' type='number' placeholder="N второй точки"
+                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+                                ></input>
+                                <button id=""></button>
+                            </div>
+                        </div>
+                        <div id="view_panel">
+                            <div id="graph">
+                                <Plot
+                                    data={data}
+                                    graphDiv="graph"
+                                    layout={{
+                                        title: 'Intensivity',
+                                        datarevision: { revision },
+                                        width: 900, height: 675
+                                    }}
+                                    revision={revision}
+                                />
+                            </div>
+                            <div>
+                                <Coor
+                                    coor={coor}
+                                    massum={massum}
+                                ></Coor>
+                            </div>
+                        </div>
                     </div>
-                    <div>
+                )
+        }
+        else {
+            button_active_1 = "button_tab_1D";
+            button_active_2 = "button_tab_1D button_active_1D";
+            element = (
+                <div id="list_graph">
+                    <div id="list_file"></div>
+                    <div id="view_panel_file">
+                        <div id="graph_file">
+                            <Plot>
+                                data = {data_file}
+                            graphDiv="graph"
+                            layout={{
+                                    title: 'Intensivity',
+                                    datarevision: { revision },
+                                    width: 900, height: 675
+                                }}
+                            </Plot>
+                        </div>
                         <Coor
-                            massum={massum}
+                            coor={coor_file}
+                            massum={massum_file}
                         ></Coor>
                     </div>
 
+                </div>)
+        }
+
+        return (
+            <div id="place_1D">
+                <div id="left_tab_panel_1D">
+                    <button className={button_active_1} onClick={() => { this.switch_tab(1) }}>G</button>
+                    <button className={button_active_2} onClick={() => { this.switch_tab(2) }}>C</button>
+                </div>
+                <div id="work_panel_1D">
+                    {element}
                 </div>
             </div>
-
         )
     }
 }
 
 class Coor extends Component {
     render() {
-        const { massum } = this.props;
+        const { coor, massum } = this.props;
         return (
             <div id="coorPanel">
                 <Coordinat
+                    coor={coor}
                     massum={massum}
                 ></Coordinat>
             </div>
         )
     }
 }
-const Coordinat = ({ massum }) => {
+const Coordinat = ({ coor, massum }) => {
     const element = massum.map((count, x) => {
         return (
             <div key={`x_${x}`} >
-                <div className='coor_element'>    x: {x}   y: {count}</div>
+                <div className='coor_element'>    <b>X:</b> {coor[x]}   <b>Y:</b> {count}</div>
                 {/* <div className='coor_element'>
                     <input
                         className='y_input'
