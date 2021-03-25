@@ -24,10 +24,11 @@ export default class Method_1D extends Component {
         coor_file: [],
         massum_file: [],
         countSum: 1,
-        en_first_point: 0,
-        en_second_point: 0,
-        n_first_point: 0,
-        n_second_point: 0
+        en_first_point: '',
+        en_second_point: '',
+        n_first_point: '',
+        n_second_point: '',
+        n_smoothing: '3'
     }
 
     switch_tab = (id) => {
@@ -211,8 +212,45 @@ export default class Method_1D extends Component {
         })
     }
 
+    click_smoothing = () => {
+        const {coor, n_smoothing} = this.state;
+        let {massum} = this.state;
+        // newSum[0] = massum[0];
+        let sum = 0, del = 3, floor = Math.floor(n_smoothing/2), sep = 0 - floor;
+        for(let i = 1; i <= floor; i++){
+            for(let j = 0; j < del; j ++)
+            {
+                sum += massum[j];
+            }
+            massum[i] = sum / del;
+            del += 2;
+        }
+        sum = 0;
+        for(let i = n_smoothing; i < massum.length - floor; i++)
+        {  
+            del = sep;
+            for(let j = 0; j < n_smoothing; j ++)
+            {
+                sum += massum[i + del];
+                del++;
+            }
+            massum[i] = sum / n_smoothing;
+            // newSum[i] = Math.ceil((newSum[i-1] + massum[i] + massum[i + 1])/3)
+        }
+        // newSum[massum.length-1] = Math.ceil((newSum[massum.length-2] + massum[massum.length-1])/2);
+        this.reloadData(coor, massum);
+        this.setState({
+            massum: massum
+        })
+    }
+
     render() {
-        const { active_tab, data, revision, coor, massum, data_file, coor_file, massum_file, countSum } = this.state;
+        const { 
+            active_tab, data, revision, coor, massum,
+            data_file, coor_file, massum_file, countSum,
+            en_first_point, en_second_point, n_first_point,
+            n_second_point, n_smoothing
+         } = this.state;
         let element, button_active_1, button_active_2;
         if (active_tab == 1) {
             button_active_1 = "button_tab_1D button_active_1D";
@@ -238,17 +276,25 @@ export default class Method_1D extends Component {
                                 <button id="click_calibration" onClick={this.click_calibration}>Калибровка</button>
                                 <input id='en_first_point' type='number' placeholder="Эн. первой точки"
                                     onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+                                    value={en_first_point}
                                 ></input>
                                 <input id='en_second_point' type='number' placeholder="Эн. второй точки"
                                     onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+                                    value={en_second_point}
                                 ></input>
                                 <input id='n_first_point' type='number' placeholder="N первой точки"
                                     onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+                                    value={n_first_point}
                                 ></input>
                                 <input id='n_second_point' type='number' placeholder="N второй точки"
                                     onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+                                    value={n_second_point}
                                 ></input>
-                                <button id=""></button>
+                                <button id="click_smoothing" onClick={this.click_smoothing}>Сглаживание</button>
+                                <input id='n_smoothing' type='number' placeholder="Количество точек"
+                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+                                    value={n_smoothing}
+                                ></input>
                             </div>
                         </div>
                         <div id="view_panel">
