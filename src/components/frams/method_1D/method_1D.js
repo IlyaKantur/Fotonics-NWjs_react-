@@ -183,8 +183,8 @@ export default class Method_1D extends Component {
                     midle += Number(y);
                     k++;
                     if (k == countSum || i == item.length - 1) {
-                        // sum[x] = sum[x] + Math.round(midle/countSum);
-                        sum[x] = sum[x] + midle
+                        sum[x] = sum[x] + Math.ceil(midle/countSum);
+                        // sum[x] = sum[x] + midle
                         coor[x] = x;
                         k = 0; midle = 0; x++;
                     }
@@ -213,28 +213,27 @@ export default class Method_1D extends Component {
     }
 
     click_smoothing = () => {
-        const {coor, n_smoothing} = this.state;
+        let {coor, n_smoothing} = this.state;
+        let n = Number(n_smoothing);
         let {massum} = this.state;
         // newSum[0] = massum[0];
-        let sum = 0, del = 3, floor = Math.floor(n_smoothing/2), sep = 0 - floor;
-        for(let i = 1; i <= floor; i++){
+        let sum = 0, del = 3, floor = Math.floor(n/2);
+        for(let i = 1; i < n; i++){
             for(let j = 0; j < del; j ++)
             {
                 sum += massum[j];
             }
-            massum[i] = sum / del;
+            massum[i] = Math.ceil(sum / del);
             del += 2;
         }
-        sum = 0;
-        for(let i = n_smoothing; i < massum.length - floor; i++)
+        for(let i = n; i < massum.length - floor; i++)
         {  
-            del = sep;
-            for(let j = 0; j < n_smoothing; j ++)
+            sum = 0;
+            for(let j = 0; j < n; j ++)
             {
-                sum += massum[i + del];
-                del++;
+                sum += massum[i + j - floor];
             }
-            massum[i] = sum / n_smoothing;
+            massum[i] = Math.ceil(sum / n);
             // newSum[i] = Math.ceil((newSum[i-1] + massum[i] + massum[i + 1])/3)
         }
         // newSum[massum.length-1] = Math.ceil((newSum[massum.length-2] + massum[massum.length-1])/2);
