@@ -10,25 +10,27 @@ const fs = window.require('fs');
 export default class Method_1D extends Component {
     constructor(props) {
         super(props)
+        this.masDataX = []
+        this.masDataY = []
+        this.masInformation = {
+            countSum: 1,
+            en_first_point: 0,
+            en_second_point: 0,
+            n_first_point: 0,
+            n_second_point: 0,
+            n_smoothing: 3
+        }
     }
 
     state = {
         active_tab: 1,
         data: [],
-        masDataX: [],
-        masDataY: [],
         revision: 0,
         massum: [],
         coor: [],
         data_file: [],
         coor_file: [],
         massum_file: [],
-        countSum: 1,
-        en_first_point: '',
-        en_second_point: '',
-        n_first_point: '',
-        n_second_point: '',
-        n_smoothing: '3'
     }
 
     switch_tab = (id) => {
@@ -38,9 +40,10 @@ export default class Method_1D extends Component {
     }
 
     stored_value = (name, value) => {
-        this.setState((state) => {
-            return state[name] = value
-        });
+        
+        // this.setState((state) => {
+        //     return state[name] = value
+        // });
     }
 
     reloadData = (masx, massum) => {
@@ -53,6 +56,8 @@ export default class Method_1D extends Component {
                 marker: { color: 'red' }
             }];
         this.setState({
+            massum: massum,
+            coor: masx,
             data: data,
             revision: this.state.revision + 1
         })
@@ -78,10 +83,8 @@ export default class Method_1D extends Component {
             masDataY.push(Y);
 
         })
-        this.setState({
-            masDataX: masDataX,
-            masDataY: masDataY
-        })
+        this.masDataX = masDataX;
+        this.masDataY = masDataY;
 
     }
 
@@ -173,10 +176,9 @@ export default class Method_1D extends Component {
     }
 
     click_sum = () => {
-        if (this.state.masDataX.length !== 0 && this.state.masDataX.length !== 0) {
-            const { masDataX, masDataY, countSum } = this.state;
-            let sum = [], coor = [];
-            masDataY.map((item, j) => {
+        if (this.masDataY.length !== 0) {
+            let sum = [], coor = [], countSum = this.masInformation.countSum;
+            this.masDataY.map((item, j) => {
                 if (j === 0) sum = Array.apply(null, Array(Math.ceil(item.length / countSum))).map(Number.prototype.valueOf, 0);
                 let midle = 0, k = 0, x = 0;
                 item.map((y, i) => {
@@ -191,31 +193,24 @@ export default class Method_1D extends Component {
                 })
             })
             this.reloadData(coor, sum);
-            this.setState({
-                coor: coor,
-                massum: sum
-            })
         }
     }
 
     click_calibration = () => {
-        const { coor, massum, en_first_point, en_second_point, n_first_point, n_second_point } = this.state;
-        let del_en = (en_second_point - en_first_point) / (n_second_point - n_first_point);
+        const { coor, massum} = this.state;
+        let del_en = (this.en_second_point - this.en_first_point) / (this.n_second_point - this.n_first_point);
         let newCoor = [];
-        newCoor[0] = en_first_point - del_en.toFixed(5) * n_first_point
+        newCoor[0] = this.en_first_point - del_en.toFixed(5) * this.n_first_point
         for (let i = 1; i < coor.length; i++) {
             newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(5));
         }
         this.reloadData(newCoor, massum);
-        this.setState({
-            coor: newCoor
-        })
     }
 
     click_smoothing = () => {
-        let {coor, n_smoothing} = this.state;
-        let n = Number(n_smoothing);
         let {massum} = this.state;
+        let n = Number(this.n_smoothing);
+        
         // newSum[0] = massum[0];
         let sum = 0, del = 3, floor = Math.floor(n/2);
         for(let i = 1; i < n; i++){
@@ -237,18 +232,13 @@ export default class Method_1D extends Component {
             // newSum[i] = Math.ceil((newSum[i-1] + massum[i] + massum[i + 1])/3)
         }
         // newSum[massum.length-1] = Math.ceil((newSum[massum.length-2] + massum[massum.length-1])/2);
-        this.reloadData(coor, massum);
-        this.setState({
-            massum: massum
-        })
+        this.reloadData(this.state.coor, massum);
     }
 
     render() {
         const { 
             active_tab, data, revision, coor, massum,
-            data_file, coor_file, massum_file, countSum,
-            en_first_point, en_second_point, n_first_point,
-            n_second_point, n_smoothing
+            data_file, coor_file, massum_file,
          } = this.state;
         let element, button_active_1, button_active_2;
         if (active_tab == 1) {
@@ -268,31 +258,30 @@ export default class Method_1D extends Component {
                             <h3>Обработка</h3>
                             <div className = {`hidden_menu ${class_HT}`}>
                                 <button id="click_sum" onClick={this.click_sum}>Суммировать</button>
-                                <input id='countSum' type='number' placeholder="Сумма по"
+                                <input id='countSum' type='number' placeholder="Сумма по: 1"
                                     onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                    value={countSum}
                                 ></input>
                                 <button id="click_calibration" onClick={this.click_calibration}>Калибровка</button>
                                 <input id='en_first_point' type='number' placeholder="Эн. первой точки"
                                     onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                    value={en_first_point}
+                                    // value={en_first_point}
                                 ></input>
                                 <input id='en_second_point' type='number' placeholder="Эн. второй точки"
                                     onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                    value={en_second_point}
+                                    // value={en_second_point}
                                 ></input>
                                 <input id='n_first_point' type='number' placeholder="N первой точки"
                                     onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                    value={n_first_point}
+                                    // value={n_first_point}
                                 ></input>
                                 <input id='n_second_point' type='number' placeholder="N второй точки"
                                     onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                    value={n_second_point}
+                                    // value={n_second_point}
                                 ></input>
                                 <button id="click_smoothing" onClick={this.click_smoothing}>Сглаживание</button>
                                 <input id='n_smoothing' type='number' placeholder="Количество точек"
                                     onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                    value={n_smoothing}
+                                    // value={n_smoothing}
                                 ></input>
                             </div>
                         </div>
