@@ -12,6 +12,8 @@ export default class Method_1D extends Component {
         super(props)
         this.masDataX = []
         this.masDataY = []
+        this.revision = 0
+        this.revision_file = 0
         this.masInformation = {
             countSum: 1,
             en_first_point: 0,
@@ -25,9 +27,9 @@ export default class Method_1D extends Component {
     state = {
         active_tab: 1,
         data: [],
-        revision: 0,
         massum: [],
         coor: [],
+        mas_name_file: [],
         data_file: [],
         coor_file: [],
         massum_file: [],
@@ -40,10 +42,7 @@ export default class Method_1D extends Component {
     }
 
     stored_value = (name, value) => {
-        
-        // this.setState((state) => {
-        //     return state[name] = value
-        // });
+        this.masInformation[name] = value
     }
 
     reloadData = (masx, massum) => {
@@ -55,25 +54,29 @@ export default class Method_1D extends Component {
                 mode: 'lines+markers',
                 marker: { color: 'red' }
             }];
+        this.revision++
         this.setState({
             massum: massum,
             coor: masx,
-            data: data,
-            revision: this.state.revision + 1
+            data: data
         })
     }
 
     // Начала считывания
 
     click_loadFolder = () => {
-        this.loadFolder(this.loadFolderData).then(({ masData }) => {
+        this.loadFolder(this.loadFolderData).then(({ masData, mas_name_file }) => {
             this.complite_data(masData);
+            this.setState({
+                mas_name_file: mas_name_file
+            })
         })
     }
 
     complite_data = (masData) => {
-        let masDataX = [], masDataY = [], X = [], Y = [];
+        let masDataX = [], masDataY = [];
         masData.map((item) => {
+            let X = [], Y = [];
             for (let i = 0; i < item.length; i++) {
                 let xy = item[i].split(' ');
                 X[i] = xy[0];
@@ -89,8 +92,11 @@ export default class Method_1D extends Component {
     }
 
     click_loadFile = () => {
-        this.loadFile(this.loadData).then(({ masData }) => {
+        this.loadFile(this.loadData).then(({ masData, mas_name_file }) => {
             this.complite_data(masData);
+            this.setState({
+                mas_name_file: mas_name_file
+            })
         })
     }
 
@@ -108,7 +114,7 @@ export default class Method_1D extends Component {
                     masFold[j] = i.files[j].name;
                 }
                 loadData(dataFolder, masFold).then(({ masData }) => {
-                    resolve({ masData })
+                    resolve({ masData, mas_name_file: masFold})
                 })
             }
         })
@@ -123,8 +129,8 @@ export default class Method_1D extends Component {
             i.click();
             i.onchange = function () {
                 let dataFolder = String(this.value)
-                loadFolderData(dataFolder).then(({ masData }) => {
-                    resolve({ masData })
+                loadFolderData(dataFolder).then(({ masData, mas_name_file }) => {
+                    resolve({ masData, mas_name_file })
                 })
             }
         })
@@ -138,7 +144,7 @@ export default class Method_1D extends Component {
                     return
                 }
                 this.loadData(dataFolder, masFold).then(({ masData }) => {
-                    resolve({ masData })
+                    resolve({ masData, mas_name_file: masFold })
                 })
             })
         })
@@ -198,9 +204,10 @@ export default class Method_1D extends Component {
 
     click_calibration = () => {
         const { coor, massum} = this.state;
-        let del_en = (this.en_second_point - this.en_first_point) / (this.n_second_point - this.n_first_point);
+        let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) / 
+            (this.masInformation.n_second_point - this.masInformation.n_first_point);
         let newCoor = [];
-        newCoor[0] = this.en_first_point - del_en.toFixed(5) * this.n_first_point
+        newCoor[0] = this.masInformation.en_first_point - del_en.toFixed(5) * this.masInformation.n_first_point
         for (let i = 1; i < coor.length; i++) {
             newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(5));
         }
@@ -209,7 +216,7 @@ export default class Method_1D extends Component {
 
     click_smoothing = () => {
         let {massum} = this.state;
-        let n = Number(this.n_smoothing);
+        let n = Number(this.masInformation.n_smoothing);
         
         // newSum[0] = massum[0];
         let sum = 0, del = 3, floor = Math.floor(n/2);
@@ -235,10 +242,28 @@ export default class Method_1D extends Component {
         this.reloadData(this.state.coor, massum);
     }
 
+    click_graph_file = (id) => {
+        const data = [
+            {
+                x: this.masDataX[id],
+                y: this.masDataY[id],
+                type: 'scatter',
+                mode: 'lines+markers',
+                marker: { color: 'red' }
+            }];
+        this.revision_file++
+        this.setState({
+            data_file: data,
+            coor_file: this.masDataX[id],
+            massum_file: this.masDataY[id]
+        })
+    }
+
     render() {
         const { 
-            active_tab, data, revision, coor, massum,
+            active_tab, data, coor, massum,
             data_file, coor_file, massum_file,
+            mas_name_file
          } = this.state;
         let element, button_active_1, button_active_2;
         if (active_tab == 1) {
@@ -292,10 +317,10 @@ export default class Method_1D extends Component {
                                     graphDiv="graph"
                                     layout={{
                                         title: 'Intensivity',
-                                        datarevision: { revision },
+                                        datarevision: { revision: this.revision },
                                         width: 900, height: 675
                                     }}
-                                    revision={revision}
+                                    revision={this.revision}
                                 />
                             </div>
                             <div>
@@ -313,17 +338,25 @@ export default class Method_1D extends Component {
             button_active_2 = "button_tab_1D button_active_1D";
             element = (
                 <div id="list_graph">
-                    <div id="list_file"></div>
+                    <div id="list_file">
+                        {mas_name_file.map((item, i)=>{
+                            return(
+                                <a onClick={() => this.click_graph_file(i)} key={i}>{item}</a>
+                            )
+                        })}
+                    </div>
                     <div id="view_panel_file">
                         <div id="graph_file">
-                            <Plot>
-                                data = {data_file}
+                            <Plot
+                            data = {data_file}
                             graphDiv="graph"
                             layout={{
                                     title: 'Intensivity',
-                                    datarevision: { revision },
+                                    datarevision: {revision: this.revision_file },
                                     width: 900, height: 675
                                 }}
+                            revision={this.revision_file}
+                            >
                             </Plot>
                         </div>
                         <Coor
