@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import Plotly from 'plotly.js/lib/core';
 import createPlotlyComponent from 'react-plotly.js/factory';
@@ -7,7 +7,7 @@ const Plot = createPlotlyComponent(Plotly);
 import './method_1D.css';
 const fs = window.require('fs');
 
-export default class Method_1D extends Component {
+export default class Method_1D extends PureComponent {
     constructor(props) {
         super(props)
         this.masDataX = []
@@ -382,7 +382,7 @@ export default class Method_1D extends Component {
     }
 }
 
-class Coor extends Component {
+class Coor extends PureComponent {
     render() {
         const { coor, massum } = this.props;
         return (
