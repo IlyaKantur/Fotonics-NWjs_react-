@@ -269,7 +269,7 @@ export default class Method_1D extends Component {
         if (active_tab == 1) {
             button_active_1 = "button_tab_1D button_active_1D";
             button_active_2 = "button_tab_1D";
-            let class_HT = 
+            let class_HT = ''
             element =
                 (
                     <div id="sum_graph">
