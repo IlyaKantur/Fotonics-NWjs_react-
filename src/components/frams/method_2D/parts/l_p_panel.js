@@ -3,9 +3,10 @@ import Bars from './bars.js';
 import Coor from './coor.js';
 import Console from '../../../console/console.js';
 
-import Plotly from 'plotly.js/lib/core';
-import createPlotlyComponent from 'react-plotly.js/factory';
-const Plot = createPlotlyComponent(Plotly);
+// import Plotly from 'plotly.js/lib/core';
+// import createPlotlyComponent from 'react-plotly.js/factory';
+// const Plot = createPlotlyComponent(Plotly);
+// import Plot from 'react-plotly.js';
 
 
 
@@ -23,7 +24,7 @@ export default class L_P_Panel extends Component {
 
     render() {
         const { loadFolder, loadFoldImg, loadFonImg, startPush, applyCoor, returnCoor, data, revision, consoleMessage, onConsoleMessage, id_item, finished } = this.props;
-        let { massum } = this.props;
+        let { massum, Plot } = this.props;
         const { active_l_t } = this.state;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;

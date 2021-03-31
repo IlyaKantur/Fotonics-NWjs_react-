@@ -5,6 +5,7 @@ import Method_1D from './method_1D/method_1D.js';
 import Method_2D from './method_2D/method_2D.js';
 import PTE from './PTE/PTE.js';
 import Camera from './camera/camera.js';
+import Plot from 'react-plotly.js';
 
 import './frames.css'
 
@@ -28,9 +29,11 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement }) => {
                     ></Choice>
                 break;
             case 'method_1D':
-                element = <Method_1D>
+                element = <Method_1D
                     onAlert = {onAlert}
                     id_item = {item}
+                    Plot = {Plot}
+                >
                 </Method_1D>
                 break;
             case 'method_2D':
@@ -38,6 +41,7 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement }) => {
                     {...item}
                     onAlert={onAlert}
                     id_item = {item}
+                    Plot = {Plot}
                     ></Method_2D>
                 break;
             case 'PTE':

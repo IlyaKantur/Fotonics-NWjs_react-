@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
 
-import Plotly from 'plotly.js/lib/core';
-import createPlotlyComponent from 'react-plotly.js/factory';
-const Plot = createPlotlyComponent(Plotly);
+// import Plotly from 'plotly.js/lib/core';
+// import createPlotlyComponent from 'react-plotly.js/factory';
+// const Plot = createPlotlyComponent(Plotly);
+// import Plot from 'react-plotly.js';
 
 import './method_1D.css';
 const fs = window.require('fs');
@@ -265,6 +266,7 @@ export default class Method_1D extends PureComponent {
             data_file, coor_file, massum_file,
             mas_name_file
          } = this.state;
+        const {Plot} = this.props;
         let element, button_active_1, button_active_2;
         if (active_tab == 1) {
             button_active_1 = "button_tab_1D button_active_1D";
@@ -304,7 +306,7 @@ export default class Method_1D extends PureComponent {
                                     // value={n_second_point}
                                 ></input>
                                 <button id="click_smoothing" onClick={this.click_smoothing}>Сглаживание</button>
-                                <input id='n_smoothing' type='number' placeholder="Количество точек"
+                                <input id='n_smoothing' type='number' placeholder="Точек: 3"
                                     onChange={(e) => this.stored_value(e.target.id, e.target.value)}
                                     // value={n_smoothing}
                                 ></input>
@@ -359,10 +361,10 @@ export default class Method_1D extends PureComponent {
                             >
                             </Plot>
                         </div>
-                        <Coor
+                        <Coor_file
                             coor={coor_file}
                             massum={massum_file}
-                        ></Coor>
+                        ></Coor_file>
                     </div>
 
                 </div>)
@@ -395,19 +397,25 @@ class Coor extends PureComponent {
         )
     }
 }
+
+class Coor_file extends PureComponent {
+    render() {
+        const { coor, massum } = this.props;
+        return (
+            <div id="coorPanel">
+                <Coordinat
+                    coor={coor}
+                    massum={massum}
+                ></Coordinat>
+            </div>
+        )
+    }
+}
 const Coordinat = ({ coor, massum }) => {
     const element = massum.map((count, x) => {
         return (
             <div key={`x_${x}`} >
                 <div className='coor_element'>    <b>X:</b> {coor[x]}   <b>Y:</b> {count}</div>
-                {/* <div className='coor_element'>
-                    <input
-                        className='y_input'
-                        id={`x_${x}`}
-                        type="text"
-                        defaultValue={count}
-                    />
-                </div> */}
             </div>
         )
     })

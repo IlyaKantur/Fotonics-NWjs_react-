@@ -197,7 +197,7 @@ export default class Method_2D extends Component {
     }
 
     render() {
-        const { id_item } = this.props;
+        const { id_item, Plot } = this.props;
         const { data, revision, massum, consoleMessage } = this.state
         return (
             <L_P_Panel
@@ -214,6 +214,7 @@ export default class Method_2D extends Component {
                 onConsoleMessage={this.onConsoleMessage}
                 id_item={id_item}
                 finished={this.finished}
+                Plot = {Plot}
             ></L_P_Panel>
         )
     }
