@@ -16,6 +16,7 @@ export default class Method_1D extends PureComponent {
         this.revision = 0
         this.revision_file = 0
         this.masInformation = {
+            nameElement: '',
             countSum: 1,
             en_first_point: 0,
             en_second_point: 0,
@@ -37,7 +38,7 @@ export default class Method_1D extends PureComponent {
         data_file: [],
         coor_file: [],
         massum_file: [],
-        
+
     }
 
     switch_tab = (id) => {
@@ -67,9 +68,16 @@ export default class Method_1D extends PureComponent {
                 y: massum,
                 type: 'scatter',
                 mode: 'lines+markers',
-                marker: { color: 'red' }
+                marker: {
+                    color: 'rgb(128, 0, 128)',
+                    size: 8
+                },
+                line: {
+                    color: 'rgb(128, 0, 128)',
+                    width: 1
+                }
             }];
-            this.revision++
+        this.revision++
         this.setState({
             massum: massum,
             coor: masx,
@@ -292,6 +300,7 @@ export default class Method_1D extends PureComponent {
                         revision={revision}
                         coor={coor}
                         massum={massum}
+                        nameElement={this.masInformation.nameElement}
                     />
                     break;
                 case 'List_graph':
@@ -346,20 +355,24 @@ class Sum_graph extends PureComponent {
     render() {
         const { click_loadFolder, click_loadFile, click_save, click_sum,
             stored_value, click_calibration, click_smoothing,
-            data, revision, coor, massum,
+            data, revision, coor, massum, nameElement
             // options
         } = this.props;
 
-
+        console.log(nameElement)
         let class_HT = ''
         return (
             <div id="sum_graph">
                 <div id="control_panel">
                     <h3>Файл</h3>
                     <div className={`hidden_menu ${class_HT}`}>
+                        <input id='nameElement' type='text' placeholder="Элемент"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        ></input>
                         <button onClick={click_loadFolder}>Папка</button>
                         <button onClick={click_loadFile}>Выбрать</button>
                         <button onClick={click_save}>Сохранить</button>
+
                     </div>
                     <h3>Обработка</h3>
                     <div className={`hidden_menu ${class_HT}`}>
@@ -397,9 +410,18 @@ class Sum_graph extends PureComponent {
                             data={data}
                             graphDiv="graph"
                             layout={{
-                                title: 'Intensivity',
+                                title: `${nameElement}`,
                                 datarevision: { revision: revision },
-                                width: 900, height: 675
+                                width: 900, height: 675,
+                                xaxis: {
+                                    title: 'Energy',
+                                    showgrid: false,
+                                    zeroline: false
+                                },
+                                yaxis: {
+                                    title: 'Intensivnosti',
+                                    showline: false
+                                }
                             }}
                             revision={revision}
                         />
