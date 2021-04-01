@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react';
 // import createPlotlyComponent from 'react-plotly.js/factory';
 // const Plot = createPlotlyComponent(Plotly);
 // import Plot from 'react-plotly.js';
+import { Line } from 'react-chartjs-2';
 
 import './method_1D.css';
 const fs = window.require('fs');
@@ -23,10 +24,13 @@ export default class Method_1D extends PureComponent {
             n_second_point: 0,
             n_smoothing: 3
         }
+        this.masTab = [{ text: 'Sum_graph' }, { text: 'List_graph' }]
+        this.button_active_1 = "button_tab_1D button_active_1D";
+        this.button_active_2 = "button_tab_1D";
     }
 
     state = {
-        active_tab: 1,
+        active_tab: 'Sum_graph',
         data: [],
         massum: [],
         coor: [],
@@ -37,6 +41,16 @@ export default class Method_1D extends PureComponent {
     }
 
     switch_tab = (id) => {
+        switch (id) {
+            case 'Sum_graph':
+                this.button_active_1 = "button_tab_1D button_active_1D";
+                this.button_active_2 = "button_tab_1D";
+                break;
+            case 'List_graph':
+                this.button_active_1 = "button_tab_1D";
+                this.button_active_2 = "button_tab_1D button_active_1D";
+                break;
+        }
         this.setState({
             active_tab: id
         })
@@ -115,7 +129,7 @@ export default class Method_1D extends PureComponent {
                     masFold[j] = i.files[j].name;
                 }
                 loadData(dataFolder, masFold).then(({ masData }) => {
-                    resolve({ masData, mas_name_file: masFold})
+                    resolve({ masData, mas_name_file: masFold })
                 })
             }
         })
@@ -192,7 +206,7 @@ export default class Method_1D extends PureComponent {
                     midle += Number(y);
                     k++;
                     if (k == countSum || i == item.length - 1) {
-                        sum[x] = sum[x] + Math.ceil(midle/countSum);
+                        sum[x] = sum[x] + Math.ceil(midle / countSum);
                         // sum[x] = sum[x] + midle
                         coor[x] = x;
                         k = 0; midle = 0; x++;
@@ -204,8 +218,8 @@ export default class Method_1D extends PureComponent {
     }
 
     click_calibration = () => {
-        const { coor, massum} = this.state;
-        let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) / 
+        const { coor, massum } = this.state;
+        let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) /
             (this.masInformation.n_second_point - this.masInformation.n_first_point);
         let newCoor = [];
         newCoor[0] = this.masInformation.en_first_point - del_en.toFixed(5) * this.masInformation.n_first_point
@@ -216,24 +230,21 @@ export default class Method_1D extends PureComponent {
     }
 
     click_smoothing = () => {
-        let {massum} = this.state;
+        let { massum } = this.state;
         let n = Number(this.masInformation.n_smoothing);
-        
+
         // newSum[0] = massum[0];
-        let sum = 0, del = 3, floor = Math.floor(n/2);
-        for(let i = 1; i < n; i++){
-            for(let j = 0; j < del; j ++)
-            {
+        let sum = 0, del = 3, floor = Math.floor(n / 2);
+        for (let i = 1; i < n; i++) {
+            for (let j = 0; j < del; j++) {
                 sum += massum[j];
             }
             massum[i] = Math.ceil(sum / del);
             del += 2;
         }
-        for(let i = n; i < massum.length - floor; i++)
-        {  
+        for (let i = n; i < massum.length - floor; i++) {
             sum = 0;
-            for(let j = 0; j < n; j ++)
-            {
+            for (let j = 0; j < n; j++) {
                 sum += massum[i + j - floor];
             }
             massum[i] = Math.ceil(sum / n);
@@ -261,123 +272,198 @@ export default class Method_1D extends PureComponent {
     }
 
     render() {
-        const { 
+        const {
             active_tab, data, coor, massum,
             data_file, coor_file, massum_file,
             mas_name_file
-         } = this.state;
-        const {Plot} = this.props;
-        let element, button_active_1, button_active_2;
-        if (active_tab == 1) {
-            button_active_1 = "button_tab_1D button_active_1D";
-            button_active_2 = "button_tab_1D";
-            let class_HT = ''
-            element =
-                (
-                    <div id="sum_graph">
-                        <div id="control_panel">
-                            <h3>Файл</h3>
-                            <div className = {`hidden_menu ${class_HT}`}>
-                                <button onClick={this.click_loadFolder}>Папка</button>
-                                <button onClick={this.click_loadFile}>Выбрать</button>
-                                <button onClick={this.click_save}>Сохранить</button>
-                            </div>
-                            <h3>Обработка</h3>
-                            <div className = {`hidden_menu ${class_HT}`}>
-                                <button id="click_sum" onClick={this.click_sum}>Суммировать</button>
-                                <input id='countSum' type='number' placeholder="Сумма по: 1"
-                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                ></input>
-                                <button id="click_calibration" onClick={this.click_calibration}>Калибровка</button>
-                                <input id='en_first_point' type='number' placeholder="Эн. первой точки"
-                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                    // value={en_first_point}
-                                ></input>
-                                <input id='en_second_point' type='number' placeholder="Эн. второй точки"
-                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                    // value={en_second_point}
-                                ></input>
-                                <input id='n_first_point' type='number' placeholder="N первой точки"
-                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                    // value={n_first_point}
-                                ></input>
-                                <input id='n_second_point' type='number' placeholder="N второй точки"
-                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                    // value={n_second_point}
-                                ></input>
-                                <button id="click_smoothing" onClick={this.click_smoothing}>Сглаживание</button>
-                                <input id='n_smoothing' type='number' placeholder="Точек: 3"
-                                    onChange={(e) => this.stored_value(e.target.id, e.target.value)}
-                                    // value={n_smoothing}
-                                ></input>
-                            </div>
-                        </div>
-                        <div id="view_panel">
-                            <div id="graph">
-                                <Plot
-                                    data={data}
-                                    graphDiv="graph"
-                                    layout={{
-                                        title: 'Intensivity',
-                                        datarevision: { revision: this.revision },
-                                        width: 900, height: 675
-                                    }}
-                                    revision={this.revision}
-                                />
-                            </div>
-                            <div>
-                                <Coor
-                                    coor={coor}
-                                    massum={massum}
-                                ></Coor>
-                            </div>
-                        </div>
-                    </div>
-                )
-        }
-        else {
-            button_active_1 = "button_tab_1D";
-            button_active_2 = "button_tab_1D button_active_1D";
-            element = (
-                <div id="list_graph">
-                    <div id="list_file">
-                        {mas_name_file.map((item, i)=>{
-                            return(
-                                <a onClick={() => this.click_graph_file(i)} key={i}>{item}</a>
-                            )
-                        })}
-                    </div>
-                    <div id="view_panel_file">
-                        <div id="graph_file">
-                            <Plot
-                            data = {data_file}
-                            graphDiv="graph"
-                            layout={{
-                                    title: 'Intensivity',
-                                    datarevision: {revision: this.revision_file },
-                                    width: 900, height: 675
-                                }}
-                            revision={this.revision_file}
-                            >
-                            </Plot>
-                        </div>
-                        <Coor_file
-                            coor={coor_file}
-                            massum={massum_file}
-                        ></Coor_file>
-                    </div>
-
-                </div>)
-        }
-
+        } = this.state;
+        const { Plot } = this.props;
+        const elements = this.masTab.map((item) => {
+            const { text } = item;
+            let clas, element;
+            if (text === active_tab) { clas = 'tab_1D tab_1D_active' }
+            else { clas = 'tab_1D' }
+            switch (text) {
+                case 'Sum_graph':
+                    element = <Sum_graph
+                        Plot={Plot}
+                        click_loadFolder={this.click_loadFolder}
+                        click_loadFile={this.click_loadFile}
+                        click_save={this.click_save}
+                        click_sum={this.click_sum}
+                        stored_value={this.stored_value}
+                        click_calibration={this.click_calibration}
+                        click_smoothing={this.click_smoothing}
+                        data={data}
+                        revision={this.revision}
+                        coor={coor}
+                        massum={massum}
+                    />
+                    break;
+                case 'List_graph':
+                    element = <List_graph
+                        Plot={Plot}
+                        mas_name_file={mas_name_file}
+                        click_graph_file={this.click_graph_file}
+                        data_file={data_file}
+                        revision_file={this.revision_file}
+                        coor_file={coor_file}
+                        massum_file={massum_file}
+                    />
+                    break;
+            }
+            return (
+                <div key={text} className={clas}>
+                    {element}
+                </div>
+            )
+        })
         return (
             <div id="place_1D">
                 <div id="left_tab_panel_1D">
-                    <button className={button_active_1} onClick={() => { this.switch_tab(1) }}>G</button>
-                    <button className={button_active_2} onClick={() => { this.switch_tab(2) }}>C</button>
+                    <button className={this.button_active_1} onClick={() => { this.switch_tab('Sum_graph') }}>G</button>
+                    <button className={this.button_active_2} onClick={() => { this.switch_tab('List_graph') }}>C</button>
                 </div>
                 <div id="work_panel_1D">
-                    {element}
+                    {elements}
+                </div>
+            </div>
+        )
+    }
+}
+
+class Sum_graph extends PureComponent {
+    render() {
+        const { Plot, click_loadFolder, click_loadFile, click_save, click_sum,
+            stored_value, click_calibration, click_smoothing, data,
+            revision, coor, massum
+        } = this.props;
+
+        // const dataa = {
+        //     labels: ['1', '2', '3', '4', '5', '6'],
+        //     datasets: [
+        //         {
+        //             label: '# of Votes',
+        //             data: [12, 19, 3, 5, 2, 3],
+        //             fill: false,
+        //             backgroundColor: 'rgb(255, 99, 132)',
+        //             borderColor: 'rgba(255, 99, 132, 0.2)',
+        //         },
+        //     ],
+        // }
+
+        // const options = {
+        //     maintainAspectRatio: false,
+        //     scales: {
+        //         yAxes: [
+        //             {
+        //                 ticks: {
+        //                     beginAtZero: true,
+        //                 },
+        //             },
+        //         ],
+        //     },
+        // }
+
+        let class_HT = ''
+        return (
+            <div id="sum_graph">
+                <div id="control_panel">
+                    <h3>Файл</h3>
+                    <div className={`hidden_menu ${class_HT}`}>
+                        <button onClick={click_loadFolder}>Папка</button>
+                        <button onClick={click_loadFile}>Выбрать</button>
+                        <button onClick={click_save}>Сохранить</button>
+                    </div>
+                    <h3>Обработка</h3>
+                    <div className={`hidden_menu ${class_HT}`}>
+                        <button id="click_sum" onClick={click_sum}>Суммировать</button>
+                        <input id='countSum' type='number' placeholder="Сумма по: 1"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        ></input>
+                        <button id="click_calibration" onClick={click_calibration}>Калибровка</button>
+                        <input id='en_first_point' type='number' placeholder="Эн. первой точки"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        // value={en_first_point}
+                        ></input>
+                        <input id='en_second_point' type='number' placeholder="Эн. второй точки"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        // value={en_second_point}
+                        ></input>
+                        <input id='n_first_point' type='number' placeholder="N первой точки"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        // value={n_first_point}
+                        ></input>
+                        <input id='n_second_point' type='number' placeholder="N второй точки"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        // value={n_second_point}
+                        ></input>
+                        <button id="click_smoothing" onClick={click_smoothing}>Сглаживание</button>
+                        <input id='n_smoothing' type='number' placeholder="Точек: 3"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        // value={n_smoothing}
+                        ></input>
+                    </div>
+                </div>
+                <div id="view_panel">
+                    <div id="graph">
+                        {/* <Line data={dataa} options={options} /> */}
+                        <Plot
+                            data={data}
+                            graphDiv="graph"
+                            layout={{
+                                title: 'Intensivity',
+                                datarevision: { revision: revision },
+                                width: 900, height: 675
+                            }}
+                            revision={revision}
+                        />
+                    </div>
+                    <div>
+                        <Coor
+                            coor={coor}
+                            massum={massum}
+                        ></Coor>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
+
+class List_graph extends PureComponent {
+
+    render() {
+        const { Plot, mas_name_file, click_graph_file, data_file,
+            revision_file, coor_file, massum_file,
+        } = this.props;
+        return (
+            <div id="list_graph">
+                <div id="list_file">
+                    {mas_name_file.map((item, i) => {
+                        return (
+                            <a onClick={() => click_graph_file(i)} key={i}>{item}</a>
+                        )
+                    })}
+                </div>
+                <div id="view_panel_file">
+                    <div id="graph_file">
+                        <Plot
+                            data={data_file}
+                            graphDiv="graph"
+                            layout={{
+                                title: 'Intensivity',
+                                datarevision: { revision: revision_file },
+                                width: 900, height: 675
+                            }}
+                            revision={revision_file}
+                        >
+                        </Plot>
+                    </div>
+                    <Coor
+                        coor={coor_file}
+                        massum={massum_file}
+                    ></Coor>
                 </div>
             </div>
         )
@@ -398,19 +484,6 @@ class Coor extends PureComponent {
     }
 }
 
-class Coor_file extends PureComponent {
-    render() {
-        const { coor, massum } = this.props;
-        return (
-            <div id="coorPanel">
-                <Coordinat
-                    coor={coor}
-                    massum={massum}
-                ></Coordinat>
-            </div>
-        )
-    }
-}
 const Coordinat = ({ coor, massum }) => {
     const element = massum.map((count, x) => {
         return (

@@ -5,16 +5,31 @@
   width: 100%;
 }
 
+.tab_1D{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0;
+}
+
+.tab_1D_active{
+  z-index: 1;
+  opacity: 1;
+}
+
 #left_tab_panel_1D {
+  width: 50px;
   height: 100%;
   background: rgb(65, 65, 65);
 }
 
 .button_tab_1D {
   position: relative;
-  width: 50px;
-  height: 50px;
-  top: 5px;
+  width: 40px;
+  height: 40px;
+  margin-top: 5px;
+  left: 5px;
   background: none;
   border: none;
   font-size: 20px;
@@ -82,7 +97,7 @@
 }
 
 #graph{
-    margin-left: -20vw;
+    /* margin-left: -20vw; */
 }
 /*  */
 #coorPanel {

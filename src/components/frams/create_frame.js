@@ -14,12 +14,8 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement }) => {
         const { id_f, nameF } = item;
         const { id, name } = activeFrame;
         let clas, element;
-        if (`${name}_${id}` == `${nameF}_${id_f}`) {
-            clas = 'frame frame_active'
-        }
-        else {
-            clas = 'frame'
-        }
+        if (`${name}_${id}` == `${nameF}_${id_f}`) { clas = 'frame frame_active'}
+        else { clas = 'frame'}
         switch (nameF) {
             case 'choice':
                 element = <Choice
