@@ -1,10 +1,11 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Component } from 'react';
 
 // import Plotly from 'plotly.js/lib/core';
 // import createPlotlyComponent from 'react-plotly.js/factory';
 // const Plot = createPlotlyComponent(Plotly);
 // import Plot from 'react-plotly.js';
 import { Line } from 'react-chartjs-2';
+import 'chartjs-plugin-zoom';
 
 import './method_1D.css';
 const fs = window.require('fs');
@@ -14,7 +15,6 @@ export default class Method_1D extends PureComponent {
         super(props)
         this.masDataX = []
         this.masDataY = []
-        this.revision = 0
         this.revision_file = 0
         this.masInformation = {
             countSum: 1,
@@ -38,6 +38,7 @@ export default class Method_1D extends PureComponent {
         data_file: [],
         coor_file: [],
         massum_file: [],
+        revision: 0
     }
 
     switch_tab = (id) => {
@@ -69,8 +70,8 @@ export default class Method_1D extends PureComponent {
                 mode: 'lines+markers',
                 marker: { color: 'red' }
             }];
-        this.revision++
         this.setState({
+            revision: this.state.revision + 1,
             massum: massum,
             coor: masx,
             data: data
@@ -273,11 +274,83 @@ export default class Method_1D extends PureComponent {
 
     render() {
         const {
-            active_tab, data, coor, massum,
-            data_file, coor_file, massum_file,
-            mas_name_file
+            active_tab, coor, massum, coor_file, massum_file,
+            mas_name_file, revision
         } = this.state;
-        const { Plot } = this.props;
+        const data = {
+            labels: coor,
+            datasets: [
+                {
+                    label: '',
+                    data: massum,
+                    fill: false,
+                    // pointRadius: 2,
+                    backgroundColor: 'rgb(166, 129, 86)',
+                    borderColor: 'rgba(166, 129, 86, 0.5)',
+                },
+            ],
+        }
+
+        const data_file = {
+            labels: coor_file,
+            datasets: [
+                {
+                    label: '',
+                    data: massum_file,
+                    fill: false,
+                    // pointRadius: 2,
+                    backgroundColor: 'rgb(166, 129, 86)',
+                    borderColor: 'rgba(166, 129, 86, 0.5)',
+                },
+            ],
+        }
+
+        const options = {
+            legend:{
+                display: false
+            },
+            animation: false,
+            maintainAspectRatio: false,
+            tooltips:{
+                displayColors: false,
+                // callbacks:{
+                //     title(){
+                //         return ``;
+                //     }
+                // }
+                // mode: "index",
+                // intersect: false,
+                // caretSize: 3
+            },
+            pan: {
+                enabled: true,
+                mode: 'xy'
+            },
+            zoom: {
+                enabled: true,
+                // drag: true,
+                mode: 'x'
+            },
+            scales: {
+                yAxes: [
+                    {
+                        ticks: {
+                            beginAtZero: true,
+                        },
+                        // gridLines: {
+                        //     display: false
+                        // }
+                    },
+                ],
+                xAxes: [
+                    {
+                        // gridLines: {
+                        //     display: false
+                        // }
+                    }
+                ]
+            },
+        }
         const elements = this.masTab.map((item) => {
             const { text } = item;
             let clas, element;
@@ -286,7 +359,6 @@ export default class Method_1D extends PureComponent {
             switch (text) {
                 case 'Sum_graph':
                     element = <Sum_graph
-                        Plot={Plot}
                         click_loadFolder={this.click_loadFolder}
                         click_loadFile={this.click_loadFile}
                         click_save={this.click_save}
@@ -295,20 +367,21 @@ export default class Method_1D extends PureComponent {
                         click_calibration={this.click_calibration}
                         click_smoothing={this.click_smoothing}
                         data={data}
-                        revision={this.revision}
+                        revision={revision}
                         coor={coor}
                         massum={massum}
+                        options={options}
                     />
                     break;
                 case 'List_graph':
                     element = <List_graph
-                        Plot={Plot}
                         mas_name_file={mas_name_file}
                         click_graph_file={this.click_graph_file}
                         data_file={data_file}
                         revision_file={this.revision_file}
                         coor_file={coor_file}
                         massum_file={massum_file}
+                        options={options}
                     />
                     break;
             }
@@ -333,37 +406,35 @@ export default class Method_1D extends PureComponent {
 }
 
 class Sum_graph extends PureComponent {
+
+    // constructor(props)
+    // {
+    //     super(props)
+    //     this.massum = this.props.massum
+    // }
+
+    // shouldComponentUpdate(nextProps){
+    //     if(this.massum != nextProps.massum)
+    //     {
+    //         return true;
+    //     }
+    //     else{
+    //         return false
+    //     }
+    // }
+
     render() {
-        const { Plot, click_loadFolder, click_loadFile, click_save, click_sum,
-            stored_value, click_calibration, click_smoothing, data,
-            revision, coor, massum
+        const { click_loadFolder, click_loadFile, click_save, click_sum,
+                stored_value, click_calibration, click_smoothing,
+                data, options, coor, massum
         } = this.props;
-
-        // const dataa = {
-        //     labels: ['1', '2', '3', '4', '5', '6'],
-        //     datasets: [
-        //         {
-        //             label: '# of Votes',
-        //             data: [12, 19, 3, 5, 2, 3],
-        //             fill: false,
-        //             backgroundColor: 'rgb(255, 99, 132)',
-        //             borderColor: 'rgba(255, 99, 132, 0.2)',
-        //         },
-        //     ],
+        
+        // if(massum.length != 0)
+        // {
+        //     const lineChart = this.reference.chartInstance
+        //     lineChart.update();
         // }
-
-        // const options = {
-        //     maintainAspectRatio: false,
-        //     scales: {
-        //         yAxes: [
-        //             {
-        //                 ticks: {
-        //                     beginAtZero: true,
-        //                 },
-        //             },
-        //         ],
-        //     },
-        // }
+        
 
         let class_HT = ''
         return (
@@ -407,16 +478,11 @@ class Sum_graph extends PureComponent {
                 </div>
                 <div id="view_panel">
                     <div id="graph">
-                        {/* <Line data={dataa} options={options} /> */}
-                        <Plot
-                            data={data}
-                            graphDiv="graph"
-                            layout={{
-                                title: 'Intensivity',
-                                datarevision: { revision: revision },
-                                width: 900, height: 675
-                            }}
-                            revision={revision}
+                        <Line 
+                            data={data} 
+                            options={options} 
+                            // ref = {(reference) => this.reference = reference}
+                            redraw = {true}
                         />
                     </div>
                     <div>
@@ -434,8 +500,8 @@ class Sum_graph extends PureComponent {
 class List_graph extends PureComponent {
 
     render() {
-        const { Plot, mas_name_file, click_graph_file, data_file,
-            revision_file, coor_file, massum_file,
+        const { mas_name_file, click_graph_file, data_file,
+                coor_file, massum_file, options
         } = this.props;
         return (
             <div id="list_graph">
@@ -448,17 +514,12 @@ class List_graph extends PureComponent {
                 </div>
                 <div id="view_panel_file">
                     <div id="graph_file">
-                        <Plot
-                            data={data_file}
-                            graphDiv="graph"
-                            layout={{
-                                title: 'Intensivity',
-                                datarevision: { revision: revision_file },
-                                width: 900, height: 675
-                            }}
-                            revision={revision_file}
-                        >
-                        </Plot>
+                    <Line 
+                            data={data_file} 
+                            options={options} 
+                            // ref = {(reference) => this.reference = reference}
+                            redraw = {true}
+                    />
                     </div>
                     <Coor
                         coor={coor_file}
@@ -470,7 +531,23 @@ class List_graph extends PureComponent {
     }
 }
 
-class Coor extends PureComponent {
+class Coor extends Component {
+    constructor(props)
+    {
+        super(props)
+        this.massum = this.props.massum
+    }
+
+    shouldComponentUpdate(nextProps){
+        if(this.massum !== nextProps.massum)
+        {
+            return true;
+        }
+        else{
+            return false
+        }
+    }
+
     render() {
         const { coor, massum } = this.props;
         return (
