@@ -3,9 +3,7 @@ import React, { PureComponent, Component } from 'react';
 // import Plotly from 'plotly.js/lib/core';
 // import createPlotlyComponent from 'react-plotly.js/factory';
 // const Plot = createPlotlyComponent(Plotly);
-// import Plot from 'react-plotly.js';
-import { Line } from 'react-chartjs-2';
-import 'chartjs-plugin-zoom';
+import Plot from 'react-plotly.js';
 
 import './method_1D.css';
 const fs = window.require('fs');
@@ -15,6 +13,7 @@ export default class Method_1D extends PureComponent {
         super(props)
         this.masDataX = []
         this.masDataY = []
+        this.revision = 0
         this.revision_file = 0
         this.masInformation = {
             countSum: 1,
@@ -38,7 +37,7 @@ export default class Method_1D extends PureComponent {
         data_file: [],
         coor_file: [],
         massum_file: [],
-        revision: 0
+        
     }
 
     switch_tab = (id) => {
@@ -70,8 +69,8 @@ export default class Method_1D extends PureComponent {
                 mode: 'lines+markers',
                 marker: { color: 'red' }
             }];
+            this.revision++
         this.setState({
-            revision: this.state.revision + 1,
             massum: massum,
             coor: masx,
             data: data
@@ -234,7 +233,6 @@ export default class Method_1D extends PureComponent {
         let { massum } = this.state;
         let n = Number(this.masInformation.n_smoothing);
 
-        // newSum[0] = massum[0];
         let sum = 0, del = 3, floor = Math.floor(n / 2);
         for (let i = 1; i < n; i++) {
             for (let j = 0; j < del; j++) {
@@ -249,9 +247,7 @@ export default class Method_1D extends PureComponent {
                 sum += massum[i + j - floor];
             }
             massum[i] = Math.ceil(sum / n);
-            // newSum[i] = Math.ceil((newSum[i-1] + massum[i] + massum[i + 1])/3)
         }
-        // newSum[massum.length-1] = Math.ceil((newSum[massum.length-2] + massum[massum.length-1])/2);
         this.reloadData(this.state.coor, massum);
     }
 
@@ -275,82 +271,8 @@ export default class Method_1D extends PureComponent {
     render() {
         const {
             active_tab, coor, massum, coor_file, massum_file,
-            mas_name_file, revision
+            mas_name_file, revision, data, data_file
         } = this.state;
-        const data = {
-            labels: coor,
-            datasets: [
-                {
-                    label: '',
-                    data: massum,
-                    fill: false,
-                    // pointRadius: 2,
-                    backgroundColor: 'rgb(166, 129, 86)',
-                    borderColor: 'rgba(166, 129, 86, 0.5)',
-                },
-            ],
-        }
-
-        const data_file = {
-            labels: coor_file,
-            datasets: [
-                {
-                    label: '',
-                    data: massum_file,
-                    fill: false,
-                    // pointRadius: 2,
-                    backgroundColor: 'rgb(166, 129, 86)',
-                    borderColor: 'rgba(166, 129, 86, 0.5)',
-                },
-            ],
-        }
-
-        const options = {
-            legend:{
-                display: false
-            },
-            animation: false,
-            maintainAspectRatio: false,
-            tooltips:{
-                displayColors: false,
-                // callbacks:{
-                //     title(){
-                //         return ``;
-                //     }
-                // }
-                // mode: "index",
-                // intersect: false,
-                // caretSize: 3
-            },
-            pan: {
-                enabled: true,
-                mode: 'xy'
-            },
-            zoom: {
-                enabled: true,
-                // drag: true,
-                mode: 'x'
-            },
-            scales: {
-                yAxes: [
-                    {
-                        ticks: {
-                            beginAtZero: true,
-                        },
-                        // gridLines: {
-                        //     display: false
-                        // }
-                    },
-                ],
-                xAxes: [
-                    {
-                        // gridLines: {
-                        //     display: false
-                        // }
-                    }
-                ]
-            },
-        }
         const elements = this.masTab.map((item) => {
             const { text } = item;
             let clas, element;
@@ -370,7 +292,6 @@ export default class Method_1D extends PureComponent {
                         revision={revision}
                         coor={coor}
                         massum={massum}
-                        options={options}
                     />
                     break;
                 case 'List_graph':
@@ -381,7 +302,6 @@ export default class Method_1D extends PureComponent {
                         revision_file={this.revision_file}
                         coor_file={coor_file}
                         massum_file={massum_file}
-                        options={options}
                     />
                     break;
             }
@@ -425,16 +345,11 @@ class Sum_graph extends PureComponent {
 
     render() {
         const { click_loadFolder, click_loadFile, click_save, click_sum,
-                stored_value, click_calibration, click_smoothing,
-                data, options, coor, massum
+            stored_value, click_calibration, click_smoothing,
+            data, revision, coor, massum,
+            // options
         } = this.props;
-        
-        // if(massum.length != 0)
-        // {
-        //     const lineChart = this.reference.chartInstance
-        //     lineChart.update();
-        // }
-        
+
 
         let class_HT = ''
         return (
@@ -478,11 +393,15 @@ class Sum_graph extends PureComponent {
                 </div>
                 <div id="view_panel">
                     <div id="graph">
-                        <Line 
-                            data={data} 
-                            options={options} 
-                            // ref = {(reference) => this.reference = reference}
-                            redraw = {true}
+                        <Plot
+                            data={data}
+                            graphDiv="graph"
+                            layout={{
+                                title: 'Intensivity',
+                                datarevision: { revision: revision },
+                                width: 900, height: 675
+                            }}
+                            revision={revision}
                         />
                     </div>
                     <div>
@@ -501,7 +420,8 @@ class List_graph extends PureComponent {
 
     render() {
         const { mas_name_file, click_graph_file, data_file,
-                coor_file, massum_file, options
+            coor_file, massum_file, revision_file
+            // ptions
         } = this.props;
         return (
             <div id="list_graph">
@@ -514,12 +434,16 @@ class List_graph extends PureComponent {
                 </div>
                 <div id="view_panel_file">
                     <div id="graph_file">
-                    <Line 
-                            data={data_file} 
-                            options={options} 
-                            // ref = {(reference) => this.reference = reference}
-                            redraw = {true}
-                    />
+                        <Plot
+                            data={data_file}
+                            graphDiv="graph"
+                            layout={{
+                                title: 'Intensivity',
+                                datarevision: { revision: revision_file },
+                                width: 900, height: 675
+                            }}
+                            revision={revision_file}
+                        />
                     </div>
                     <Coor
                         coor={coor_file}
@@ -532,18 +456,16 @@ class List_graph extends PureComponent {
 }
 
 class Coor extends Component {
-    constructor(props)
-    {
+    constructor(props) {
         super(props)
         this.massum = this.props.massum
     }
 
-    shouldComponentUpdate(nextProps){
-        if(this.massum !== nextProps.massum)
-        {
+    shouldComponentUpdate(nextProps) {
+        if (this.massum !== nextProps.massum) {
             return true;
         }
-        else{
+        else {
             return false
         }
     }
