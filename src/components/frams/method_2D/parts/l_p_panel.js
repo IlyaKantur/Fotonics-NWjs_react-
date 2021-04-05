@@ -82,8 +82,20 @@ export default class L_P_Panel extends Component {
                                 <Plot
                                     data={data}
                                     graphDiv="graph"
-                                    layout={{ title: 'Intensivity', datarevision: {revision} }}
-                                    revision = {revision}
+                                    layout={{
+                                        title: 'Intensivity', datarevision: { revision },
+                                        width: 700, height: 525,
+                                        xaxis: {
+                                            title: 'Energy',
+                                            showgrid: false,
+                                            zeroline: false
+                                        },
+                                        yaxis: {
+                                            title: 'Intensivnosti',
+                                            showline: false
+                                        }
+                                    }}
+                                    revision={revision}
                                 />
                             </div>
                         </div>
