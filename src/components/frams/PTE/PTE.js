@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import './PTE.css';
 
-export default class PTE extends Component {
+export default class PTE extends PureComponent {
     constructor(props) {
         super(props);
     }
@@ -10,7 +10,7 @@ export default class PTE extends Component {
     state = {
         info_element_name: 'H',
         search_name: '',
-        search_alert_text: []
+        search_alert_text: {}
     }
 
     search_but = () => {
@@ -28,6 +28,11 @@ export default class PTE extends Component {
                     info_element_name: name_search_el
                 })
             }
+            else{
+                this.setState({
+                    search_alert_text:{text: "Неправильно введено"}
+                })
+            }
         }
 
     }
@@ -40,7 +45,7 @@ export default class PTE extends Component {
 
     close_search_alert = () => {
         this.setState({
-            search_alert_text: []
+            search_alert_text: {}
         })
     }
 
@@ -57,7 +62,7 @@ export default class PTE extends Component {
         }
         else {
             this.setState({
-                search_alert_text: [{ text: 'Смени язык', id: '0' }]
+                search_alert_text: {text: 'Смени язык'}
             })
             if (test1) {
                 this.setState({
@@ -235,17 +240,14 @@ export default class PTE extends Component {
 }
 
 const Search_alert = ({ close, alert }) => {
-    const element = alert.map((item) => {
-        const { text, id } = item
-        return (
-            <div key={`search_alert_${id}`}>
-                <S_a
-                    close = {close}
-                    text = {text}
-                />
-            </div>
-        )
-    })
+    let element = null;
+    if(alert.text != undefined){
+        element = (<S_a
+            text={alert.text}
+            close = {close}
+        />)
+        
+    }
     return (
         <div>
             { element}
@@ -254,14 +256,14 @@ const Search_alert = ({ close, alert }) => {
     )
 }
 
-class S_a extends Component {
+class S_a extends PureComponent {
     constructor(props) {
         super(props)
     }
 
     componentDidMount() {
         const { close } = this.props;
-        setTimeout(close, 1000)
+        setTimeout(close, 500)
     }
 
     render() {
@@ -271,7 +273,6 @@ class S_a extends Component {
                 <span>{text}</span>
             </div>
         )
-
     }
 }
 

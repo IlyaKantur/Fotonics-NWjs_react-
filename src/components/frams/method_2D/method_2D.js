@@ -20,6 +20,23 @@ export default class Method_2D extends Component {
         this.finished = false
 
         this.proces;
+
+        this.masInformation_2D={
+            chek_obsorv: false,
+            SaveLast: false,
+            Iter: false,
+            IterN: 0,
+            BF: false,
+            Delta: false,
+            DFon: 3,
+            BPix: false,
+            Gran: false,
+            Xx: 200,
+            XX: 1000,
+            Yy: 100,
+            YY: 800,
+            nameElement: ''
+        }
     }
 
     state = {
@@ -29,6 +46,10 @@ export default class Method_2D extends Component {
         oldY: [],
         massum: [],
         consoleMessage: []
+    }
+
+    stored_value = (name ,value) => {
+        this.masInformation_2D[name] = value
     }
 
 
@@ -48,8 +69,7 @@ export default class Method_2D extends Component {
     }
 
     loadFolder = (id_f_nameF) => {
-        const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked
-        loadImg().loadFolder(chek_obsorv).then(({ masImg, imgFolder }) => {
+        loadImg().loadFolder(this.masInformation_2D.chek_obsorv).then(({ masImg, imgFolder }) => {
             this.imgFolder = imgFolder;
             if (!chek_obsorv) {
                 this.masImg = masImg
@@ -58,7 +78,6 @@ export default class Method_2D extends Component {
     }
 
     loadFoldImg = (id_f_nameF) => {
-        const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked
         loadImg().loadFoldImg().then(({ masImg, imgFolder }) => {
             this.masImg = masImg;
             this.imgFolder = imgFolder;
@@ -66,7 +85,6 @@ export default class Method_2D extends Component {
     }
 
     loadFonImg = (id_f_nameF) => {
-        const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked
         loadImg().loadFonImg().then((fon) => {
             this.imgFon = fon;
         })
@@ -137,7 +155,10 @@ export default class Method_2D extends Component {
         const imgnum = this.imgnum;
         const imgFolder = this.imgFolder;
         const masImg = this.masImg;
-        this.proces = new Processing({ onConsoleMessage: onConsoleMessage, id_f_nameF: id_f_nameF, chek_obsorv: chek_obsorv, imgFolder: imgFolder, imgnum: imgnum, masImg: masImg, fon: this.imgFon })
+        this.proces = new Processing({ 
+            onConsoleMessage: onConsoleMessage, id_f_nameF: id_f_nameF,
+            chek_obsorv: chek_obsorv, imgFolder: imgFolder, imgnum: imgnum,
+            masImg: masImg, fon: this.imgFon, masInformation_2D: this.masInformation_2D })
 
         this.proces.start().then(({ massum, masx, finished, oldY, imgnum }) => {
             this.reloadData(masx, massum)
@@ -198,7 +219,7 @@ export default class Method_2D extends Component {
 
     render() {
         const { id_item, Plot } = this.props;
-        const { data, revision, massum, consoleMessage } = this.state
+        const { data, revision, massum, consoleMessage, } = this.state
         return (
             <L_P_Panel
                 loadFolder={this.loadFolder}
@@ -215,6 +236,8 @@ export default class Method_2D extends Component {
                 id_item={id_item}
                 finished={this.finished}
                 Plot = {Plot}
+                masInformation_2D={this.masInformation_2D}
+                stored_value={this.stored_value}
             ></L_P_Panel>
         )
     }

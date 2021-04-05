@@ -23,7 +23,11 @@ export default class L_P_Panel extends Component {
     }
 
     render() {
-        const { loadFolder, loadFoldImg, loadFonImg, startPush, applyCoor, returnCoor, data, revision, consoleMessage, onConsoleMessage, id_item, finished } = this.props;
+        const { loadFolder, loadFoldImg, loadFonImg,
+                startPush, applyCoor, returnCoor, data,
+                revision, consoleMessage, onConsoleMessage,
+                id_item, finished, masInformation_2D, stored_value 
+        } = this.props;
         let { massum, Plot } = this.props;
         const { active_l_t } = this.state;
         const { id_f, nameF } = id_item;
@@ -52,6 +56,8 @@ export default class L_P_Panel extends Component {
                     loadFonImg={loadFonImg}
                     startPush={startPush}
                     id_item={id_item}
+                    masInformation_2D={masInformation_2D}
+                    stored_value={stored_value}
                 ></Bars>;
                 <Coor
                     className={z2}

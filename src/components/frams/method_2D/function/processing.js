@@ -3,7 +3,7 @@ const fs = window.require('fs');
 
 export default class Processing {
 
-    constructor({ onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder, imgnum, masImg, fon }) {
+    constructor({ onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder, imgnum, masImg, fon, masInformation_2D }) {
         // Image
         this.ImgNew = document.getElementById(`ImgNew_${id_f_nameF}`);
         this.ImgSum = document.getElementById(`ImgSum_${id_f_nameF}`);
@@ -15,20 +15,20 @@ export default class Processing {
         this.ctxhs = this.himgsum.getContext("2d");
 
         // Checkbox
-        this.saveLast = document.getElementById(`SaveLast_${id_f_nameF}`).checked;
-        this.iter = document.getElementById(`Iter_${id_f_nameF}`).checked; // Ограничение
-        this.bf = document.getElementById(`BF_${id_f_nameF}`).checked; // Без фона
-        this.delta = document.getElementById(`Delta_${id_f_nameF}`).checked; // Вычет шума
-        this.bpix = document.getElementById(`BPix_${id_f_nameF}`).checked; // Вычет битого
-        this.gran = document.getElementById(`Gran_${id_f_nameF}`).checked; // Границы
+        this.saveLast = masInformation_2D.SaveLast;
+        this.iter = masInformation_2D.Iter; // Ограничение
+        this.bf = masInformation_2D.BF; // Без фона
+        this.delta = masInformation_2D.Delta; // Вычет шума
+        this.bpix = masInformation_2D.BPix; // Вычет битого
+        this.gran = masInformation_2D.Gran; // Границы
 
         // Введеные значения
-        this.iterN = document.getElementById(`IterN_${id_f_nameF}`).value; // Ограничение по количеству обработанных снимков
-        this.dfon = document.getElementById(`DFon_${id_f_nameF}`).value; // Значение вычитаемого шума
-        this.g_Xx = document.getElementById(`Xx_${id_f_nameF}`).value;
-        this.g_XX = document.getElementById(`XX_${id_f_nameF}`).value;
-        this.g_Yy = document.getElementById(`Yy_${id_f_nameF}`).value;
-        this.g_YY = document.getElementById(`YY_${id_f_nameF}`).value
+        this.iterN = masInformation_2D.IterN; // Ограничение по количеству обработанных снимков
+        this.dfon = masInformation_2D.DFon; // Значение вычитаемого шума
+        this.g_Xx = masInformation_2D.Xx;
+        this.g_XX = masInformation_2D.XX;
+        this.g_Yy = masInformation_2D.Yy;
+        this.g_YY = masInformation_2D.YY;
 
         this.ix = 0;
         this.iy = 0;

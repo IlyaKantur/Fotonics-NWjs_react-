@@ -1,33 +1,36 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
-export default class Bars extends Component{
+export default class Bars extends PureComponent{
 
-    state = {
-        chek_obsorv: false,
-        SaveLast: false,
-        Iter: false,
-        IterN: 0,
-        BF: false,
-        Delta: false,
-        DFon: 3,
-        BPix: false,
-        Gran: false,
-        Xx: 200,
-        XX: 1000,
-        Yy: 100,
-        YY: 800,
-        nameElement: ''
-    }
+    // state = {
+    //     // chek_obsorv: false,
+    //     SaveLast: false,
+    //     Iter: false,
+    //     IterN: 0,
+    //     BF: false,
+    //     Delta: false,
+    //     DFon: 3,
+    //     BPix: false,
+    //     Gran: false,
+    //     Xx: 200,
+    //     XX: 1000,
+    //     Yy: 100,
+    //     YY: 800,
+    //     nameElement: ''
+    // }
 
-    stored_value(name ,value){
-        this.setState((state) => {
-            return state[name] = value
-          });
-    }
+    // stored_value(name ,value){
+    //     this.setState((state) => {
+    //         return state[name] = value
+    //       });
+    // }
 
     render(){
-        const {className, loadFolder, loadFoldImg, loadFonImg, startPush, id_item} = this.props;
-        const {chek_obsorv, SaveLast, Iter, IterN, BF, Delte, DFon, BPix, Gran, Xx, XX, Yy, YY} = this.state
+        const { className, loadFolder, loadFoldImg,
+                loadFonImg, startPush, id_item,
+                masInformation_2D, stored_value
+        } = this.props;
+
         const {id_f, nameF} = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
         return(
@@ -37,9 +40,9 @@ export default class Bars extends Component{
                         <li>
                             <label className="container">Наблюдение
                                 <input className = "chek_obsorv" id={`chek_obsorv_${id_f_nameF}`} 
-                                    onChange = {(e) => this.stored_value(e.target.className,e.target.checked)} 
+                                    onChange = {(e) => stored_value(e.target.className,e.target.checked)} 
                                     type="checkbox"
-                                    checked = {chek_obsorv}
+                                    defaultChecked = {masInformation_2D.chek_obsorv}
                                 />
                                 {/* defaultChecked='checked' */}
                                 <span className="checkmark"></span>
@@ -55,9 +58,9 @@ export default class Bars extends Component{
                         <li><button id="Save">Сохранить</button></li>
                         <li><label className="container">Только последний
                             <input className = "SaveLast" id={`SaveLast_${id_f_nameF}`}
-                                onChange = {(e) => this.stored_value(e.target.className,e.target.checked)}
+                                onChange = {(e) => stored_value(e.target.className,e.target.checked)}
                                 type="checkbox"
-                                checked = {SaveLast}
+                                defaultChecked = {masInformation_2D.SaveLast}
                             />
                             <span className="checkmark"></span>
                             </label>
@@ -72,19 +75,19 @@ export default class Bars extends Component{
                     <ul>
                         <li><label className="container">Ограничение
                             <input className = "Iter" id={`Iter_${id_f_nameF}`}
-                                onChange = {(e) => this.stored_value(e.target.className,e.target.checked)}
+                                onChange = {(e) => stored_value(e.target.className,e.target.checked)}
                                 type="checkbox"
-                                checked = {Iter}
+                                defaultChecked = {masInformation_2D.Iter}
                             />
                             <span className="checkmark"></span>
                         </label></li>
                         <li><input className = "IterN" id={`IterN_${id_f_nameF}`} 
-                                onChange = {(e) => this.stored_value(e.target.className,e.target.value)}
+                                onChange = {(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
-                                value = {IterN}
+                                placeholder = 'Количество'
                         /></li>
                         <li><button id="Start" onClick = {() => startPush(id_f_nameF)}>Старт</button></li>
-                        <li><button id="Restart">Очистка</button></li>
+                        {/* <li><button id="Restart">Очистка</button></li> */}
                     </ul>
                 </li>
 
@@ -92,29 +95,31 @@ export default class Bars extends Component{
                     <ul>
                         <li><label className="container">Без фона
                             <input className = "BF" id={`BF_${id_f_nameF}`} 
-                                onChange = {(e) => this.stored_value(e.target.className,e.target.checked)}
+                                onChange = {(e) => stored_value(e.target.className,e.target.checked)}
                                 type="checkbox"
-                                checked = {BF}
+                                defaultChecked = {masInformation_2D.BF}
                             />
                             <span className="checkmark"></span>
                         </label></li>
                         <li><label className="container">Вычет шума
                             <input className = "Delta" id={`Delta_${id_f_nameF}`} 
-                                onChange = {(e) => this.stored_value(e.target.className,e.target.checked)}
+                                onChange = {(e) => stored_value(e.target.className,e.target.checked)}
                                 type="checkbox"
-                                checked = {Delte}
+                                defaultChecked = {masInformation_2D.Delta}
                             />
                             <span className="checkmark"></span>
                         </label></li>
                         <li><input className = "DFon" id={`DFon_${id_f_nameF}`} 
-                            onChange = {(e) => this.stored_value(e.target.className,e.target.value)}
+                            onChange = {(e) => stored_value(e.target.className, +e.target.value)}
                             type="number" 
-                            defaultValue={DFon}/></li>
+                            placeholder="3"
+                            />
+                        </li>
                         <li><label className="container">Вычет битого
                             <input className = "BPix" id={`BPix_${id_f_nameF}`} 
-                                onChange = {(e) => this.stored_value(e.target.className,e.target.checked)}
+                                onChange = {(e) => stored_value(e.target.className,e.target.checked)}
                                 type="checkbox"
-                                checked = {BPix}
+                                defaultChecked = {masInformation_2D.BPix}
                             />
                             <span className="checkmark"></span>
                         </label></li>
@@ -126,28 +131,36 @@ export default class Bars extends Component{
                     <ul>
                         <li><label className="container">Границы
                             <input className = "Gran" id={`Gran_${id_f_nameF}`} 
-                                onChange = {(e) => this.stored_value(e.target.className,e.target.checked)}
+                                onChange = {(e) => stored_value(e.target.className,e.target.checked)}
                                 type="checkbox"
-                                checked = {Gran}
+                                defaultChecked = {masInformation_2D.Gran}
                             />
                             <span className="checkmark"></span>
                         </label></li>X
                         <li><input className = "Xx" id={`Xx_${id_f_nameF}`} 
-                            onChange = {(e) => this.stored_value(e.target.className,e.target.value)}
+                            onChange = {(e) => stored_value(e.target.className, +e.target.value)}
                             type="number" 
-                            defaultValue={Xx}/></li>
+                            // placeholder={masInformation_2D.Xx}
+                            />
+                        </li>
                         <li><input className = "XX" id={`XX_${id_f_nameF}`} 
-                            onChange = {(e) => this.stored_value(e.target.className,e.target.value)}
+                            onChange = {(e) => stored_value(e.target.className, +e.target.value)}
                             type="number" 
-                            defaultValue={XX}/></li>Y
+                            // placeholder={masInformation_2D.XX}
+                            />
+                        </li>Y
                         <li><input className = "Yy" id={`Yy_${id_f_nameF}`} 
-                            onChange = {(e) => this.stored_value(e.target.className,e.target.value)}
+                            onChange = {(e) => stored_value(e.target.className, +e.target.value)}
                             type="number" 
-                            defaultValue={Yy}/></li>
+                            // placeholder={masInformation_2D.Yy}
+                            />
+                        </li>
                         <li><input className = "YY" id={`YY_${id_f_nameF}`} 
-                            onChange = {(e) => this.stored_value(e.target.className,e.target.value)}
+                            onChange = {(e) => stored_value(e.target.className, +e.target.value)}
                             type="number" 
-                            defaultValue={YY}/></li>
+                            // placeholder={masInformation_2D.YY}
+                            />
+                        </li>
                     </ul>
                 </li>
            </ul>

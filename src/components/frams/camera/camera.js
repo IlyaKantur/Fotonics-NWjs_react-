@@ -9,6 +9,16 @@ export default class Camera extends Component {
     super(props);
     this.webcamRef = React.createRef();
     this.iter;
+    this.camers = null;
+  }
+
+  componentDidMount(){
+    navigator.mediaDevices.enumerateDevices().then(this.handleDevices);
+  }
+
+  handleDevices = (mediaDevices) =>{
+    this.camers = mediaDevices.filter(({ kind }) => kind === "videoinput")
+    console.log(this.camers)
   }
 
   state = {
