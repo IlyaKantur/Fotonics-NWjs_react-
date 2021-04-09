@@ -1,0 +1,54 @@
+#MenuBar{
+    height: max-content;
+    width: 100%;
+    background-color: rgb(20, 20, 20);
+    display: flex;
+    flex-direction: row;
+}
+#MenuBar > div{
+    height: 100%;
+    width: max-content;
+    padding: 6px;
+    color:white;
+    font-size: 12px;
+}
+#MenuBar > div:hover{
+    background-color:rgb(128, 128, 128)
+}
+#ListMenu{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    position: relative;
+    width: 100%;
+    height: max-content;
+}
+
+.listMenu{
+    background-color: rgb(20, 20, 20);
+    width: max-content;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    position: absolute;
+    z-index: 2;
+}
+.listMenu_active{
+    display: flex;
+}
+#ListMetod{
+    left: 41.5px;
+}
+#ListInfo{
+    left: 100px
+}
+
+.button_ListMenu{
+    background-color: rgb(20, 20, 20, 0);
+    border: none;
+    color: white;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}

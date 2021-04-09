@@ -11,7 +11,7 @@ body {
     background: #5f6e77e7;
 }
 
-button{
+.but > button{
     position: relative;
     height: max-content;
     width: max-content;

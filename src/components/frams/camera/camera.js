@@ -18,7 +18,7 @@ export default class Camera extends Component {
 
   handleDevices = (mediaDevices) =>{
     this.camers = mediaDevices.filter(({ kind }) => kind === "videoinput")
-    console.log(this.camers)
+    // console.log(this.camers)
   }
 
   state = {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 const fs = window.require('fs');
 import Menu from '../main/manu.js';
+import MenuBar from '../main/MenuBar';
 import TabWP from '../tab/create_tab.js';
 import Frame from '../frams/create_frame.js';
 import Alert from '../alert/alert.js';
@@ -12,7 +13,7 @@ export default class App extends Component {
     state = {
         tab: [
             { nameWP: "choice", text: "Выбор", id_t: '1' },
-            { nameWP: 'method_1D', text: "Обработка_1D", id_t: '1'},
+            { nameWP: 'method_1D', text: "Обработка_1D", id_t: '1' },
             { nameWP: "method_2D", text: "Обработка_2D", id_t: '1' },
             { nameWP: "PTE", text: "PTE", id_t: '1' },
             { nameWP: "camera", text: "Камера", id_t: '1' }
@@ -20,10 +21,10 @@ export default class App extends Component {
         ],
         frame: [
             { nameF: "choice", id_f: '1' },
-            { nameF: 'method_1D', id_f: '1'},
+            { nameF: 'method_1D', id_f: '1' },
             { nameF: "method_2D", id_f: '1' },
             { nameF: "PTE", id_f: '1' },
-            { nameF: "camera", id_f: '1'}
+            { nameF: "camera", id_f: '1' }
         ],
         activeFrame: { name: "camera", id: '1' },
         activeAlert: [{ text: 'test крестика', id: '0' }],
@@ -76,21 +77,21 @@ export default class App extends Component {
                     f_name_el = result[5].trim();
                     l_r_el = result[2].trim();
                     baseElement[i] = {
-                            row_el: row_el,
-                            class_el: class_el,
-                            number_el: number_el,
-                            name_el: name_el,
-                            weight_el: weight_el,
-                            f_name_el: f_name_el,
-                            energy_lvl: result[7],
-                            full_name_inf: result[8],
-                            group_inf: result[9],
-                            period_inf: result[10],
-                            family_inf: result[11],
-                            oxid_deg_inf: result[12],
-                            el_conf_inf: result[13],
-                            l_r_el: l_r_el
-                        }
+                        row_el: row_el,
+                        class_el: class_el,
+                        number_el: number_el,
+                        name_el: name_el,
+                        weight_el: weight_el,
+                        f_name_el: f_name_el,
+                        energy_lvl: result[7],
+                        full_name_inf: result[8],
+                        group_inf: result[9],
+                        period_inf: result[10],
+                        family_inf: result[11],
+                        oxid_deg_inf: result[12],
+                        el_conf_inf: result[13],
+                        l_r_el: l_r_el
+                    }
                     if (i == masFold.length - 1) {
                         resolve(baseElement)
                     }
@@ -200,6 +201,7 @@ export default class App extends Component {
         return (
             <>
                 <Alert activeAlert={activeAlert} closeAlert={this.closeAlert} />
+                <MenuBar />
                 <div id="work_place" className="panel">
                     <div id="panel_WP">
                         <TabWP
@@ -243,14 +245,15 @@ window.addEventListener('DOMContentLoaded', () => {
     let MENU = {
         file: {
             label: 'Файл',
-            submenu: [{
-                label: 'Файлы',
-                click: () => { }
-            },
-            {
-                label: 'Сохранить',
-                click: () => { }
-            },
+            submenu: [
+            // {
+            //     label: 'Файлы',
+            //     click: () => { }
+            // },
+            // {
+            //     label: 'Сохранить',
+            //     click: () => { }
+            // },
             {
                 label: 'Закрыть',
                 click: () => {
@@ -262,25 +265,33 @@ window.addEventListener('DOMContentLoaded', () => {
         },
         choice: {
             label: 'Метод',
-            submenu: [{
+            submenu: [
+            {
+                label: 'Одномерный детектор',
+                click: () => {
+                    console.log("1D")
+                }
+            },
+            {
                 label: 'Двумерный детектор',
                 click: () => {
-                    createTab({
-                        foldWP: 'metodDD.html',
-                        nameWP: 'Двумерный'
-                    })
+                    console.log("2D")
                 }
-            }]
+            },
+            {
+                label: 'Камера',
+                click: () => {
+                    console.log("Камера")
+                }
+            }
+            ]
         },
         reference: {
             label: 'Справка',
             submenu: [{
                 label: 'Пер. таблица',
                 click: () => {
-                    createTab({
-                        foldWP: 'periodic_table.html',
-                        nameWP: 'Пер. Таблица'
-                    })
+                    console.log("PTE")
                 }
             }]
         }
