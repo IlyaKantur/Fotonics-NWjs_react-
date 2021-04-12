@@ -9,7 +9,7 @@ import Plot from 'react-plotly.js';
 
 import './frames.css'
 
-const CreateFrame = ({ posts, activeFrame, onAlert, baseElement }) => {
+const CreateFrame = ({ posts, activeFrame, onAlert, baseElement, createTab }) => {
     const elements = posts.map((item) => {
         const { id_f, nameF } = item;
         const { id, name } = activeFrame;
@@ -22,6 +22,7 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement }) => {
                     {...item}
                     onAlert={onAlert}
                     id_item = {item}
+                    createTab= {createTab}
                     ></Choice>
                 break;
             case 'method_1D':

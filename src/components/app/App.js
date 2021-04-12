@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 const fs = window.require('fs');
 import Menu from '../main/manu.js';
-import MenuBar from '../main/MenuBar';
+// import MenuBar from '../main/MenuBar';
 import TabWP from '../tab/create_tab.js';
 import Frame from '../frams/create_frame.js';
 import Alert from '../alert/alert.js';
@@ -10,32 +10,61 @@ import './App.css';
 
 export default class App extends Component {
 
+    constructor(props){
+        super(props)
+        this.library_Tab = [
+            { nameWP: "choice", text: "Выбор"},
+            { nameWP: 'method_1D', text: "Обработка_1D"},
+            { nameWP: "method_2D", text: "Обработка_2D"},
+            { nameWP: "PTE", text: "PTE"},
+            { nameWP: "camera", text: "Камера"}
+        ]
+    }
+
     state = {
         tab: [
             { nameWP: "choice", text: "Выбор", id_t: '1' },
-            { nameWP: 'method_1D', text: "Обработка_1D", id_t: '1' },
-            { nameWP: "method_2D", text: "Обработка_2D", id_t: '1' },
-            { nameWP: "PTE", text: "PTE", id_t: '1' },
-            { nameWP: "camera", text: "Камера", id_t: '1' }
+            // { nameWP: 'method_1D', text: "Обработка_1D", id_t: '1' },
+            // { nameWP: "method_2D", text: "Обработка_2D", id_t: '1' },
+            // { nameWP: "PTE", text: "PTE", id_t: '1' },
+            // { nameWP: "camera", text: "Камера", id_t: '1' }
 
         ],
         frame: [
             { nameF: "choice", id_f: '1' },
-            { nameF: 'method_1D', id_f: '1' },
-            { nameF: "method_2D", id_f: '1' },
-            { nameF: "PTE", id_f: '1' },
-            { nameF: "camera", id_f: '1' }
+            // { nameF: 'method_1D', id_f: '1' },
+            // { nameF: "method_2D", id_f: '1' },
+            // { nameF: "PTE", id_f: '1' },
+            // { nameF: "camera", id_f: '1' }
         ],
-        activeFrame: { name: "camera", id: '1' },
+        activeFrame: { name: "choice", id: '1' },
         activeAlert: [{ text: 'test крестика', id: '0' }],
         baseElement: []
     }
 
     componentDidMount() {
+        this.create_menu();
         this.load_base().then((baseElement) => {
             this.setState({
                 baseElement: baseElement
             })
+        })
+    }
+
+    create_menu = () => {
+        CreateMenu(this.createTab)
+    }
+
+    createTab = (text) => {
+        const {tab, frame} = this.state;
+        const Tab = this.library_Tab.find(item => item.nameWP == text);
+        const count = frame.filter(item => item.nameF == text).length + 1
+        const newTab = {nameWP: text, text: Tab.text, id_t: count}
+        const newFrame = {nameF: text, id_f: count}
+        this.setState({
+            tab:[...tab, newTab],
+            frame:[...frame, newFrame],
+            activeFrame:{name: text, id: count}
         })
     }
 
@@ -201,7 +230,7 @@ export default class App extends Component {
         return (
             <>
                 <Alert activeAlert={activeAlert} closeAlert={this.closeAlert} />
-                <MenuBar />
+                {/* <MenuBar /> */}
                 <div id="work_place" className="panel">
                     <div id="panel_WP">
                         <TabWP
@@ -217,6 +246,7 @@ export default class App extends Component {
                             activeFrame={activeFrame}
                             onAlert={this.onAlert}
                             baseElement={baseElement}
+                            createTab={this.createTab}
                         ></Frame>
                     </div>
                 </div>
@@ -227,63 +257,52 @@ export default class App extends Component {
 
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-
+const CreateMenu = (create) => {
     let menuBar = Menu().create;
-    // let createTab = CreateTab().create;
-
-    // (function () {
-    //     let main_frame_fold = 'choice.html';
-    //     let main_frame_name = 'Режим';
-    //     let main_frame_id = main_frame_fold.substring(0, main_frame_fold.length - 5);
-    //     createTab({
-    //         foldWP: main_frame_fold,
-    //         nameWP: main_frame_name
-    //     })
-    // }());
 
     let MENU = {
         file: {
             label: 'Файл',
             submenu: [
-            // {
-            //     label: 'Файлы',
-            //     click: () => { }
-            // },
-            // {
-            //     label: 'Сохранить',
-            //     click: () => { }
-            // },
-            {
-                label: 'Закрыть',
-                click: () => {
-                    window.close();
-                }
+                // {
+                //     label: 'Файлы',
+                //     click: () => { }
+                // },
+                // {
+                //     label: 'Сохранить',
+                //     click: () => { }
+                // },
+                {
+                    label: 'Закрыть',
+                    click: () => {
+                        window.close();
+                    }
 
-            }
+                }
             ]
         },
         choice: {
             label: 'Метод',
             submenu: [
-            {
-                label: 'Одномерный детектор',
-                click: () => {
-                    console.log("1D")
+                {
+                    label: 'Одномерный детектор',
+                    click: () => {
+                        create("method_1D")
+                        // console.log("1D")
+                    }
+                },
+                {
+                    label: 'Двумерный детектор',
+                    click: () => {
+                        create("method_2D")
+                    }
+                },
+                {
+                    label: 'Камера',
+                    click: () => {
+                        create("camera")
+                    }
                 }
-            },
-            {
-                label: 'Двумерный детектор',
-                click: () => {
-                    console.log("2D")
-                }
-            },
-            {
-                label: 'Камера',
-                click: () => {
-                    console.log("Камера")
-                }
-            }
             ]
         },
         reference: {
@@ -291,10 +310,10 @@ window.addEventListener('DOMContentLoaded', () => {
             submenu: [{
                 label: 'Пер. таблица',
                 click: () => {
-                    console.log("PTE")
+                    create("PTE")
                 }
             }]
         }
     };
     menuBar(MENU);
-})
+}
