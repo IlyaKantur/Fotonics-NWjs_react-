@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Bars from './bars.js';
 import Coor from './coor.js';
 import Console from '../../../console/console.js';
@@ -10,7 +10,7 @@ import Console from '../../../console/console.js';
 
 
 
-export default class L_P_Panel extends Component {
+export default class L_P_Panel extends PureComponent {
 
     state = {
         active_l_t: 1,
@@ -89,16 +89,16 @@ export default class L_P_Panel extends Component {
                                     data={data}
                                     graphDiv="graph"
                                     layout={{
-                                        title: 'Intensivity', datarevision: { revision },
+                                        title: masInformation_2D.nameElement, datarevision: { revision },
                                         width: 700, height: 525,
                                         xaxis: {
-                                            title: 'Energy',
-                                            showgrid: false,
-                                            zeroline: false
+                                            title: masInformation_2D.AxisX,
+                                            // showgrid: false,
+                                            // zeroline: false
                                         },
                                         yaxis: {
-                                            title: 'Intensivnosti',
-                                            showline: false
+                                            title: masInformation_2D.AxisY,
+                                            // showline: false
                                         }
                                     }}
                                     revision={revision}

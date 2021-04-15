@@ -32,3 +32,8 @@
     height: 300px;
     width: 400px;
 }
+
+.choice_snapshot{
+    width: 800px !important;
+    height: 600px !important;
+}

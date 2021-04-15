@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import "./menuBar.css"
 
-class MenuBar extends Component {
+class MenuBar extends PureComponent {
     state = {
         class1: "listMenu",
         class2: "listMenu",
@@ -60,58 +60,6 @@ class MenuBar extends Component {
             </div>
         )
     }
-
 }
-
-// const MenuBar = () =>{
-
-//     let class1 = "listMenu", class2 = "listMenu", class3 = "listMenu";
-
-//     const listClick = (id) => {
-//         switch(id){
-//             case 1 :{
-//                 class1 = "listMenu listMenu_active";
-//                 class2 = "listMenu";
-//                 class3 = "listMenu";
-//                 break;
-//             }
-//             case 2 :{
-//                 class1 = "listMenu";
-//                 class2 = "listMenu listMenu_active";
-//                 class3 = "listMenu";
-//                 break;
-//             }
-//             case 3 :{
-//                 class1 = "listMenu";
-//                 class2 = "listMenu";
-//                 class3 = "listMenu listMenu_active"
-//                 break;
-//             }
-//         }
-//     }
-
-//     return(
-//         <>
-//         <div id="MenuBar">
-//             <div onClick={() =>{listClick(1)}}>Файл</div>
-//             <div onClick={() =>{listClick(2)}}>Метод</div>
-//             <div onClick={() =>{listClick(3)}}>Справка</div>
-//         </div>
-//         <div id="ListMenu">
-//             <div id="ListFile" className={class1}>
-//                 <button className="button_ListMenu">Close</button>
-//             </div>
-//             <div id="ListMetod" className={class2}>
-//                 <button className="button_ListMenu">Metod 1D</button>
-//                 <button className="button_ListMenu">Metod 2D</button>
-//                 <button className="button_ListMenu">Camera</button>
-//             </div>
-//             <div id="ListInfo" className={class3}>
-//                 <button className="button_ListMenu">PTE</button>
-//             </div>
-//         </div>
-//         </>
-//     )
-// }
 
 export default MenuBar

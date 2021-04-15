@@ -12,23 +12,30 @@ export default class Camera extends Component {
     this.camers = null;
   }
 
-  componentDidMount(){
+  componentDidMount() {
     navigator.mediaDevices.enumerateDevices().then(this.handleDevices);
   }
 
-  handleDevices = (mediaDevices) =>{
+  handleDevices = (mediaDevices) => {
     this.camers = mediaDevices.filter(({ kind }) => kind === "videoinput")
     // console.log(this.camers)
   }
 
   state = {
     active: false,
-    imgSrc: null
+    imgSrc: null,
+    choice: false
   }
 
-  active_cam = () =>{
+  active_cam = () => {
     this.setState({
       active: !this.state.active
+    })
+  }
+
+  switch_choice = () =>{
+    this.setState({
+      choice: !this.state.choice
     })
   }
 
@@ -36,7 +43,7 @@ export default class Camera extends Component {
     let i = 0;
     // if(!this.iter){
     //   this.iter = setInterval(() =>{
-        
+
     //   })
     // }
 
@@ -44,40 +51,51 @@ export default class Camera extends Component {
     this.setState({
       imgSrc: imageSrc
     })
-    const base64Data = imageSrc.replace(/data:image\/png;base64,/,"");
-    fs.writeFile(`result/image/test_${i++}.jpg`, base64Data, 'base64', err => {if(err !== null)console.log(err)})
+    const base64Data = imageSrc.replace(/data:image\/png;base64,/, "");
+    fs.writeFile(`result/image/test_${i++}.jpg`, base64Data, 'base64', err => { if (err !== null) console.log(err) })
   }
 
   render() {
-    const {active, imgSrc} = this.state;
-    let element;
-    if(active){element = 
-    (<>
-      <Webcam
-        audio={false}
-        ref={this.webcamRef}
-        screenshotFormat="image/png"
-        width = {800}
-        height = {600}
-      />
-      {imgSrc && (
-        <img id='snapshot'
-          src={imgSrc}
-        />
-      )}
-    </>
-    )}
-    else{element = (<></>)}
+    const { active, imgSrc, choice } = this.state;
+    let element, style = '', width = 800, height = 600;
+    if(choice){
+      style = 'choice_snapshot';
+      width = 400;
+      height = 300
+    }
+    if (active) {
+      element =
+      (<>
+        <div onClick = {this.switch_choice}>
+          <Webcam
+            audio={false}
+            ref={this.webcamRef}
+            screenshotFormat="image/png"
+            width={width}
+            height={height}
+          />
+        </div>
+        {imgSrc && (
+          <img id='snapshot'
+            className = {style}
+            src={imgSrc}
+            onClick = {this.switch_choice}
+          />
+        )}
+      </>
+      )
+    }
+    else { element = (<></>) }
     return (
       <div id='camera_place'>
-        <div id = "control">
+        <div id="control">
           <button onClick={this.active_cam}>Watch</button>
           <button onClick={this.capture}>Capture photo</button>
           {/* <button onClick={stop}>Stop</button> */}
         </div>
-        <div id = "place">
+        <div id="place">
           {element}
-        </div>        
+        </div>
       </div>
     )
   }
@@ -96,20 +114,20 @@ export default class Camera extends Component {
 //       inter = setInterval(() => {
 //         const imageSrc = webcamRef.current.getScreenshot();
 //         setImgSrc(imageSrc);
-  
+
 //         const base64Data = imageSrc.replace(/data:image\/png;base64,/, "");
 //         // Созранение фото
 //         fs.writeFile(`result/image/test_${i++}.jpg`, base64Data, 'base64', function (err) {
 //           if (err != null) {
 //             console.log(err);
 //           }
-  
+
 //         });
 //       },1000)
 //     }else{
 //       clearInterval(inter)
 //     }
-    
+
 //   }, [webcamRef, setImgSrc]);
 
 

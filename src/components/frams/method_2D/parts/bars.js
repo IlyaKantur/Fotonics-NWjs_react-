@@ -68,6 +68,12 @@ export default class Bars extends PureComponent{
                         <li><input id='nameElement' type='text' placeholder="Элемент"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input></li>
+                        <li><input id='AxisX' type='text' placeholder="Ось X"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        ></input></li>
+                        <li><input id='AxisY' type='text' placeholder="Ось Y"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        ></input></li>
                     </ul>
                 </li>
 

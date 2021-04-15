@@ -1,4 +1,4 @@
-import React, { PureComponent, Component } from 'react';
+import React, { PureComponent} from 'react';
 
 // import Plotly from 'plotly.js/lib/core';
 // import createPlotlyComponent from 'react-plotly.js/factory';
@@ -17,6 +17,8 @@ export default class Method_1D extends PureComponent {
         this.revision_file = 0
         this.masInformation = {
             nameElement: '',
+            AxisX: 'Energy',
+            AxisY: 'Intensivnosti',
             countSum: 1,
             en_first_point: 0,
             en_second_point: 0,
@@ -301,6 +303,8 @@ export default class Method_1D extends PureComponent {
                         coor={coor}
                         massum={massum}
                         nameElement={this.masInformation.nameElement}
+                        AxisX={this.masInformation.AxisX}
+                        AxisY={this.masInformation.AxisY}
                     />
                     break;
                 case 'List_graph':
@@ -311,6 +315,9 @@ export default class Method_1D extends PureComponent {
                         revision_file={this.revision_file}
                         coor_file={coor_file}
                         massum_file={massum_file}
+                        nameElement={this.masInformation.nameElement}
+                        AxisX={this.masInformation.AxisX}
+                        AxisY={this.masInformation.AxisY}
                     />
                     break;
             }
@@ -369,6 +376,12 @@ class Sum_graph extends PureComponent {
                         <input id='nameElement' type='text' placeholder="Элемент"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
+                        <input id='AxisX' type='text' placeholder="Ось X"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        ></input>
+                        <input id='AxisY' type='text' placeholder="Ось Y"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        ></input>
                         <button onClick={click_loadFolder}>Папка</button>
                         <button onClick={click_loadFile}>Выбрать</button>
                         <button onClick={click_save}>Сохранить</button>
@@ -415,12 +428,12 @@ class Sum_graph extends PureComponent {
                                 width: 900, height: 675,
                                 xaxis: {
                                     title: 'Energy',
-                                    showgrid: false,
-                                    zeroline: false
+                                    // showgrid: false,
+                                    // zeroline: false
                                 },
                                 yaxis: {
                                     title: 'Intensivnosti',
-                                    showline: false
+                                    // showline: false
                                 }
                             }}
                             revision={revision}
@@ -442,7 +455,7 @@ class List_graph extends PureComponent {
 
     render() {
         const { mas_name_file, click_graph_file, data_file,
-            coor_file, massum_file, revision_file
+            coor_file, massum_file, revision_file, nameElement
             // ptions
         } = this.props;
         return (
@@ -460,9 +473,18 @@ class List_graph extends PureComponent {
                             data={data_file}
                             graphDiv="graph"
                             layout={{
-                                title: 'Intensivity',
+                                title: `${nameElement}`,
                                 datarevision: { revision: revision_file },
-                                width: 900, height: 675
+                                width: 900, height: 675,
+                                xaxis: {
+                                    title: 'Energy',
+                                    // showgrid: false,
+                                    // zeroline: false
+                                },
+                                yaxis: {
+                                    title: 'Intensivnosti',
+                                    // showline: false
+                                }
                             }}
                             revision={revision_file}
                         />
@@ -477,7 +499,7 @@ class List_graph extends PureComponent {
     }
 }
 
-class Coor extends Component {
+class Coor extends PureComponent {
     constructor(props) {
         super(props)
         this.massum = this.props.massum

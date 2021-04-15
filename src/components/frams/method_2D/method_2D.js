@@ -35,7 +35,9 @@ export default class Method_2D extends Component {
             XX: 1000,
             Yy: 100,
             YY: 800,
-            nameElement: ''
+            nameElement: '',
+            AxisX: 'X',
+            AxisY: 'Y',
         }
     }
 
@@ -71,7 +73,7 @@ export default class Method_2D extends Component {
     loadFolder = (id_f_nameF) => {
         loadImg().loadFolder(this.masInformation_2D.chek_obsorv).then(({ masImg, imgFolder }) => {
             this.imgFolder = imgFolder;
-            if (!chek_obsorv) {
+            if (!masInformation_2D.chek_obsorv) {
                 this.masImg = masImg
             }
         });
