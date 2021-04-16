@@ -5,6 +5,7 @@ import Processing from './function/processing.js'
 // import regeneratorRuntime from "regenerator-runtime";
 
 import './method_2D.css';
+const fs = window.require('fs');
 
 export default class Method_2D extends Component {
 
@@ -22,8 +23,12 @@ export default class Method_2D extends Component {
         this.proces;
 
         this.masInformation_2D={
+            method: 'Двумерный',
             chek_obsorv: false,
             SaveLast: false,
+            nameElement: '',
+            AxisX: 'X',
+            AxisY: 'Y',
             Iter: false,
             IterN: 0,
             BF: false,
@@ -35,10 +40,15 @@ export default class Method_2D extends Component {
             XX: 1000,
             Yy: 100,
             YY: 800,
-            nameElement: '',
-            AxisX: 'X',
-            AxisY: 'Y',
+            add_information: '',
         }
+        this.nameInformation_2D =
+        [
+            "Название метода:", "*Режим наблюдения:", "*Сохранить последний:", "Название элемента:",
+            "ОсьХ:", "ОсьY:", "*Ограниченное количество:", "Количество:", "*Без фильтрации:", "*Вычесть дельта:",
+            "Дельта:", "*Вычет битого пикселя:", "*Включить границы:", "Начало по горизонтале:", "Конец по горизонтали",
+            "Начало по вертикали:", "Конец по вертикали:", `Дополнительная информация \n`
+        ]
     }
 
     state = {
@@ -73,7 +83,7 @@ export default class Method_2D extends Component {
     loadFolder = (id_f_nameF) => {
         loadImg().loadFolder(this.masInformation_2D.chek_obsorv).then(({ masImg, imgFolder }) => {
             this.imgFolder = imgFolder;
-            if (!masInformation_2D.chek_obsorv) {
+            if (!this.masInformation_2D.chek_obsorv) {
                 this.masImg = masImg
             }
         });
@@ -189,12 +199,36 @@ export default class Method_2D extends Component {
             })
             if (finished) {
                 this.timerId = clearInterval(this.timerId)
+                this.save_protocol();
             }
 
             // let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
             // if (finished) {
             //     cancelAnimationFrame(req);
             // }
+        })
+    }
+
+    save_protocol = () => {
+        const nameFolderProtocol = this.masInformation_2D.nameElement || 'NoName';
+        const date = new Date();
+        const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+        const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
+        const dir = `result/protocol/${nameFolderProtocol}`
+        fs.mkdir(dir, err => {
+            if (err.code != "EEXIST") { console.log(err); throw err };
+            fs.mkdir(`${dir}/${dataProtocol}`, err => {
+                if (err.code != "EEXIST") { console.log(err); throw err };
+                let file = fs.createWriteStream(`./${dir}/${dataProtocol}/2D_${timeProtocol}.dat`);
+                file.on('error', function (err) { console.log(err) })
+                // const keys = Object.keys(this.masInformation);
+                const values = Object.values(this.masInformation_2D);
+                file.write(
+                    `Дата записи: ${dataProtocol}\nВремя записи: ${timeProtocol}\n`
+                )
+                this.nameInformation_2D.forEach((item, i) => { file.write(`${item} ${values[i]} \n`) })
+                file.end();
+            })
         })
     }
 

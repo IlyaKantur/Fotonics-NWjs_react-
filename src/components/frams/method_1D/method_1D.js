@@ -1,4 +1,4 @@
-import React, { PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 
 // import Plotly from 'plotly.js/lib/core';
 // import createPlotlyComponent from 'react-plotly.js/factory';
@@ -16,6 +16,7 @@ export default class Method_1D extends PureComponent {
         this.revision = 0
         this.revision_file = 0
         this.masInformation = {
+            method: 'Однокоординатный',
             nameElement: '',
             AxisX: 'Energy',
             AxisY: 'Intensivnosti',
@@ -24,8 +25,15 @@ export default class Method_1D extends PureComponent {
             en_second_point: 0,
             n_first_point: 0,
             n_second_point: 0,
-            n_smoothing: 3
+            n_smoothing: 3,
+            add_information: ''
         }
+        this.nameInformation =
+            [
+                "Название метода:", "Название элемента:", "ОсьХ:", "ОсьY:", "Суммировать по:",
+                "Эпергия первой точки:", "Энергия второй точки:", "Номер первой точки:",
+                "Номер второй точки:", "Сглаживание по n точек:", `Дополнительная информация: \n`
+            ]
         this.masTab = [{ text: 'Sum_graph' }, { text: 'List_graph' }]
         this.button_active_1 = "button_tab_1D button_active_1D";
         this.button_active_2 = "button_tab_1D";
@@ -40,7 +48,6 @@ export default class Method_1D extends PureComponent {
         data_file: [],
         coor_file: [],
         massum_file: [],
-
     }
 
     switch_tab = (id) => {
@@ -224,7 +231,31 @@ export default class Method_1D extends PureComponent {
                 })
             })
             this.reloadData(coor, sum);
+            this.save_protocol()
         }
+    }
+
+    save_protocol = () => {
+        const nameFolderProtocol = this.masInformation.nameElement || 'NoName';
+        const date = new Date();
+        const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+        const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
+        const dir = `result/protocol/${nameFolderProtocol}`
+        fs.mkdir(dir, err => {
+            if (err.code != "EEXIST") { console.log(err); throw err };
+            fs.mkdir(`${dir}/${dataProtocol}`, err => {
+                if (err.code != "EEXIST") { console.log(err); throw err };
+                let file = fs.createWriteStream(`./${dir}/${dataProtocol}/1D_${timeProtocol}.dat`);
+                file.on('error', function (err) { console.log(err) })
+                // const keys = Object.keys(this.masInformation);
+                const values = Object.values(this.masInformation);
+                file.write(
+                    `Дата записи: ${dataProtocol}\nВремя записи: ${timeProtocol}\n`
+                )
+                this.nameInformation.forEach((item, i) => { file.write(`${item} ${values[i]} \n`) })
+                file.end();
+            })
+        })
     }
 
     click_calibration = () => {
@@ -365,8 +396,6 @@ class Sum_graph extends PureComponent {
             data, revision, coor, massum, nameElement
             // options
         } = this.props;
-
-        console.log(nameElement)
         let class_HT = ''
         return (
             <div id="sum_graph">
@@ -415,6 +444,13 @@ class Sum_graph extends PureComponent {
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         // value={n_smoothing}
                         ></input>
+                    </div>
+                    <h3>Детали экспермента</h3>
+                    <div className={`hidden_menu ${class_HT}`}>
+                        <textarea id='add_information' placeholder="Дополнительная информация"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        // value={n_smoothing}
+                        ></textarea>
                     </div>
                 </div>
                 <div id="view_panel">
@@ -505,14 +541,14 @@ class Coor extends PureComponent {
         this.massum = this.props.massum
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (this.massum !== nextProps.massum) {
-            return true;
-        }
-        else {
-            return false
-        }
-    }
+    // shouldComponentUpdate(nextProps) {
+    //     if (this.massum !== nextProps.massum) {
+    //         return true;
+    //     }
+    //     else {
+    //         return false
+    //     }
+    // }
 
     render() {
         const { coor, massum } = this.props;

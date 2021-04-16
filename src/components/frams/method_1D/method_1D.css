@@ -164,6 +164,11 @@
   overflow: auto;
 }
 
+#add_information{
+  min-height: 60px;
+  resize: none;
+}
+
 
 /* #apply_Coor,
   #return_Coor {
