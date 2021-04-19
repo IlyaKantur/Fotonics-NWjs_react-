@@ -37,3 +37,18 @@
     width: 800px !important;
     height: 600px !important;
 }
+
+#list_camera{
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+}
+#list_camera > * {
+    padding: 4px;
+    border-bottom: 0.5px solid black;
+}
+
+#list_camera > *:hover {
+    background-color:rgb(200, 200, 200);
+    cursor: pointer;
+}

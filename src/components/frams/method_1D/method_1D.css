@@ -152,7 +152,6 @@
 #list_file > *:hover {
   background-color:rgb(200, 200, 200);
   cursor: pointer;
-  
 }
 #view_panel_file{
   height: 100vh;
@@ -167,6 +166,13 @@
 #add_information{
   min-height: 60px;
   resize: none;
+}
+
+#control h3{
+  border-bottom: 2px solid black;
+  background: black;
+  color: white;
+  font-size: 16px;
 }
 
 
