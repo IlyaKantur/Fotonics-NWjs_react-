@@ -72,8 +72,11 @@
 }
 
 #control_panel h3 {
-  background-color: rgb(26, 26, 26);
-  color: white;
+  border-bottom: 2px solid black;
+    background: black;
+    color: white;
+    font-size: 16px;
+    padding: 4px;
 }
 
 .hidden_menu{
@@ -166,13 +169,6 @@
 #add_information{
   min-height: 60px;
   resize: none;
-}
-
-#control h3{
-  border-bottom: 2px solid black;
-  background: black;
-  color: white;
-  font-size: 16px;
 }
 
 

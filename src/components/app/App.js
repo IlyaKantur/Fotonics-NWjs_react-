@@ -10,14 +10,14 @@ import './App.css';
 
 export default class App extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.library_Tab = [
-            { nameWP: "choice", text: "Выбор"},
-            { nameWP: 'method_1D', text: "Обработка_1D"},
-            { nameWP: "method_2D", text: "Обработка_2D"},
-            { nameWP: "PTE", text: "PTE"},
-            { nameWP: "camera", text: "Камера"}
+            { nameWP: "choice", text: "Выбор" },
+            { nameWP: 'method_1D', text: "Обработка_1D" },
+            { nameWP: "method_2D", text: "Обработка_2D" },
+            { nameWP: "PTE", text: "PTE" },
+            { nameWP: "camera", text: "Камера" }
         ]
     }
 
@@ -56,15 +56,15 @@ export default class App extends Component {
     }
 
     createTab = (text) => {
-        const {tab, frame} = this.state;
+        const { tab, frame } = this.state;
         const Tab = this.library_Tab.find(item => item.nameWP == text);
         const count = frame.filter(item => item.nameF == text).length + 1
-        const newTab = {nameWP: text, text: Tab.text, id_t: count}
-        const newFrame = {nameF: text, id_f: count}
+        const newTab = { nameWP: text, text: Tab.text, id_t: count }
+        const newFrame = { nameF: text, id_f: count }
         this.setState({
-            tab:[...tab, newTab],
-            frame:[...frame, newFrame],
-            activeFrame:{name: text, id: count}
+            tab: [...tab, newTab],
+            frame: [...frame, newFrame],
+            activeFrame: { name: text, id: count }
         })
     }
 
@@ -272,6 +272,39 @@ const CreateMenu = (create) => {
                 //     label: 'Сохранить',
                 //     click: () => { }
                 // },
+                {
+                    label: 'Открыть',
+                    click: () => {
+                        // let win = nw.Window.get();
+                        // let iframeWin = win(iframe.contentWindow);
+                        // console.log(iframeWin === win)
+                        nw.Window.open('E:/Old_taple/Fotonics(NWjs_react)/src/html/test.html#root_2', {}, function(new_win){
+                            window.blur();
+                            new_win.focus()
+                            console.log(new_win)
+                        })
+                        // console.log('open new page');
+                        // var parentWin = window;
+
+                        // if (parentWin.localStorage.getItem('child_open')) {
+                        //     console.log('child window is already open');
+                        //     parentWin.localStorage.removeItem('child_open');
+                        //     return;
+                        // }
+
+                        // nw.Window.open('E:/Old_taple/Fotonics(NWjs_react)/src/html/test.html#root_2', {}, function (win) {
+                        //     // if(win) {
+                        //     //     console.log("win is no longer undefined!");
+                        //     // }
+                        //     parentWin.localStorage.setItem('child_open', true);
+                        //     win.on('focus', function(){console.log("focus")})
+
+                        //     win.on('closed', function () {
+                        //         parentWin.localStorage.removeItem('child_open');
+                        //     });
+                        // });
+                    }
+                },
                 {
                     label: 'Закрыть',
                     click: () => {

@@ -5,7 +5,7 @@
     flex-direction: row;
     justify-content: left;
 }
-#control{
+#control_camera{
     height: 100vh;
     width: 150px;
     display: flex;
@@ -13,7 +13,7 @@
     justify-content: start;
     border-right: 1px solid black;
 }
-#place{
+#place_cam_snap{
     height: 100vh;
     display: flex;
     flex-direction: row;
@@ -23,7 +23,7 @@
     overflow-x: auto;
 }
 
-#place > *{
+#place_cam_snap > *{
     margin-left: 10px;
     margin-right: 10px;
 }
@@ -47,9 +47,19 @@
     width: 100%;
     padding: 4px 0px 4px 0px;
     border-bottom: 0.5px solid black;
+    word-wrap: break-word;
+    text-align: center;
 }
 
 #list_camera > *:hover {
     background-color:rgb(200, 200, 200);
     cursor: pointer;
 }
+
+#control_camera h3{
+    border-bottom: 2px solid black;
+    background: black;
+    color: white;
+    font-size: 16px;
+    padding: 4px;
+  }

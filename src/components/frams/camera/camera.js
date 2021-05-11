@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Webcam from 'react-webcam';
 const fs = window.require('fs');
 
 import './camera.css';
 
-export default class Camera extends Component {
+export default class Camera extends PureComponent {
   constructor(props) {
     super(props);
     this.webcamRef = React.createRef();
@@ -12,8 +12,11 @@ export default class Camera extends Component {
     this.n_snapshot = 0;
     this.masInformation = {
       countSnapshot: 1,
-      delayTime: 1
+      delayTime: 1,
+      nameSnapshot: '',
+      recordingTime: null
     }
+    this.folder_storage = ""
   }
 
   state = {
@@ -21,7 +24,7 @@ export default class Camera extends Component {
     imgSrc: null,
     choice: false,
     camers: [],
-    deviceId: null
+    deviceId: null,
   }
 
   stored_value = (name, value) => {
@@ -59,12 +62,28 @@ export default class Camera extends Component {
     console.log(item)
   }
 
+  choice_folder = () => {
+    let i = document.createElement('input')
+    i.type = 'file';
+    i.nwdirectory = 'directory';
+    i.click();
+    i.onchange = (e) => {
+      const f = String(e.target.value)
+      this.folder_storage = f
+    }
+  }
+
   capture = () => {
     this.n_snapshot = 0;
     if (!this.iter) {
+      if(this.masInformation.recordingTime)
+      {
+        let {recordingTime, delayTime} = this.masInformation
+        this.masInformation.countSnapshot = Math.floor(recordingTime / delayTime)
+      }
       this.iter = setInterval(() => {
         this.snapshot()
-      }, this.masInformation.delayTime*1000)
+      }, this.masInformation.delayTime * 1000)
     }
   }
 
@@ -74,8 +93,13 @@ export default class Camera extends Component {
       imgSrc: imageSrc
     })
     const base64Data = imageSrc.replace(/data:image\/png;base64,/, "");
-    fs.writeFile(`result/image/test_${this.n_snapshot++}.jpg`, base64Data, 'base64', err => { if (err !== null) console.log(err) })
-    if(this.n_snapshot == this.masInformation.countSnapshot) clearInterval(this.iter)
+    let folder = this.folder_storage || 'result/image' ;
+    let name = this.masInformation.nameSnapshot || 'image'
+    fs.writeFile(`${folder}/${name}_${this.n_snapshot++}.jpg`, base64Data, 'base64', err => { if (err !== null) console.log(err) })
+    if (this.n_snapshot == (this.masInformation.countSnapshot || 1)) {
+      clearInterval(this.iter)
+      this.iter = null;
+    }
   }
 
   render() {
@@ -110,24 +134,32 @@ export default class Camera extends Component {
         )
     }
     else { element = (<></>) }
-    if(camers.lengh != 0)
-    {
+    if (camers.lengh != 0) {
       camera = camers.map((item, i) => {
-        return(
-          <a key={`camera_${i}`} onClick = {() => this.choice_camera(item)}>{item.label}</a>
+        return (
+          <a key={`camera_${i}`} onClick={() => this.choice_camera(item)}>{item.label}</a>
         )
       })
     }
     return (
       <div id='camera_place'>
-        <div id="control">
+        <div id="control_camera">
           <h3>Спосок подключенных камер</h3>
           <div id="list_camera">
             {camera}
           </div>
+          <h3>Управление</h3>
           <button onClick={this.active_cam}>Камера</button>
+          <button onClick={this.choice_folder}>Папка</button>
           <button onClick={this.capture}>Накопление</button>
+          <input id='nameSnapshot' type='text' placeholder="Название"
+            onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+          ></input>
           <input id='countSnapshot' type='number' placeholder="Количество снимков"
+            onChange={(e) => this.stored_value(e.target.id, e.target.value)}
+          ></input>
+          либо
+          <input id='recordingTime' type='number' placeholder="Время съемки,с"
             onChange={(e) => this.stored_value(e.target.id, e.target.value)}
           ></input>
           <input id='delayTime' type='number' placeholder="Время задержки,с"
@@ -135,7 +167,7 @@ export default class Camera extends Component {
           ></input>
           {/* <button onClick={stop}>Stop</button> */}
         </div>
-        <div id="place">
+        <div id="place_cam_snap">
           {element}
         </div>
       </div>
