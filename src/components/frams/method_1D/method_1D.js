@@ -205,7 +205,7 @@ export default class Method_1D extends PureComponent {
 
     click_save = () => {
         const { coor, massum } = this.state;
-        const path_save = './result/TestObr/1D/test.dat';
+        const path_save = `./result/TestObr/1D/${this.masInformation.nameElement}.dat`;
 
         let file = fs.createWriteStream(path_save);
         file.on('error', function (err) { console.log(err) })
