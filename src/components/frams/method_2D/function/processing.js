@@ -3,7 +3,16 @@ const fs = window.require('fs');
 
 export default class Processing {
 
-    constructor({ onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder, imgnum, masImg, fon, masInformation_2D }) {
+    constructor({
+        onConsoleMessage,
+        id_f_nameF,
+        chek_obsorv,
+        imgFolder,
+        imgnum,
+        masImg,
+        fon,
+        masInformation_2D
+    }) {
         // Image
         this.ImgNew = document.getElementById(`ImgNew_${id_f_nameF}`);
         this.ImgSum = document.getElementById(`ImgSum_${id_f_nameF}`);
@@ -17,6 +26,7 @@ export default class Processing {
         // Checkbox
         this.saveLast = masInformation_2D.SaveLast;
         this.iter = masInformation_2D.Iter; // Ограничение
+        this.intPix = masInformation_2D.IntPix; // Суммировать интенсивность пикселей
         this.bf = masInformation_2D.BF; // Без фона
         this.delta = masInformation_2D.Delta; // Вычет шума
         this.bpix = masInformation_2D.BPix; // Вычет битого
@@ -24,6 +34,7 @@ export default class Processing {
 
         // Введеные значения
         this.iterN = masInformation_2D.IterN; // Ограничение по количеству обработанных снимков
+        this.minInt = masInformation_2D.MinInt; // Порог интенсивности, если < тогда 0 
         this.dfon = masInformation_2D.DFon; // Значение вычитаемого шума
         this.g_Xx = masInformation_2D.Xx;
         this.g_XX = masInformation_2D.XX;
@@ -94,21 +105,57 @@ export default class Processing {
             this.startOb = new Date().getTime();
             this.proces = true;
             this.onConsoleMessage('Start')
-            this.workOnImg().then(({ massum, masx, finished, oldY, imgnum }) => resolve({ massum, masx, finished, oldY, imgnum }));
+            this.workOnImg().then(({
+                massum,
+                masx,
+                finished,
+                oldY,
+                imgnum
+            }) => resolve({
+                massum,
+                masx,
+                finished,
+                oldY,
+                imgnum
+            }));
         })
     }
 
     workOnImg = () => {
         return new Promise((resolve, reject) => {
             if (this.imgnum == this.masImg.length && this.chek_obsorv) {
-                this.check().then(({ massum, masx, finished, oldY, imgnum }) => {
+                this.check().then(({
+                    massum,
+                    masx,
+                    finished,
+                    oldY,
+                    imgnum
+                }) => {
                     this.save_proces(massum, masx, finished, oldY, imgnum);
-                    resolve({ massum, masx, finished, oldY, imgnum })
+                    resolve({
+                        massum,
+                        masx,
+                        finished,
+                        oldY,
+                        imgnum
+                    })
                 });
             } else {
-                this.processing().then(({ massum, masx, finished, oldY, imgnum }) => {
+                this.processing().then(({
+                    massum,
+                    masx,
+                    finished,
+                    oldY,
+                    imgnum
+                }) => {
                     this.save_proces(massum, masx, finished, oldY, imgnum);
-                    resolve({ massum, masx, finished, oldY, imgnum })
+                    resolve({
+                        massum,
+                        masx,
+                        finished,
+                        oldY,
+                        imgnum
+                    })
                 });
             }
         })
@@ -117,14 +164,28 @@ export default class Processing {
     check = () => {
         return new Promise((resolve, reject) => {
             let folder = this.imgFolder || this.defolt_folred;
-            loadImg().loadObservation(folder, this.imgnum).then(({masImg}) => {
+            loadImg().loadObservation(folder, this.imgnum).then(({
+                masImg
+            }) => {
                 if (this.imgnum == masImg.length) {
                     this.check();
                 } else {
                     this.masImg = masImg;
-                    this.processing().then(({ massum, masx, finished, oldY, imgnum }) => {
+                    this.processing().then(({
+                        massum,
+                        masx,
+                        finished,
+                        oldY,
+                        imgnum
+                    }) => {
                         this.save_proces(massum, masx, finished, oldY, imgnum);
-                        resolve({ massum, masx, finished, oldY, imgnum })
+                        resolve({
+                            massum,
+                            masx,
+                            finished,
+                            oldY,
+                            imgnum
+                        })
                     })
                 }
             })
@@ -146,25 +207,33 @@ export default class Processing {
             let ii = 0;
             let xbeg, xfin, ybeg, yfin;
             for (let i = 0; i < imgData.length; i += 4) {
-                mas0[ii] = imgData[i];
-                if (!this.bf && this.fon_load && mas0[ii] >= this.imgfon[i]) {
-                    mas0[ii] -= this.imgfon[i];
+                if (this.intPix) {
+                    mas0[ii] = imgData[i];
+                    if (!this.bf && this.fon_load && mas0[ii] >= this.imgfon[i]) {
+                        mas0[ii] -= this.imgfon[i];
+                    }
+                    if (this.delta && mas0[ii] >= this.dfon) {
+                        mas0[ii] -= this.dfon;
+                    }
                 }
-                if (this.delta && mas0[ii] >= this.dfon) {
-                    mas0[ii] -= this.dfon;
+                else{
+                    if(imgData[i] >= this.minInt) {
+                        mas0[ii] = 1
+                    }
+                    else{
+                        mas0[ii] = 0;
+                    }
                 }
                 ii++;
             }
             let yy = 0;
-            if(this.gran)
-            {
+            if (this.gran) {
                 xbeg = +this.g_Xx;
                 xfin = +this.g_XX;
                 ybeg = +this.g_Yy;
                 yfin = +this.g_YY;
                 yy = (ybeg - 1) * this.ix + xbeg;
-            }
-            else{
+            } else {
                 xbeg = 0;
                 xfin = this.ix;
                 ybeg = 0;
@@ -198,9 +267,8 @@ export default class Processing {
                     mas[x] += mas0[yy];
                     yy += 1;
                 }
-                if(this.gran)
-                {
-                    yy += (this.ix - xfin) + xbeg 
+                if (this.gran) {
+                    yy += (this.ix - xfin) + xbeg
                 }
             }
 
@@ -268,7 +336,13 @@ export default class Processing {
 
                 finished = true;
             }
-            resolve({ massum, masx, finished, oldY, imgnum });
+            resolve({
+                massum,
+                masx,
+                finished,
+                oldY,
+                imgnum
+            });
         })
     }
 }

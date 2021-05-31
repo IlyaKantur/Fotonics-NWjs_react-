@@ -93,6 +93,19 @@ export default class Bars extends PureComponent {
                                 type="number"
                                 placeholder='Количество'
                             /></li>
+                            <li><label className="container">Инт. Пикселя
+                            <input className="IntPix" id={`IntPix_${id_f_nameF}`}
+                                    onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                                    type="checkbox"
+                                    defaultChecked={masInformation_2D.IntPix}
+                                />
+                                <span className="checkmark"></span>
+                            </label></li>
+                            <li><input className="MinInt" id={`MinInt_${id_f_nameF}`}
+                                onChange={(e) => stored_value(e.target.className, +e.target.value)}
+                                type="number"
+                                placeholder={`Мин. инт: ${masInformation_2D.MinInt}`}
+                            /></li>
                             <li><button id="Start" onClick={() => startPush(id_f_nameF)}>Старт</button></li>
                             {/* <li><button id="Restart">Очистка</button></li> */}
                         </ul>
@@ -147,25 +160,25 @@ export default class Bars extends PureComponent {
                         <li><input className="Xx" id={`Xx_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
-                            // placeholder={masInformation_2D.Xx}
+                                placeholder={masInformation_2D.Xx}
                             />
                             </li>
                             <li><input className="XX" id={`XX_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
-                            // placeholder={masInformation_2D.XX}
+                                placeholder={masInformation_2D.XX}
                             />
                             </li>Y
                         <li><input className="Yy" id={`Yy_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
-                            // placeholder={masInformation_2D.Yy}
+                                placeholder={masInformation_2D.Yy}
                             />
                             </li>
                             <li><input className="YY" id={`YY_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
-                            // placeholder={masInformation_2D.YY}
+                                placeholder={masInformation_2D.YY}
                             />
                             </li>
                         </ul>

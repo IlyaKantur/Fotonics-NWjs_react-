@@ -31,6 +31,8 @@ export default class Method_2D extends Component {
             AxisY: 'Y',
             Iter: false,
             IterN: 0,
+            IntPix: false,
+            MinInt: 5,
             BF: false,
             Delta: false,
             DFon: 3,
