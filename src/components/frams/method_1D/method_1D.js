@@ -567,7 +567,7 @@ const Coordinat = ({ coor, massum }) => {
     const element = massum.map((count, x) => {
         return (
             <div key={`x_${x}`} >
-                <div className='coor_element'>    <b>X:</b> {coor[x]}   <b>Y:</b> {count}</div>
+                <div className='coor_element_1D'>    <b>X:</b> {coor[x]}   <b>Y:</b> {count}</div>
             </div>
         )
     })

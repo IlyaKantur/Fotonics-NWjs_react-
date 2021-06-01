@@ -26,13 +26,14 @@ export default class L_P_Panel extends PureComponent {
         const { loadFolder, loadFoldImg, loadFonImg,
                 startPush, applyCoor, returnCoor, data,
                 revision, consoleMessage, onConsoleMessage,
-                id_item, finished, masInformation_2D, stored_value 
+                id_item, finished, masInformation_2D, stored_value,
+                calibration 
         } = this.props;
-        let { massum, Plot } = this.props;
+        let {masx, massum, Plot } = this.props;
         const { active_l_t } = this.state;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
-        if (!finished) massum = [];
+        if (!finished) massum = [], masx = [];
         let element, button_active_1, button_active_2, z1, z2;
         if (active_l_t == 1) {
             button_active_1 = "button_active";
@@ -55,12 +56,14 @@ export default class L_P_Panel extends PureComponent {
                     loadFoldImg={loadFoldImg}
                     loadFonImg={loadFonImg}
                     startPush={startPush}
+                    calibration={calibration}
                     id_item={id_item}
                     masInformation_2D={masInformation_2D}
                     stored_value={stored_value}
                 ></Bars>;
                 <Coor
                     className={z2}
+                    masx={masx}
                     massum={massum}
                     applyCoor={applyCoor}
                     returnCoor={returnCoor}

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import L_P_Panel from './parts/l_p_panel.js';
 import loadImg from './function/loadImg.js';
 import Processing from './function/processing.js'
@@ -7,7 +7,7 @@ import Processing from './function/processing.js'
 import './method_2D.css';
 const fs = window.require('fs');
 
-export default class Method_2D extends Component {
+export default class Method_2D extends PureComponent {
 
     constructor(props) {
         super(props);
@@ -22,7 +22,7 @@ export default class Method_2D extends Component {
 
         this.proces;
 
-        this.masInformation_2D={
+        this.masInformation_2D = {
             method: 'Двумерный',
             chek_obsorv: false,
             SaveLast: false,
@@ -37,6 +37,10 @@ export default class Method_2D extends Component {
             Delta: false,
             DFon: 3,
             BPix: false,
+            en_first_point: 0,
+            en_second_point: 0,
+            n_first_point: 0,
+            n_second_point: 0,
             Gran: false,
             Xx: 200,
             XX: 1000,
@@ -45,12 +49,12 @@ export default class Method_2D extends Component {
             add_information: '',
         }
         this.nameInformation_2D =
-        [
-            "Название метода:", "*Режим наблюдения:", "*Сохранить последний:", "Название элемента:",
-            "ОсьХ:", "ОсьY:", "*Ограниченное количество:", "Количество:", "*Без фильтрации:", "*Вычесть дельта:",
-            "Дельта:", "*Вычет битого пикселя:", "*Включить границы:", "Начало по горизонтале:", "Конец по горизонтали",
-            "Начало по вертикали:", "Конец по вертикали:", `Дополнительная информация \n`
-        ]
+            [
+                "Название метода:", "*Режим наблюдения:", "*Сохранить последний:", "Название элемента:",
+                "ОсьХ:", "ОсьY:", "*Ограниченное количество:", "Количество:", "*Без фильтрации:", "*Вычесть дельта:",
+                "Дельта:", "*Вычет битого пикселя:", "*Включить границы:", "Начало по горизонтале:", "Конец по горизонтали",
+                "Начало по вертикали:", "Конец по вертикали:", `Дополнительная информация \n`
+            ]
     }
 
     state = {
@@ -62,7 +66,7 @@ export default class Method_2D extends Component {
         consoleMessage: []
     }
 
-    stored_value = (name ,value) => {
+    stored_value = (name, value) => {
         this.masInformation_2D[name] = value
     }
 
@@ -77,6 +81,8 @@ export default class Method_2D extends Component {
                 marker: { color: 'red' }
             }];
         this.setState({
+            masx: masx,
+            massum: massum,
             data: data,
             revision: this.state.revision + 1
         })
@@ -144,13 +150,13 @@ export default class Method_2D extends Component {
             // вставить надпись в консоль о начале наблюдения
             console.log("Наблюдение")
             let folder = imgFolder || this.defolt_folder_observ;
-            loadImg().loadObservation(folder, 0).then(({masImg}) => {
+            loadImg().loadObservation(folder, 0).then(({ masImg }) => {
                 this.masImg = masImg
                 this.start({ id_f_nameF, chek_obsorv });
             })
         } else {
             if (this.masImg.length == 0) {
-                loadImg().loadFolderImg(this.defolt_folder_base).then(({masImg}) => {
+                loadImg().loadFolderImg(this.defolt_folder_base).then(({ masImg }) => {
                     this.masImg = masImg;
                     this.start({ id_f_nameF, chek_obsorv });
                 })
@@ -169,10 +175,11 @@ export default class Method_2D extends Component {
         const imgnum = this.imgnum;
         const imgFolder = this.imgFolder;
         const masImg = this.masImg;
-        this.proces = new Processing({ 
+        this.proces = new Processing({
             onConsoleMessage: onConsoleMessage, id_f_nameF: id_f_nameF,
             chek_obsorv: chek_obsorv, imgFolder: imgFolder, imgnum: imgnum,
-            masImg: masImg, fon: this.imgFon, masInformation_2D: this.masInformation_2D })
+            masImg: masImg, fon: this.imgFon, masInformation_2D: this.masInformation_2D
+        })
 
         this.proces.start().then(({ massum, masx, finished, oldY, imgnum }) => {
             this.reloadData(masx, massum)
@@ -195,12 +202,10 @@ export default class Method_2D extends Component {
             this.imgnum = imgnum;
             this.finished = finished;
             this.setState({
-                masx: masx,
                 oldY: oldY,
-                massum: massum,
             })
             if (finished) {
-                this.timerId = clearInterval(this.timerId)
+                this.timerId = clearInterval(this.timerId);
                 this.save_protocol();
             }
 
@@ -209,6 +214,20 @@ export default class Method_2D extends Component {
             //     cancelAnimationFrame(req);
             // }
         })
+    }
+
+    calibration = () => {
+        if (this.finished) {
+            const { masx, massum } = this.state;
+            let del_en = (this.masInformation_2D.en_second_point - this.masInformation_2D.en_first_point) /
+                (this.masInformation_2D.n_second_point - this.masInformation_2D.n_first_point);
+            let newCoor = [];
+            newCoor[0] = this.masInformation_2D.en_first_point - del_en.toFixed(3) * this.masInformation_2D.n_first_point
+            for (let i = 1; i < masx.length; i++) {
+                newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(3));
+            }
+            this.reloadData(newCoor, massum);
+        }
     }
 
     save_protocol = () => {
@@ -257,14 +276,16 @@ export default class Method_2D extends Component {
 
     render() {
         const { id_item, Plot } = this.props;
-        const { data, revision, massum, consoleMessage, } = this.state
+        const { data, revision, massum, consoleMessage, masx} = this.state
         return (
             <L_P_Panel
                 loadFolder={this.loadFolder}
                 loadFoldImg={this.loadFoldImg}
                 loadFonImg={this.loadFonImg}
                 startPush={this.startPush}
+                masx={masx}
                 massum={massum}
+                calibration={this.calibration}
                 applyCoor={this.applyCoor}
                 returnCoor={this.returnCoor}
                 data={data}
@@ -273,7 +294,7 @@ export default class Method_2D extends Component {
                 onConsoleMessage={this.onConsoleMessage}
                 id_item={id_item}
                 finished={this.finished}
-                Plot = {Plot}
+                Plot={Plot}
                 masInformation_2D={this.masInformation_2D}
                 stored_value={this.stored_value}
             ></L_P_Panel>

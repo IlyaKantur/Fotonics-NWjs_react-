@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
-export default class Coor extends Component{
+export default class Coor extends PureComponent{
     render(){
-        const {className, massum, applyCoor, returnCoor} = this.props;
+        const {className, masx, massum, applyCoor, returnCoor} = this.props;
         return(
             <ul id="coor" className={`bar ${className}`}>
                 <div id="coordinatesPanel">
                     <Coordinat
+                        masx = {masx}
                         massum = {massum}
                     ></Coordinat>
                 </div>
@@ -18,19 +19,17 @@ export default class Coor extends Component{
         )
     }
 }
-const Coordinat = ({massum}) => {
-    const element = massum.map((count, x) =>{
+const Coordinat = ({masx, massum}) => {
+    const element = massum.map((count, i) =>{
         return(
-            <div key = {`x_${x}`} >
-                <div className = 'coor_element'>    x: {x}   y:</div> 
-                <div className = 'coor_element'> 
-                    <input 
+            <div key = {`x_${i}`} >
+                <div className = 'coor_element_2D'>    x: {masx[i]}   y: <input 
                         className = 'y_input' 
-                        id = {`x_${x}`} 
+                        id = {`x_${i}`} 
                         type="text" 
                         defaultValue = {count}
                     />
-                </div>
+                </div> 
             </div>
         )
     })

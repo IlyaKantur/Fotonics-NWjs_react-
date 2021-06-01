@@ -144,8 +144,7 @@
     border-bottom: 5px solid rgba(102, 102, 102, 0);
   } */
   
-  #navbar a,
-  input {
+  #navbar a{
     background-color: #181818cb;
     color: #fff;
     padding: 5px;
@@ -315,7 +314,7 @@
     position: absolute;
     border-bottom: 2px solid black;
     background-color: rgb(220, 220, 220);
-    font-size: 16px;
+    font-size: 14px;
   }
   
   #coordinatesPanel {
@@ -357,8 +356,9 @@
   }
   
   
-  .coor_element {
-    display: inline-block;
+  .coor_element_2D {
+    display: flex;
+    flex-direction: row;
   }
   
   .y_input {
@@ -366,6 +366,7 @@
     background-color: rgb(220, 220, 220);
     color: black;
     border: none;
-    font-size: 15px;
+    font-size: 14px;
+    font-weight: bold;
   }
 
