@@ -206,6 +206,7 @@ export default class Method_2D extends PureComponent {
                 oldY: oldY,
             })
             if (finished) {
+                this.finished = finished;
                 this.timerId = clearInterval(this.timerId);
                 this.save_protocol();
             }
