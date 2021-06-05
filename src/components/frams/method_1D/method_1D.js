@@ -205,12 +205,12 @@ export default class Method_1D extends PureComponent {
 
     click_save = () => {
         const { coor, massum } = this.state;
-        const path_save = `./result/TestObr/1D/${this.masInformation.nameElement}.dat`;
+        const path_save = `./result/TestObr/1D/${this.masInformation.nameElement ? this.masInformation.nameElement : 'NoName'}.dat`;
 
-        let file = fs.createWriteStream(path_save);
-        file.on('error', function (err) { console.log(err) })
+        const file_1D = fs.createWriteStream(path_save);
+        file_1D.on('error', function (err) { console.log(err) })
         coor.forEach((item, i) => file.write(`${item} ${massum[i]} \n`));
-        file.end();
+        file_1D.end();
     }
 
     click_sum = () => {
@@ -374,11 +374,29 @@ export default class Method_1D extends PureComponent {
 
 class Sum_graph extends PureComponent {
 
-    // constructor(props)
-    // {
-    //     super(props)
-    //     this.massum = this.props.massum
-    // }
+    constructor(props)
+    {
+        super(props)
+        // this.massum = this.props.massum
+        this.masVisible = {
+            file: false,
+            processing: false,
+            calibration: false,
+            smoothing: false,
+            details: false
+        }
+    }
+
+    state = {
+        reload: false
+    }
+
+    hide_parametr(id) {
+        this.masVisible[id] = !this.masVisible[id];
+        this.setState({
+            reload: !this.state.reload
+        })
+    }
 
     // shouldComponentUpdate(nextProps){
     //     if(this.massum != nextProps.massum)
@@ -390,18 +408,20 @@ class Sum_graph extends PureComponent {
     //     }
     // }
 
+
     render() {
         const { click_loadFolder, click_loadFile, click_save, click_sum,
             stored_value, click_calibration, click_smoothing,
             data, revision, coor, massum, nameElement
             // options
         } = this.props;
-        let class_HT = ''
+
+
         return (
             <div id="sum_graph">
                 <div id="control_panel">
-                    <h3>Файл</h3>
-                    <div className={`hidden_menu ${class_HT}`}>
+                    <h3 onClick={() => this.hide_parametr('file')}>Файл</h3>
+                    <div style={{ display: this.masVisible['file'] ? 'block' : 'none' }}>
                         <input id='nameElement' type='text' placeholder="Элемент"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
@@ -416,12 +436,15 @@ class Sum_graph extends PureComponent {
                         <button onClick={click_save}>Сохранить</button>
 
                     </div>
-                    <h3>Обработка</h3>
-                    <div className={`hidden_menu ${class_HT}`}>
+                    <h3 onClick={() => this.hide_parametr('processing')}>Обработка</h3>
+                    <div style={{ display: this.masVisible['processing'] ? 'block' : 'none' }}>
                         <button id="click_sum" onClick={click_sum}>Суммировать</button>
                         <input id='countSum' type='number' placeholder="Сумма по: 1"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
+                    </div>
+                    <h3 onClick={() => this.hide_parametr('calibration')}>Калибровка</h3>
+                    <div style={{ display: this.masVisible['calibration'] ? 'block' : 'none' }}>
                         <button id="click_calibration" onClick={click_calibration}>Калибровка</button>
                         <input id='en_first_point' type='number' placeholder="Эн. первой точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
@@ -439,14 +462,17 @@ class Sum_graph extends PureComponent {
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         // value={n_second_point}
                         ></input>
+                    </div>
+                    <h3 onClick={() => this.hide_parametr('smoothing')}>Сглаживание</h3>
+                    <div style={{ display: this.masVisible['smoothing'] ? 'block' : 'none' }}>
                         <button id="click_smoothing" onClick={click_smoothing}>Сглаживание</button>
                         <input id='n_smoothing' type='number' placeholder="Точек: 3"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         // value={n_smoothing}
                         ></input>
                     </div>
-                    <h3>Детали экспермента</h3>
-                    <div className={`hidden_menu ${class_HT}`}>
+                    <h3 onClick={() => this.hide_parametr('processing')}>Детали экспермента</h3>
+                    <div style={{ display: this.masVisible['processing'] ? 'block' : 'none' }}>
                         <textarea id='add_information' placeholder="Дополнительная информация"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         // value={n_smoothing}

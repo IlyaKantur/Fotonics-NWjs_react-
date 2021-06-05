@@ -5,7 +5,8 @@
 /.pnp
 .pnp.js
 *.bmp
-/result/TestObr
+*.dat
+/result/protocol
 # testing
 /coverage
 
