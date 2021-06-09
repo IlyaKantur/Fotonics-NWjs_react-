@@ -37,6 +37,7 @@ export default class Method_2D extends PureComponent {
             Delta: false,
             DFon: 3,
             BPix: false,
+            n_smoothing: 3,
             en_first_point: 0,
             en_second_point: 0,
             n_first_point: 0,
@@ -205,6 +206,7 @@ export default class Method_2D extends PureComponent {
                 oldY: oldY,
             })
             if (finished) {
+                this.finished = finished;
                 this.timerId = clearInterval(this.timerId);
                 this.save_protocol();
             }
@@ -274,6 +276,39 @@ export default class Method_2D extends PureComponent {
         })
     }
 
+    save = () => {
+        const {masx, massum} = this.state;
+        const path_save = `./result/TestObr/2D/${
+            this.masInformation_2D.nameElement ? this.masInformation_2D.nameElement : 'NoName'}.dat`;
+        
+        const file_2D = fs.createWriteStream(path_save);
+        file_2D.on('error', function (err){console.log(err)})
+        masx.forEach((item, i) => file_2D.write(`${item} ${massum[i]} \n`));
+        file_2D.end();
+    }
+
+    smoothing = () =>{
+        let {massum} = this.state;
+        const n = Number(this.masInformation_2D.n_smoothing);
+
+        let sum = 0, del = 3, floor = Math.floor(n / 2);
+        for (let i = 1; i < n; i++) {
+            for (let j = 0; j < del; j++) {
+                sum += massum[j];
+            }
+            massum[i] = Math.ceil(sum / del);
+            del += 2;
+        }
+        for (let i = n; i < massum.length - floor; i++) {
+            sum = 0;
+            for (let j = 0; j < n; j++) {
+                sum += massum[i + j - floor];
+            }
+            massum[i] = Math.ceil(sum / n);
+        }
+        this.reloadData(this.state.masx, massum);
+    }
+
     render() {
         const { id_item, Plot } = this.props;
         const { data, revision, massum, consoleMessage, masx} = this.state
@@ -297,6 +332,8 @@ export default class Method_2D extends PureComponent {
                 Plot={Plot}
                 masInformation_2D={this.masInformation_2D}
                 stored_value={this.stored_value}
+                save={this.save}
+                smoothing={this.smoothing}
             ></L_P_Panel>
         )
     }

@@ -78,6 +78,9 @@
     font-size: 16px;
     padding: 4px;
 }
+#control_panel input{
+  width: 97%;
+}
 
 .hidden_menu{
   display: flex;

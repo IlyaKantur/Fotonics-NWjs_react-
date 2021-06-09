@@ -37,7 +37,8 @@ export default class Bars extends PureComponent {
             filtering: false,
             borders: false,
             details: false,
-            calibration: false
+            calibration: false,
+            smoothing: false
         }
     }
 
@@ -46,7 +47,7 @@ export default class Bars extends PureComponent {
     }
 
     hide_parametr(id) {
-        this.masVisible[id] = !this.masVisible[id]
+        this.masVisible[id] = !this.masVisible[id];
         this.setState({
             reload: !this.state.reload
         })
@@ -56,7 +57,7 @@ export default class Bars extends PureComponent {
         const { className, loadFolder, loadFoldImg,
             loadFonImg, startPush, id_item,
             masInformation_2D, stored_value,
-            calibration
+            calibration, save, smoothing
         } = this.props;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
@@ -83,7 +84,7 @@ export default class Bars extends PureComponent {
                         <ul style={{ display: this.masVisible['file'] ? 'block' : 'none' }}>
                             <li><button id="Folder" onClick={() => loadFolder(id_f_nameF)}>Папка</button></li>
                             <li><button id="Fold" onClick={() => loadFoldImg(id_f_nameF)}>Выбор</button></li>
-                            <li><button id="Save">Сохранить</button></li>
+                            <li><button id="Save" onClick={() => save()}>Сохранить</button></li>
                             <li><label className="container">Только последний
                             <input className="SaveLast" id={`SaveLast_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
@@ -171,6 +172,19 @@ export default class Bars extends PureComponent {
                                 <span className="checkmark"></span>
                             </label></li>
                             <li><button id="Fonfold" onClick={() => loadFonImg(id_f_nameF)}>Фон</button></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="#" onClick={() => this.hide_parametr('smoothing')}>Сглаживание</a>
+                        <ul style={{ display: this.masVisible['smoothing'] ? 'block' : 'none' }}>
+                            <button onClick={() => smoothing()}>Сглаживание</button>
+                            <li><input className="n_smoothing" id={`n_smoothing_${id_f_nameF}`}
+                                onChange={(e) => stored_value(e.target.className, +e.target.value)}
+                                type="number"
+                                placeholder="3"
+                            />
+                            </li>
+
                         </ul>
                     </li>
 

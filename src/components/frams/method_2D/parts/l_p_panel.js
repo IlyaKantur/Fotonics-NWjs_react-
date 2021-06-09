@@ -27,7 +27,7 @@ export default class L_P_Panel extends PureComponent {
                 startPush, applyCoor, returnCoor, data,
                 revision, consoleMessage, onConsoleMessage,
                 id_item, finished, masInformation_2D, stored_value,
-                calibration 
+                calibration, save, smoothing
         } = this.props;
         let {masx, massum, Plot } = this.props;
         const { active_l_t } = this.state;
@@ -60,6 +60,8 @@ export default class L_P_Panel extends PureComponent {
                     id_item={id_item}
                     masInformation_2D={masInformation_2D}
                     stored_value={stored_value}
+                    save={save}
+                    smoothing={smoothing}
                 ></Bars>;
                 <Coor
                     className={z2}
