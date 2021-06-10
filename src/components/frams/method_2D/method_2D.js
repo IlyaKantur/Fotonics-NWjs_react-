@@ -64,6 +64,8 @@ export default class Method_2D extends PureComponent {
         revision: 0,
         oldY: [],
         massum: [],
+        coor_massum: [],
+        coor_masx: [],
         consoleMessage: []
     }
 
@@ -114,15 +116,15 @@ export default class Method_2D extends PureComponent {
     applyCoor = () => {
         const { masx } = this.state;
         let massum = [];
-        if (this.finished == true) {
+        if (this.finished) {
             let masInput = document.querySelectorAll('.y_input');
             for (let i = 0; i < masInput.length; i++) {
-                massum[i] = masInput[i].value;
+                massum[i] = +masInput[i].value;
             }
-            const data = this.reloadData(masx, massum)
+            this.reloadData(masx, massum)
             this.setState({
-                data: data,
-                massum: massum
+                coor_massum: massum,
+                coor_masx: masx
             })
         }
     }
@@ -130,16 +132,16 @@ export default class Method_2D extends PureComponent {
     returnCoor = () => {
         const { oldY, masx } = this.state;
         let massum = [];
-        if (this.finished == true) {
+        if (this.finished) {
             let masInput = document.querySelectorAll('.y_input');
             for (let i = 0; i < masInput.length; i++) {
                 masInput[i].value = oldY[i];
                 massum[i] = masInput[i].value;
             }
-            const data = this.reloadData(masx, oldY)
+            this.reloadData(masx, oldY)
             this.setState({
-                data: data,
-                massum: massum
+                coor_massum: massum,
+                coor_masx: masx
             })
         }
     }
@@ -171,6 +173,10 @@ export default class Method_2D extends PureComponent {
         console.log("Click Start");
         this.finished = false;
         this.imgnum = 0;
+        this.setState({
+            coor_massum: [],
+            coor_masx: []
+        })
 
         const onConsoleMessage = this.onConsoleMessage;
         const imgnum = this.imgnum;
@@ -194,6 +200,14 @@ export default class Method_2D extends PureComponent {
             if (!finished) {
                 this.timerId = setInterval(this.work, 10)
             }
+            else {
+                this.finished = finished;
+                this.save_protocol();
+                this.setState({
+                    coor_massum: massum,
+                    coor_masx: masx
+                })
+            }
 
         })
     }
@@ -209,6 +223,10 @@ export default class Method_2D extends PureComponent {
                 this.finished = finished;
                 this.timerId = clearInterval(this.timerId);
                 this.save_protocol();
+                this.setState({
+                    coor_massum: massum,
+                    coor_masx: masx
+                })
             }
 
             // let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
@@ -229,6 +247,10 @@ export default class Method_2D extends PureComponent {
                 newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(3));
             }
             this.reloadData(newCoor, massum);
+            this.setState({
+                coor_massum: massum,
+                coor_masx: newCoor
+            })
         }
     }
 
@@ -277,49 +299,54 @@ export default class Method_2D extends PureComponent {
     }
 
     save = () => {
-        const {masx, massum} = this.state;
-        const path_save = `./result/TestObr/2D/${
-            this.masInformation_2D.nameElement ? this.masInformation_2D.nameElement : 'NoName'}.dat`;
-        
+        const { masx, massum } = this.state;
+        const path_save = `./result/TestObr/2D/${this.masInformation_2D.nameElement ? this.masInformation_2D.nameElement : 'NoName'}.dat`;
+
         const file_2D = fs.createWriteStream(path_save);
-        file_2D.on('error', function (err){console.log(err)})
+        file_2D.on('error', function (err) { console.log(err) })
         masx.forEach((item, i) => file_2D.write(`${item} ${massum[i]} \n`));
         file_2D.end();
     }
 
-    smoothing = () =>{
-        let {massum} = this.state;
-        const n = Number(this.masInformation_2D.n_smoothing);
+    smoothing = () => {
+        if (this.finished) {
+            let { massum } = this.state;
+            const n = Number(this.masInformation_2D.n_smoothing);
 
-        let sum = 0, del = 3, floor = Math.floor(n / 2);
-        for (let i = 1; i < n; i++) {
-            for (let j = 0; j < del; j++) {
-                sum += massum[j];
+            let sum = 0, del = 3, floor = Math.floor(n / 2);
+            for (let i = 1; i < n; i++) {
+                for (let j = 0; j < del; j++) {
+                    sum += massum[j];
+                }
+                massum[i] = Math.ceil(sum / del);
+                del += 2;
             }
-            massum[i] = Math.ceil(sum / del);
-            del += 2;
-        }
-        for (let i = n; i < massum.length - floor; i++) {
-            sum = 0;
-            for (let j = 0; j < n; j++) {
-                sum += massum[i + j - floor];
+            for (let i = n; i < massum.length - floor; i++) {
+                sum = 0;
+                for (let j = 0; j < n; j++) {
+                    sum += massum[i + j - floor];
+                }
+                massum[i] = Math.ceil(sum / n);
             }
-            massum[i] = Math.ceil(sum / n);
+            this.reloadData(this.state.masx, massum);
+            this.setState({
+                coor_massum: massum,
+                coor_masx: this.state.masx
+            })
         }
-        this.reloadData(this.state.masx, massum);
     }
 
     render() {
         const { id_item, Plot } = this.props;
-        const { data, revision, massum, consoleMessage, masx} = this.state
+        const { data, revision, consoleMessage, coor_massum, coor_masx } = this.state
         return (
             <L_P_Panel
                 loadFolder={this.loadFolder}
                 loadFoldImg={this.loadFoldImg}
                 loadFonImg={this.loadFonImg}
                 startPush={this.startPush}
-                masx={masx}
-                massum={massum}
+                coor_massum={coor_massum}
+                coor_masx={coor_masx}
                 calibration={this.calibration}
                 applyCoor={this.applyCoor}
                 returnCoor={this.returnCoor}

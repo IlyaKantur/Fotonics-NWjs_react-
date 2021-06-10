@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent } from 'react';
 
 export default class Coor extends PureComponent{
     render(){
@@ -23,7 +23,7 @@ const Coordinat = ({masx, massum}) => {
     const element = massum.map((count, i) =>{
         return(
             <div key = {`x_${i}`} >
-                <div className = 'coor_element_2D'>    x: {masx[i]}   y: <input 
+                <div className = 'coor_element_2D'>    x: {masx[i]}   y: <input
                         className = 'y_input' 
                         id = {`x_${i}`} 
                         type="text" 

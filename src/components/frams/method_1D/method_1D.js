@@ -215,6 +215,7 @@ export default class Method_1D extends PureComponent {
 
     click_sum = () => {
         if (this.masDataY.length !== 0) {
+            // let date_start = new Date().getTime();
             let sum = [], coor = [], countSum = this.masInformation.countSum;
             this.masDataY.map((item, j) => {
                 if (j === 0) sum = Array.apply(null, Array(Math.ceil(item.length / countSum))).map(Number.prototype.valueOf, 0);
@@ -232,6 +233,7 @@ export default class Method_1D extends PureComponent {
             })
             this.reloadData(coor, sum);
             this.save_protocol()
+            // console.log("время обработки: "+(new Date().getTime()-date_start)/1000)
         }
     }
 

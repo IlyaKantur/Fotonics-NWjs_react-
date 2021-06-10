@@ -27,13 +27,12 @@ export default class L_P_Panel extends PureComponent {
                 startPush, applyCoor, returnCoor, data,
                 revision, consoleMessage, onConsoleMessage,
                 id_item, finished, masInformation_2D, stored_value,
-                calibration, save, smoothing
+                calibration, save, smoothing, coor_massum, coor_masx
         } = this.props;
-        let {masx, massum, Plot } = this.props;
+        let {Plot } = this.props;
         const { active_l_t } = this.state;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
-        if (!finished) massum = [], masx = [];
         let element, button_active_1, button_active_2, z1, z2;
         if (active_l_t == 1) {
             button_active_1 = "button_active";
@@ -65,8 +64,8 @@ export default class L_P_Panel extends PureComponent {
                 ></Bars>;
                 <Coor
                     className={z2}
-                    masx={masx}
-                    massum={massum}
+                    masx={coor_masx}
+                    massum={coor_massum}
                     applyCoor={applyCoor}
                     returnCoor={returnCoor}
                     id_item={id_item}
