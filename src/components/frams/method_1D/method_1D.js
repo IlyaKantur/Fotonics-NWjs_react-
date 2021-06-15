@@ -209,7 +209,7 @@ export default class Method_1D extends PureComponent {
 
         const file_1D = fs.createWriteStream(path_save);
         file_1D.on('error', function (err) { console.log(err) })
-        coor.forEach((item, i) => file.write(`${item} ${massum[i]} \n`));
+        coor.forEach((item, i) => file_1D.write(`${item} ${massum[i]} \n`));
         file_1D.end();
     }
 

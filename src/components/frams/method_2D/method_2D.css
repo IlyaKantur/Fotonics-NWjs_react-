@@ -360,8 +360,11 @@
     display: flex;
     flex-direction: row;
   }
+  .x_element_2D{
+    margin-right: 5px;
+  }
   
-  .y_input {
+  .y_input_2D {
     width: 50px;
     background-color: rgb(220, 220, 220);
     color: black;

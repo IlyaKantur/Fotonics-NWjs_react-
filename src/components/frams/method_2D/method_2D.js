@@ -117,7 +117,7 @@ export default class Method_2D extends PureComponent {
         const { masx } = this.state;
         let massum = [];
         if (this.finished) {
-            let masInput = document.querySelectorAll('.y_input');
+            let masInput = document.querySelectorAll('.y_input_2D');
             for (let i = 0; i < masInput.length; i++) {
                 massum[i] = +masInput[i].value;
             }
@@ -133,10 +133,10 @@ export default class Method_2D extends PureComponent {
         const { oldY, masx } = this.state;
         let massum = [];
         if (this.finished) {
-            let masInput = document.querySelectorAll('.y_input');
+            let masInput = document.querySelectorAll('.y_input_2D');
             for (let i = 0; i < masInput.length; i++) {
                 masInput[i].value = oldY[i];
-                massum[i] = masInput[i].value;
+                massum[i] = oldY[i];
             }
             this.reloadData(masx, oldY)
             this.setState({
@@ -246,10 +246,46 @@ export default class Method_2D extends PureComponent {
             for (let i = 1; i < masx.length; i++) {
                 newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(3));
             }
+            let masInput = document.querySelectorAll('.x_element_2D');
+            for (let i = 0; i < masInput.length; i++) {
+                masInput[i].innerHTML = `${newCoor[i]}`;
+            }
             this.reloadData(newCoor, massum);
             this.setState({
                 coor_massum: massum,
                 coor_masx: newCoor
+            })
+        }
+    }
+
+    smoothing = () => {
+        if (this.finished) {
+            let { massum } = this.state;
+            const n = Number(this.masInformation_2D.n_smoothing);
+
+            let sum = 0, del = 3, floor = Math.floor(n / 2);
+            for (let i = 1; i < n; i++) {
+                for (let j = 0; j < del; j++) {
+                    sum += massum[j];
+                }
+                massum[i] = Math.ceil(sum / del);
+                del += 2;
+            }
+            for (let i = n; i < massum.length - floor; i++) {
+                sum = 0;
+                for (let j = 0; j < n; j++) {
+                    sum += massum[i + j - floor];
+                }
+                massum[i] = Math.ceil(sum / n);
+            }
+            let masInput = document.querySelectorAll('.y_input_2D');
+            for (let i = 0; i < masInput.length; i++) {
+                masInput[i].value = massum[i];
+            }
+            this.reloadData(this.state.masx, massum);
+            this.setState({
+                coor_massum: massum,
+                coor_masx: this.state.masx
             })
         }
     }
@@ -306,34 +342,6 @@ export default class Method_2D extends PureComponent {
         file_2D.on('error', function (err) { console.log(err) })
         masx.forEach((item, i) => file_2D.write(`${item} ${massum[i]} \n`));
         file_2D.end();
-    }
-
-    smoothing = () => {
-        if (this.finished) {
-            let { massum } = this.state;
-            const n = Number(this.masInformation_2D.n_smoothing);
-
-            let sum = 0, del = 3, floor = Math.floor(n / 2);
-            for (let i = 1; i < n; i++) {
-                for (let j = 0; j < del; j++) {
-                    sum += massum[j];
-                }
-                massum[i] = Math.ceil(sum / del);
-                del += 2;
-            }
-            for (let i = n; i < massum.length - floor; i++) {
-                sum = 0;
-                for (let j = 0; j < n; j++) {
-                    sum += massum[i + j - floor];
-                }
-                massum[i] = Math.ceil(sum / n);
-            }
-            this.reloadData(this.state.masx, massum);
-            this.setState({
-                coor_massum: massum,
-                coor_masx: this.state.masx
-            })
-        }
     }
 
     render() {
