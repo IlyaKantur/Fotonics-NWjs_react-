@@ -59,7 +59,6 @@ export default class Camera extends PureComponent {
     this.setState({
       deviceId: item.deviceId
     })
-    console.log(item)
   }
 
   choice_folder = () => {

@@ -508,6 +508,7 @@ class Sum_graph extends PureComponent {
                             coor={coor}
                             massum={massum}
                         ></Coor>
+
                     </div>
                 </div>
             </div>

@@ -96,7 +96,7 @@
     cursor: pointer;
   }
   
-  #coor {
+  #coor_2D {
     position: absolute;
     left: 50px;
     height: 100%;
@@ -310,7 +310,7 @@
   
   /* Нижняя часть */
   #coordinatesPanel,
-  #CPButtom {
+  #CPButtom_2D {
     position: absolute;
     border-bottom: 2px solid black;
     background-color: rgb(220, 220, 220);
@@ -325,19 +325,19 @@
     overflow: auto;
   }
   
-  #CPButtom {
+  #CPButtom_2D {
     position: relative;
     width: 100%;
     height: max-content;
     background-color: rgb(180, 180, 180);
   }
   
-  #apply_Coor{
+  #apply_Coor_2D{
     margin-bottom: 5px;
   }
 
-  #apply_Coor,
-  #return_Coor {
+  #apply_Coor_2D,
+  #return_Coor_2D {
     position: relative;
     height: 20px;
     width: 100%;
@@ -347,11 +347,11 @@
     outline: none;
   }
   
-  #apply_Coor:hover {
+  #apply_Coor_2D:hover {
     background-color: rgb(200, 200, 200)
   }
   
-  #return_Coor:hover {
+  #return_Coor_2D:hover {
     background-color: rgb(200, 200, 200)
   }
   

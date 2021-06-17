@@ -4,16 +4,16 @@ export default class Coor extends PureComponent {
     render() {
         const { className, masx, massum, applyCoor, returnCoor } = this.props;
         return (
-            <ul id="coor" className={`bar ${className}`}>
+            <ul id="coor_2D" className={`bar ${className}`}>
                 <div id="coordinatesPanel">
                     <Coordinat
                         masx={masx}
                         massum={massum}
                     ></Coordinat>
                 </div>
-                <div id="CPButtom">
-                    <button id="apply_Coor" onClick={applyCoor}>Применить</button>
-                    <button id="return_Coor" onClick={returnCoor}>Отмена</button>
+                <div id="CPButtom_2D">
+                    <button id="apply_Coor_2D" onClick={applyCoor}>Применить</button>
+                    <button id="return_Coor_2D" onClick={returnCoor}>Отмена</button>
                 </div>
             </ul>
         )
