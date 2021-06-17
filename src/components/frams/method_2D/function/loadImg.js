@@ -72,18 +72,20 @@ function LoadImg() {
     }
 
     function observation(imgFolder, iter) {
-        let length_old = iter, length_new;
         return new Promise((resolve, reject) => {
-            obs();
-            function obs() {
+            let length_old = iter, length_new, obs_interval;
+
+            obs_interval = setInterval( () => obs(), 200);
+            function obs(){
                 fs.readdir(imgFolder, (err, masFold) => {
                     if (err) {
                         console.error(err);
                         return;
                     }
                     length_new = masFold.length
-                    if (length_new == length_old) obs();
+                    if (length_new == length_old) return;
                     else {
+                        clearInterval(obs_interval);
                         length_old = length_new;
                         load(imgFolder, masFold, iter).then((masImg) => resolve(masImg));
                     }
@@ -102,8 +104,8 @@ function LoadImg() {
                 return element = `${imgFolder}/${element}`
             })
             let dataStart = new Date().getTime();
-            loadImg(masFold, iter).then(({ dataStop, masImg, imgFolder }) => {
-                let message = `Изображений загруженно: ${masFold.length} за ${(dataStop - dataStart) / 1000} секунд`
+            loadImg(masFold, iter).then(({ dataStop, masImg}) => {
+                let message = `Изображений загруженно: ${masFold.length - iter} за ${(dataStop - dataStart) / 1000} секунд`
                 console.log(message);
                 resolve({masImg});
             });
@@ -119,6 +121,7 @@ function LoadImg() {
                     let message = 'Ошибка загрузки изображения'
                     console.log(message);
                 })
+                masImg[i].addEventListener('onload', () => console.log('загруженно', i))//
             }
             let dataStop = new Date().getTime();
             masImg[masFold.length - 1].onload = () => { resolve({ dataStop, masImg}) };

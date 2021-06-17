@@ -3,16 +3,7 @@ const fs = window.require('fs');
 
 export default class Processing {
 
-    constructor({
-        onConsoleMessage,
-        id_f_nameF,
-        chek_obsorv,
-        imgFolder,
-        imgnum,
-        masImg,
-        fon,
-        masInformation_2D
-    }) {
+    constructor({onConsoleMessage, id_f_nameF, chek_obsorv, imgFolder, imgnum, masImg, fon, masInformation_2D}) {
         // Image
         this.ImgNew = document.getElementById(`ImgNew_${id_f_nameF}`);
         this.ImgSum = document.getElementById(`ImgSum_${id_f_nameF}`);
@@ -105,92 +96,43 @@ export default class Processing {
             this.startOb = new Date().getTime();
             this.proces = true;
             this.onConsoleMessage('Start')
-            this.workOnImg().then(({
-                massum,
-                masx,
-                finished,
-                oldY,
-                imgnum
-            }) => resolve({
-                massum,
-                masx,
-                finished,
-                oldY,
-                imgnum
-            }));
+            this.workOnImg(this.masImg, this.chek_obsorv).then(({massum, masx, finished, oldY, imgnum}) => resolve({massum, masx, finished, oldY, imgnum}));
         })
     }
 
-    workOnImg = () => {
+    workOnImg = (masImg, chek_obsorv) => {
         return new Promise((resolve, reject) => {
-            if (this.imgnum == this.masImg.length && this.chek_obsorv) {
-                this.check().then(({
-                    massum,
-                    masx,
-                    finished,
-                    oldY,
-                    imgnum
-                }) => {
+            // if (this.imgnum == this.masImg.length && this.chek_obsorv) {
+            //     this.check().then(({massum, masx, finished, oldY, imgnum}) => {
+            //         this.save_proces(massum, masx, finished, oldY, imgnum);
+            //         resolve({massum, masx, finished, oldY, imgnum});
+            //     });
+            // } else {
+                if(chek_obsorv) this.masImg = masImg
+                this.processing().then(({massum, masx, finished, oldY, imgnum}) => {
                     this.save_proces(massum, masx, finished, oldY, imgnum);
-                    resolve({
-                        massum,
-                        masx,
-                        finished,
-                        oldY,
-                        imgnum
-                    })
+                    resolve({ massum, masx, finished, oldY, imgnum});
                 });
-            } else {
-                this.processing().then(({
-                    massum,
-                    masx,
-                    finished,
-                    oldY,
-                    imgnum
-                }) => {
-                    this.save_proces(massum, masx, finished, oldY, imgnum);
-                    resolve({
-                        massum,
-                        masx,
-                        finished,
-                        oldY,
-                        imgnum
-                    })
-                });
-            }
+            // }
         })
     }
 
-    check = () => {
-        return new Promise((resolve, reject) => {
-            let folder = this.imgFolder || this.defolt_folred;
-            loadImg().loadObservation(folder, this.imgnum).then(({
-                masImg
-            }) => {
-                if (this.imgnum == masImg.length) {
-                    this.check();
-                } else {
-                    this.masImg = masImg;
-                    this.processing().then(({
-                        massum,
-                        masx,
-                        finished,
-                        oldY,
-                        imgnum
-                    }) => {
-                        this.save_proces(massum, masx, finished, oldY, imgnum);
-                        resolve({
-                            massum,
-                            masx,
-                            finished,
-                            oldY,
-                            imgnum
-                        })
-                    })
-                }
-            })
-        })
-    }
+    // check = () => {
+    //     return new Promise((resolve, reject) => {
+    //         let folder = this.imgFolder || this.defolt_folred;
+    //         loadImg().loadObservation(folder, this.imgnum).then(({masImg}) => {
+    //             if (this.imgnum == masImg.length) {
+    //                 this.check();
+    //             } else {
+    //                 this.masImg = masImg;
+    //                 this.processing().then(({ massum, masx, finished, oldY, imgnum}) => {
+    //                     this.save_proces(massum, masx, finished, oldY, imgnum);
+    //                     resolve({ massum, masx, finished, oldY, imgnum})
+    //                 })
+    //             }
+    //         })
+    //     })
+    // }
 
     processing = () => {
         return new Promise((resolve, reject) => {

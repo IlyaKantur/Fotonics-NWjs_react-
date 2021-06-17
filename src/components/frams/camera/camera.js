@@ -37,7 +37,6 @@ export default class Camera extends PureComponent {
 
   handleDevices = (mediaDevices) => {
     let camers = mediaDevices.filter(({ kind }) => kind === "videoinput")
-    console.log(camers)
     this.setState({
       camers: camers
     })
