@@ -261,7 +261,6 @@ export default class Processing {
             //     }
 
             // });
-
             this.imgnum++;
             console.log(`Обработанано ${this.imgnum} снимков из ${this.masImg.length}`)
 
@@ -283,7 +282,7 @@ export default class Processing {
                 masx,
                 finished,
                 oldY,
-                imgnum
+                imgnum,
             });
         })
     }

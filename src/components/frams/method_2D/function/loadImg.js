@@ -73,20 +73,20 @@ function LoadImg() {
 
     function observation(imgFolder, iter) {
         return new Promise((resolve, reject) => {
-            let length_old = iter, length_new, obs_interval;
+            let length_old = iter, obs_interval;
 
-            obs_interval = setInterval( () => obs(), 200);
+            obs_interval = setInterval( () => obs(), 10);
             function obs(){
                 fs.readdir(imgFolder, (err, masFold) => {
                     if (err) {
                         console.error(err);
                         return;
                     }
-                    length_new = masFold.length
-                    if (length_new == length_old) return;
-                    else {
+                    
+                    if (masFold.length > length_old)
+                    {
                         clearInterval(obs_interval);
-                        length_old = length_new;
+                        length_old = masFold.length;
                         load(imgFolder, masFold, iter).then((masImg) => resolve(masImg));
                     }
                 })
@@ -105,7 +105,7 @@ function LoadImg() {
             })
             let dataStart = new Date().getTime();
             loadImg(masFold, iter).then(({ dataStop, masImg}) => {
-                let message = `Изображений загруженно: ${masFold.length - iter} за ${(dataStop - dataStart) / 1000} секунд`
+                let message = `Изображений загруженно: ${masImg.length} за ${(dataStop - dataStart) / 1000} секунд`
                 console.log(message);
                 resolve({masImg});
             });
@@ -121,10 +121,12 @@ function LoadImg() {
                     let message = 'Ошибка загрузки изображения'
                     console.log(message);
                 })
-                masImg[i].addEventListener('onload', () => console.log('загруженно', i))//
             }
             let dataStop = new Date().getTime();
-            masImg[masFold.length - 1].onload = () => { resolve({ dataStop, masImg}) };
+            
+            masImg[masImg.length - 1].onload = () => { 
+                resolve({ dataStop, masImg}) 
+            };
         })
     }
 

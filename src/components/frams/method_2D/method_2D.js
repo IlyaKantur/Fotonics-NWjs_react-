@@ -148,6 +148,19 @@ export default class Method_2D extends PureComponent {
 
     startPush = (id_f_nameF) => {
         const { imgFolder } = this.state;
+        this.setState({
+            masx: [],
+            massum: [],
+            oldX: [],
+            oldY: [],
+            coor_masx: [],
+            coor_massum: []
+        })
+        this.reloadData([], [])
+        
+        // let cookies = nw.Window.get().cookies.getAll
+        // nw.App.clearAppCache(nw.App.manifest);//
+
         const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked;
         let folder = imgFolder || this.defolt_folder_observ;
         if (chek_obsorv) {
@@ -174,11 +187,6 @@ export default class Method_2D extends PureComponent {
         const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked;
         this.finished = false;
         this.imgnum = 0;
-        this.setState({
-            coor_massum: [],
-            coor_masx: []
-        })
-
         const onConsoleMessage = this.onConsoleMessage;
         const imgnum = this.imgnum;
         const imgFolder = this.imgFolder;
@@ -202,10 +210,15 @@ export default class Method_2D extends PureComponent {
                 this.timerId = setInterval(() => this.work(folder), 10)
             }
             else if(!finished && chek_obsorv){
-                loadImg().loadObservation(folder, imgnum).then(({ masImg }) => {
-                    this.masImg = masImg
-                    this.work(folder);
-                })
+                if(this.masImg.length == imgnum){
+                    loadImg().loadObservation(folder, imgnum).then(({ masImg }) => {
+                        this.masImg = masImg
+                        setTimeout(()=> this.work(folder), 0);
+                    })
+                }
+                else{
+                    setTimeout(()=> this.work(folder), 0);
+                }
             }
             else {
                 this.finished = finished;
@@ -221,6 +234,7 @@ export default class Method_2D extends PureComponent {
     work = (folder) => {
         const {chek_obsorv} = this.masInformation_2D;
         this.proces.workOnImg(this.masImg, chek_obsorv).then(({ massum, masx, finished, oldY, imgnum }) => {
+            if(chek_obsorv) this.masImg[this.imgnum] = null;
             this.reloadData(masx, massum)
             this.imgnum = imgnum;
             this.finished = finished;
@@ -228,10 +242,15 @@ export default class Method_2D extends PureComponent {
                 oldY: oldY,
             })
             if(!finished && chek_obsorv){
-                loadImg().loadObservation(folder, imgnum).then(({ masImg }) => {
-                    this.masImg = masImg
-                    this.work(folder);
-                })
+                if(this.masImg.length == imgnum){
+                    loadImg().loadObservation(folder, imgnum).then(({ masImg }) => {
+                        this.masImg = masImg
+                        setTimeout(()=> this.work(folder), 0);
+                    })
+                }
+                else{
+                    setTimeout(()=> this.work(folder), 0);
+                }
             }
             if (finished) {
                 this.finished = finished;
