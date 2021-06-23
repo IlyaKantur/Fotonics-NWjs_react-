@@ -5,8 +5,11 @@
   "main": "dist/index.html",
   "scripts": {
     "start": "webpack --mode development --watch",
+    "start_2": "run --win-x64 --mirror https://dl.nwjs.io/ .",
     "build": "webpack --mode production",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dist": "build --tasks win-x64 --mirror https://dl.nwjs.io/ .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "nwbuild --platforms win64 -- buildDir prod/ src/"
   },
   "repository": {
     "type": "git",
@@ -23,13 +26,15 @@
     "css-loader": "^5.0.1",
     "fs": "0.0.1-security",
     "html-webpack-plugin": "^4.5.0",
+    "nwjs-builder-phoenix": "^1.15.0",
     "reactstrap": "^8.7.1",
     "style-loader": "^2.0.0",
     "svg-inline-loader": "^0.8.2",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^5.10.0",
     "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "nw-builder": "^3.5.7"
   },
   "dependencies": {
     "@babel/core": "^7.12.9",
