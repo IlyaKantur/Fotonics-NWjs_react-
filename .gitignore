@@ -6,9 +6,9 @@
 .pnp.js
 *.bmp
 *.dat
-/fotonics_nwjs_react-0.0.1-win-x64
 # testing
 /coverage
+/Output/setup
 
 # production
 /build
