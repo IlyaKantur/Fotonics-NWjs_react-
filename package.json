@@ -1,22 +1,23 @@
 {
   "name": "fotonics_nwjs_react",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Создание Fotonics на основе связки NWjs + react",
-  "main": "dist/index.html",
+  "main": "main/index.html",
   "window": {
     "width": 1366,
     "height": 750,
-    "icon": "dist/atom.jpg"
+    "icon": "main/atom.jpg"
   },
-  
   "scripts": {
     "start": "webpack --mode development --watch",
-    "start_2": "run --win-x64 --mirror https://dl.nwjs.io/ .",
-    "build": "webpack --mode production",
-    "dist": "build --tasks win-x64 --mirror https://dl.nwjs.io/ .",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prod": "nwbuild -p win64 ./",
-    "start_": "nw --disable-raf-throttling"
+    "nwjs-start": "run --x64 .",
+    "nwjs-pack-win": "build --tasks win-x64 .",
+    "nwjs-pack-linux": "build --tasks linux-x64 ."
+  },
+  "build": {
+    "nwVersion": "0.54.1",
+    "packed": true,
+    "concurrent": true
   },
   "repository": {
     "type": "git",
@@ -33,9 +34,7 @@
     "css-loader": "^5.0.1",
     "fs": "0.0.1-security",
     "html-webpack-plugin": "^4.5.0",
-    "nw-builder": "^3.5.7",
     "nwjs-builder-phoenix": "^1.15.0",
-    "nwjs-packager": "^1.5.0",
     "reactstrap": "^8.7.1",
     "style-loader": "^2.0.0",
     "svg-inline-loader": "^0.8.2",
@@ -50,6 +49,7 @@
     "@babel/preset-env": "^7.12.7",
     "@babel/preset-react": "^7.12.7",
     "babel-loader": "^8.2.2",
+    "nwjs": "^1.4.4",
     "plotly.js": "^1.58.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
