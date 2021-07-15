@@ -12,12 +12,30 @@
     "start": "webpack --mode development --watch",
     "nwjs-start": "run --x64 .",
     "nwjs-pack-win": "build --tasks win-x64 .",
-    "nwjs-pack-linux": "build --tasks linux-x64 ."
+    "nwjs-pack-linux": "build --tasks linux-x64 .",
+    "nwjs-packager": "nwp",
+    "nwjs-packager-run": "nwp -r"
   },
   "build": {
     "nwVersion": "0.54.1",
-    "packed": true,
-    "concurrent": true
+    "nwFlavor": "sdk"
+  },
+  "nwjs-packager": {
+    "nwVersion": "0.54.1",
+    "appFriendlyName": "Fotonics",
+    "appWinIcon": "main/atom.ico",
+    "files": [ "main/**", "Base/**","Foto/**"],
+    "builds": {
+      "linux": {
+        "tar.gz": false
+      },
+      "osx": {
+        "zip": false
+      },
+      "win": {
+        "zip": false
+      }
+    }
   },
   "repository": {
     "type": "git",
@@ -50,6 +68,7 @@
     "@babel/preset-react": "^7.12.7",
     "babel-loader": "^8.2.2",
     "nwjs": "^1.4.4",
+    "nwjs-packager": "^1.5.0",
     "plotly.js": "^1.58.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
