@@ -17,14 +17,17 @@
     "nwjs-packager-run": "nwp -r"
   },
   "build": {
-    "nwVersion": "0.54.1",
+    "nwVersion": "stable",
     "nwFlavor": "sdk"
   },
   "nwjs-packager": {
-    "nwVersion": "0.54.1",
     "appFriendlyName": "Fotonics",
     "appWinIcon": "main/atom.ico",
-    "files": [ "main/**", "Base/**","Foto/**"],
+    "files": [
+      "main/**",
+      "Base/**",
+      "Foto/**"
+    ],
     "builds": {
       "linux": {
         "tar.gz": false
@@ -52,6 +55,7 @@
     "css-loader": "^5.0.1",
     "fs": "0.0.1-security",
     "html-webpack-plugin": "^4.5.0",
+    "nw-builder": "^3.5.7",
     "nwjs-builder-phoenix": "^1.15.0",
     "reactstrap": "^8.7.1",
     "style-loader": "^2.0.0",
@@ -67,6 +71,7 @@
     "@babel/preset-env": "^7.12.7",
     "@babel/preset-react": "^7.12.7",
     "babel-loader": "^8.2.2",
+    "fomantic-ui": "^2.8.8",
     "nwjs": "^1.4.4",
     "nwjs-packager": "^1.5.0",
     "plotly.js": "^1.58.4",

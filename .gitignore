@@ -9,6 +9,7 @@
 *.dat
 # testing
 /coverage
+/semantic
 # production
 /build
 
