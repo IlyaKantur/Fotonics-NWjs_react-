@@ -1,12 +1,13 @@
 {
-  "name": "fotonics_nwjs_react",
+  "name": "Fotonics",
   "version": "0.1.0",
-  "description": "Создание Fotonics на основе связки NWjs + react",
+  "description": "Fotonics",
+  "descriptions": "Создание Fotonics на основе связки NWjs + react",
   "main": "main/index.html",
   "window": {
     "width": 1366,
-    "height": 750,
-    "icon": "main/atom.jpg"
+    "height": 768,
+    "icon": "main/atom_copy.ico"
   },
   "scripts": {
     "start": "webpack --mode development --watch",
@@ -17,12 +18,11 @@
     "nwjs-packager-run": "nwp -r"
   },
   "build": {
-    "nwVersion": "stable",
-    "nwFlavor": "sdk"
+    "nwVersion": "stable"
   },
   "nwjs-packager": {
     "appFriendlyName": "Fotonics",
-    "appWinIcon": "main/atom.ico",
+    "appWinIcon": "main/atom_copy.ico",
     "files": [
       "main/**",
       "Base/**",
@@ -63,7 +63,7 @@
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^5.10.0",
     "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^4.0.0"
   },
   "dependencies": {
     "@babel/core": "^7.12.9",
