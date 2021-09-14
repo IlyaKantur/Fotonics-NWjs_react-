@@ -37,7 +37,7 @@ export default class App extends Component {
             // { nameF: "PTE", id_f: '1' },
             { nameF: "camera", id_f: '1' }
         ],
-        activeFrame: { name: "method_2D", id: '1' },
+        activeFrame: { name: "choice", id: '1' },
         activeAlert: [{ text: 'test крестика', id: '0' }],
         baseElement: []
     }
