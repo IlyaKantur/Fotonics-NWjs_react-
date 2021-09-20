@@ -3,6 +3,7 @@ import React from 'react';
 import './choice.css'
 
 const fs = window.require('fs');
+const http = window.require('http')
 
 const Choice = ({ onAlert, id_item, createTab }) => {
     const { id_f, nameF } = id_item;
@@ -20,10 +21,16 @@ const Choice = ({ onAlert, id_item, createTab }) => {
 }
 
 const check_version = async () => {
-    const urlVersion = 'http://127.0.0.1:3000/download/Fotonics.json';
+    // const urlVersion = 'http://127.0.0.1:3000/download/Fotonics.json';
+    const urlVersion = 'http://192.168.50.6:3000/download/Fotonics.json';
+
+    // const urlInstaller = 'http://127.0.0.1:3000/download/installer/install';
+    const urlInstaller = 'http://192.168.50.6:3000/download/installer/install';
+
     const path_package = '/package.json'
     let package_json;
     // const file = require('/package.json')
+
 
     fetch(path_package, {
         method: "GET",
@@ -33,23 +40,48 @@ const check_version = async () => {
         .then(json => {
             package_json = json
         })
+        .then(() => {
+            fetch(urlVersion, {
+                method: "GET",
+                headers: {}
+            })
+                .then(response => response.json())
+                .then(json => {
+                    if (package_json.version === json.version) {
+                        console.log("Стоит текущая версия")
+                    }
+                    else {
+                        console.log("Версия устарела")
 
-    fetch(urlVersion, {
-        method: "GET",
-        headers: {}
-    })
-        .then(response => response.json())
-        .then(json => {
-            if (package_json.version === json.version) {
-                console.log("Стоит текущая версия")
-            }
-            else {
-                console.log("Версия устарела")
-                package_json['version'] = json.version
-                fs.unlink(`.${path_package}`, err => { if (err !== null) console.log(err) })
-                fs.writeFileSync(`.${path_package}`, JSON.stringify(package_json), err => { if (err !== null) console.log(err) })
-            }
+                        //1 версия скачивания
+                        const file = fs.createWriteStream('./install.exe')
+                            const req = http.get(`${urlInstaller}(${json.version}).exe`, (response) => {
+                                console.log(`скачена версия: ${json.version}`)
+                                response.pipe(file)
+                            })
+
+                        //2 версия скачивания
+                        // fetch(`${urlInstaller}(${json.version}).exe`,{
+                        //     method: 'GET',
+                        //     headers: {}
+                        // })
+                        
+                        // .then(response => response.blob())
+                        // .then(blob => {
+                        //     const link = document.createElement('a');
+                        //     link.download = 'install.exe';
+                        //     link.href = URL.createObjectURL(blob);
+                        //     link.click();
+                        //     link.remove();
+                        // })
+                        //обновление json
+                        // package_json['version'] = json.version
+                        // fs.unlink(`.${path_package}`, err => { if (err !== null) console.log(err) })
+                        // fs.writeFileSync(`.${path_package}`, JSON.stringify(package_json), err => { if (err !== null) console.log(err) })
+                    }
+                })
         })
+
 }
 
 // class AutoSaveJSON {
