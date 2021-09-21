@@ -1,6 +1,6 @@
 {
   "name": "Fotonics",
-  "version": "0.9.0",
+  "version": "0.11.0",
   "description": "Fotonics",
   "descriptions": "Создание Fotonics на основе связки NWjs + react",
   "main": "main/index.html",

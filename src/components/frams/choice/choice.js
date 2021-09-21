@@ -68,8 +68,7 @@ const check_version = async () => {
                                     console.log(`скачена версия: ${json.version}`)
                                     cp.exec('install.exe', (err, data)=>{
                                         console.log(err);
-                                        console.log(data.toString())
-                                        
+
                                         fs.unlink("install.exe", function(err){
                                             if (err) {
                                                 console.log(err);
@@ -104,7 +103,6 @@ const check_version = async () => {
                 })
         })
         .catch(err => console.log(err))
-
 }
 
 // class AutoSaveJSON {
