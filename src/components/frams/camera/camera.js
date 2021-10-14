@@ -32,8 +32,14 @@ export default class Camera extends PureComponent {
   }
 
   componentDidMount() {
+    // navigator.mediaDevices.getUserMedia().then(this.userMedia)
     navigator.mediaDevices.enumerateDevices().then(this.handleDevices);
   }
+
+  // userMedia = (info) => {
+  //   console.log(info)
+  // }
+
 
   handleDevices = (mediaDevices) => {
     let camers = mediaDevices.filter(({ kind }) => kind === "videoinput")

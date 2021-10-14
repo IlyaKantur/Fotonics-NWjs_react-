@@ -36,7 +36,6 @@ export default class Processing {
         this.iy = 0;
         this.cx = 0;
         this.cy = 0;
-        this.imgSum = 0;
         this.imgfon = 0;
         this.startOb = 0;
         this.imgsum = new Image();
@@ -86,13 +85,15 @@ export default class Processing {
             this.himgsum.height = this.iy;
             this.imgsum = this.masImg[0];
             this.ctxsum.drawImage(this.imgsum, 0, 0, this.cx, this.cy);
-            this.ctxhs.drawImage(this.imgsum, 0, 0);
-            this.imgSum = this.ctxhs.getImageData(0, 0, this.ix, this.iy);
-            if (this.fon.length == undefined) {
-                this.fon_load = true
-                this.ctxhs.drawImage(this.fon, 0, 0);
-                this.imgfon = this.ctxhs.getImageData(0, 0, this.ix, this.iy).data;
-            }
+            this.ctxhs.drawImage(this.imgsum, 0, 0, this.ix, this.iy);
+            // if (this.fon.length == undefined) {
+            //     this.fon_load = true
+            //     this.ctxhs.clearRect(0, 0, this.himg.width, this.himg.height);
+            //     this.ctxhs.drawImage(this.fon, 0, 0);
+            //     this.imgfon = this.ctxhs.getImageData(0, 0, this.ix, this.iy).data;
+            //     this.ctxhs.clearRect(0, 0, this.himg.width, this.himg.height);
+            //     this.ctxhs.drawImage(this.imgsum, 0, 0);
+            // }
             this.startOb = new Date().getTime();
             this.proces = true;
             this.onConsoleMessage('Start')
@@ -140,10 +141,11 @@ export default class Processing {
             this.ctx.clearRect(0, 0, this.cx, this.cy);
             this.ctx.drawImage(imgg, 0, 0, this.cx, this.cy);
             this.ctxh.clearRect(0, 0, this.himg.width, this.himg.height);
-            this.ctxh.drawImage(imgg, 0, 0);
+            this.ctxh.drawImage(imgg, 0, 0, this.ix, this.iy);
             let imgData = this.ctxh.getImageData(0, 0, this.ix, this.iy).data;
             let Img = this.ctx.getImageData(0, 0, this.cx, this.cy);
             let Imgsum = this.ctxsum.getImageData(0, 0, this.cx, this.cy);
+            let imgSum = this.ctxhs.getImageData(0, 0, this.ix, this.iy);
             let mas0 = [];
             let mas = [];
             let ii = 0;
@@ -218,28 +220,26 @@ export default class Processing {
                 this.massum[x] += mas[x];
                 this.oldY[x] = this.massum[x];
             }
-            ii = 0;
+
             for (let i = 0; i < imgData.length; i += 4) {
                 if (i % 4 == 3) {
                     continue;
                 }
-                if (this.imgSum.data[i] >= mas0[ii]) {
-                    ii++;
+                if (imgSum.data[i] >= imgData[i]) {
                     continue;
                 } else {
-                    this.imgSum.data[i] += mas0[ii];
-                    this.imgSum.data[i + 1] += mas0[ii];
-                    this.imgSum.data[i + 2] += mas0[ii];
-                    ii++;
+                    imgSum.data[i] += imgData[i];
+                    imgSum.data[i + 1] += imgData[i + 1];
+                    imgSum.data[i + 2] += imgData[i + 2];
                 }
             }
+
 
             for (let i = 0; i < Img.data.length; i += 4) {
                 if (i % 4 == 3) {
                     continue;
                 }
                 if (Imgsum.data[i] >= Img.data[i]) {
-                    ii++;
                     continue;
                 } else {
                     Imgsum.data[i] += Img.data[i];
@@ -250,17 +250,13 @@ export default class Processing {
 
             //вывод в панель
 
-            this.ctxhs.putImageData(this.imgSum, 0, 0);
-            this.ctxsum.putImageData(Imgsum, 0, 0);
-            // const url = this.himgsum.toDataURL('image/jpg');
-            // const base64Data = url.replace(/^data:image\/png;base64,/, "");
-            //Созранение фото
-            // fs.writeFile(`result/image/${imgnum}.jpg`, base64Data, 'base64', function (err) {
-            //     if (err != null) {
-            //         console.log(err);
-            //     }
+            
 
-            // });
+            this.ctxhs.putImageData(imgSum, 0, 0);
+            this.ctxsum.putImageData(Imgsum, 0, 0);
+
+            // Созранение фото
+            
             this.imgnum++;
             console.log(`Обработанано ${this.imgnum} снимков из ${this.masImg.length}`)
 
@@ -274,6 +270,17 @@ export default class Processing {
                 let message = `Обработана за: ${((new Date().getTime() - this.startOb) / 1000).toFixed(3)} секунд`
                 console.log(message)
                 this.onConsoleMessage(message)
+
+                const url = this.himgsum.toDataURL('image/jpg');
+                const base64Data = url.replace(/^data:image\/png;base64,/, "");
+
+                let path_write_image = `result/image/${this.imgnum}.jpg`
+                if(fs.existsSync(path_write_image)) path_write_image = `result/image/${this.imgnum}_cope.jpg`
+                fs.writeFile(path_write_image, base64Data, 'base64', function (err) {
+                    if (err != null) {
+                        console.log(err);
+                    }
+                });
 
                 finished = true;
             }
