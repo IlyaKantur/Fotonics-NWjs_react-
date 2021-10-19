@@ -229,7 +229,7 @@ export default class PTE extends PureComponent {
                         </div>
                         <div className="b_n">**АКТИНОИДЫ</div>
                         <div id="actinide">
-                            {cell_PTE('#lanthanides', baseElement, this.info)}
+                            {cell_PTE('#actinide', baseElement, this.info)}
                         </div>
                     </div>
 
