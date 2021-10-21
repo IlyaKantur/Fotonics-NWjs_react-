@@ -98,7 +98,7 @@ export default class PTE extends PureComponent {
                         alert={search_alert_text}
                         close={this.close_search_alert}
                     />
-                    <div>
+                    <div id="info_panel">
                         {info_element(info_element_name, baseElement)}
                     </div>
                 </div>
@@ -249,9 +249,9 @@ const Search_alert = ({ close, alert }) => {
         
     }
     return (
-        <div>
+        <>
             { element}
-        </div>
+        </>
 
     )
 }
@@ -362,16 +362,49 @@ const info_element = (info_element_name, baseElement) => {
         el_con = el_con.replace(/<sup>/g, '(');
         el_con = el_con.replace(/<\/sup>/g, ")")
 
+        let lengt_wave = (
+            <div className = 'info_length_wave'>
+                <b className="n_E">a2: {baseElement[id].length_wave[0]}</b>
+                <b className="n_E">a1: {baseElement[id].length_wave[1]}</b>
+                <b className="n_E">b3: {baseElement[id].length_wave[2]}</b>
+                <b className="n_E">b1: {baseElement[id].length_wave[3]}</b>
+                <b className="n_E">b5II: {baseElement[id].length_wave[4]}</b>
+                <b className="n_E">b5I: {baseElement[id].length_wave[5]}</b>
+                <b className="n_E">b2II: {baseElement[id].length_wave[6]}</b>
+                <b className="n_E">b2I: {baseElement[id].length_wave[7]}</b>
+                <b className="n_E">b4II: {baseElement[id].length_wave[8]}</b>
+                <b className="n_E">b4I: {baseElement[id].length_wave[9]}</b>
+            </div>
+        )
+        let energy_foto = (
+            <div className = "info_energy_foto">
+                <b className="n_E">a2: {baseElement[id].energy_foto[0]}</b>
+                <b className="n_E">a1: {baseElement[id].energy_foto[1]}</b>
+                <b className="n_E">b3: {baseElement[id].energy_foto[2]}</b>
+                <b className="n_E">b1: {baseElement[id].energy_foto[3]}</b>
+                <b className="n_E">b5II: {baseElement[id].energy_foto[4]}</b>
+                <b className="n_E">b5I: {baseElement[id].energy_foto[5]}</b>
+                <b className="n_E">b2II: {baseElement[id].energy_foto[6]}</b>
+                <b className="n_E">b2I: {baseElement[id].energy_foto[7]}</b>
+                <b className="n_E">b4II: {baseElement[id].energy_foto[8]}</b>
+                <b className="n_E">b4I: {baseElement[id].energy_foto[9]}</b>
+            </div>
+        )
+    
+        
+
         const info = (
             <>
-                <div id="info_number">Номер: <b className="n_E">{baseElement[id].number_el}</b> </div>
-                <div id="info_name">Имя: <b className="n_E">{baseElement[id].full_name_inf}</b> </div>
-                <div id="info_weight">Масса: <b className="n_E">{baseElement[id].weight_el} а.е.м.</b> </div>
-                <div id="info_g_p">Группа: <b className="n_E">{baseElement[id].group_inf}</b> Период: <b className="n_e">{baseElement[id].period_inf}</b></div>
-                <div id="info_e-l">Эн. уровни: <b className="n_E">{baseElement[id].energy_lvl}</b></div>
-                <div id="info_family">Семейство: <b className="n_E">{baseElement[id].family_inf}</b></div>
-                <div id="info_o-d">Степень окис: <b className="n_E">{baseElement[id].oxid_deg_inf}</b></div>
-                <div id="info_e-c">Электроная конф: <b className="n_E">{el_con}</b></div>
+                <div id="info_number" className="info_cell">Номер: <b className="n_E">{baseElement[id].number_el}</b> </div>
+                <div id="info_name" className="info_cell">Имя: <b className="n_E">{baseElement[id].full_name_inf}</b> </div>
+                <div id="info_weight" className="info_cell">Масса: <b className="n_E">{baseElement[id].weight_el} а.е.м.</b> </div>
+                <div id="info_g_p" className="info_cell">Группа: <b className="n_E">{baseElement[id].group_inf}</b> Период: <b className="n_e">{baseElement[id].period_inf}</b></div>
+                <div id="info_e-l" className="info_cell">Эн. уровни: <b className="n_E">{baseElement[id].energy_lvl}</b></div>
+                <div id="info_family" className="info_cell">Семейство: <b className="n_E">{baseElement[id].family_inf}</b></div>
+                <div id="info_o-d" className="info_cell">Степень окис: <b className="n_E">{baseElement[id].oxid_deg_inf}</b></div>
+                <div id="info_e-c" className="info_cell">Электроная конф: <b className="n_E">{el_con}</b></div>
+                <div id="info_l_w" className="info_cell">Длина волны, серия K:{lengt_wave}</div>
+                <div id="info_e_f" className="info_cell">Энергия фотона, серия K:{energy_foto}</div>
             </>
         )
 

@@ -1,17 +1,3 @@
-html {
-    width: 100%;
-    height: 100%;
-    cursor: default;
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    box-sizing: column;
-    width: 100%;
-    height: 100%;
-    /* background: #5f6e77e7; */
-}
 
 #Panel_PT {
     width: 100%;
@@ -22,7 +8,6 @@ body {
 }
 
 #left_panel {
-    height: 100%;
     width: 200px;
     position: relative;
     display: flex;
@@ -42,9 +27,11 @@ body {
 }
 
 /* В left_panel */
+
 #search_element{
     display: flex;
     flex-direction: row;
+    height: 21px;
 }
 
 #search_alert{
@@ -58,6 +45,17 @@ body {
 }
 #search_alert span{
     margin-left: 5px;
+}
+
+#info_panel{
+    height: calc(100% - 21px);
+    display: flex;
+    flex-direction: column;
+}
+#info_element{
+    overflow-y: auto;
+    border-top: 2px solid black;
+    height: 100%;
 }
 
 .inp_ser_el{
@@ -111,11 +109,8 @@ body {
     width: 30%;
     text-align: right;
 }
-#info_element{
-    margin-top: 6px;
-    border-top: 2px solid black;
-}
-#info_element div{
+
+.info_cell{
     border-bottom: 0.5px solid grey;
     padding: 10px 0 5px 10px;
     font-size: 18px;
@@ -292,7 +287,12 @@ body {
     display: flex;
     flex-direction: row;
 }
-
+/* info */
+.info_length_wave, .info_energy_foto{
+    display: flex !important;
+    flex-direction: column !important;
+}
+/*  */
 /* Частный случай */
 #He {
     margin-left: 612px;

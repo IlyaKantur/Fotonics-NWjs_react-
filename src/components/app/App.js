@@ -24,20 +24,20 @@ export default class App extends Component {
     state = {
         tab: [
             { nameWP: "choice", text: "Выбор", id_t: '1' },
-            { nameWP: 'method_1D', text: "Обработка_1D", id_t: '1' },
+            // { nameWP: 'method_1D', text: "Обработка_1D", id_t: '1' },
             { nameWP: "method_2D", text: "Обработка_2D", id_t: '1' },
-            // { nameWP: "PTE", text: "PTE", id_t: '1' },
-            { nameWP: "camera", text: "Камера", id_t: '1' }
+            { nameWP: "PTE", text: "PTE", id_t: '1' },
+            // { nameWP: "camera", text: "Камера", id_t: '1' }
 
         ],
         frame: [
             { nameF: "choice", id_f: '1' },
-            { nameF: 'method_1D', id_f: '1' },
+            // { nameF: 'method_1D', id_f: '1' },
             { nameF: "method_2D", id_f: '1' },
-            // { nameF: "PTE", id_f: '1' },
-            { nameF: "camera", id_f: '1' }
+            { nameF: "PTE", id_f: '1' },
+            // { nameF: "camera", id_f: '1' }
         ],
-        activeFrame: { name: "choice", id: '1' },
+        activeFrame: { name: "PTE", id: '1' },
         activeAlert: [{ text: 'test крестика', id: '0' }],
         baseElement: []
     }
@@ -87,7 +87,7 @@ export default class App extends Component {
         return new Promise((resolve, reject) => {
             let baseElement = [];
             for (let i = 0; i < masFold.length; i++) {
-                let row_el, class_el, number_el, weight_el, f_name_el, l_r_el, name_el;
+                let row_el, class_el, number_el, weight_el, f_name_el, l_r_el, name_el, length_wave, energy_foto;
                 let file = new File(`${baseFolder}/${masFold[i]}/${masFold[i]}.dat`, `${masFold[i]}.dat`)
                 let reader = new FileReader();
                 reader.readAsText(file);
@@ -98,6 +98,10 @@ export default class App extends Component {
                         str = str.substring(from + 1, str.length)
                         result[i] = str;
                     })
+                    
+                    result[14] = result[14].trim();
+                    result[15] = result[15].trim();
+
                     row_el = result[0].trim();
                     class_el = result[1].trim();
                     number_el = result[3];
@@ -105,6 +109,9 @@ export default class App extends Component {
                     weight_el = result[6];
                     f_name_el = result[5].trim();
                     l_r_el = result[2].trim();
+                    length_wave = result[14].split(' ');
+                    energy_foto = result[15].split(' ');
+                    
                     baseElement[i] = {
                         row_el: row_el,
                         class_el: class_el,
@@ -119,7 +126,9 @@ export default class App extends Component {
                         family_inf: result[11],
                         oxid_deg_inf: result[12],
                         el_conf_inf: result[13],
-                        l_r_el: l_r_el
+                        l_r_el: l_r_el,
+                        length_wave: length_wave,
+                        energy_foto: energy_foto
                     }
                     if (i == masFold.length - 1) {
                         resolve(baseElement)
