@@ -24,6 +24,8 @@ export default class Processing {
         this.gran = masInformation_2D.Gran; // Границы
 
         // Введеные значения
+        this.nameElement = masInformation_2D.nameElement || 'NoName';
+
         this.iterN = masInformation_2D.IterN; // Ограничение по количеству обработанных снимков
         this.minInt = masInformation_2D.MinInt; // Порог интенсивности, если < тогда 0 
         this.dfon = masInformation_2D.DFon; // Значение вычитаемого шума
@@ -274,13 +276,25 @@ export default class Processing {
                 const url = this.himgsum.toDataURL('image/jpg');
                 const base64Data = url.replace(/^data:image\/png;base64,/, "");
 
-                let path_write_image = `result/image/${this.imgnum}.jpg`
-                if(fs.existsSync(path_write_image)) path_write_image = `result/image/${this.imgnum}_cope.jpg`
-                fs.writeFile(path_write_image, base64Data, 'base64', function (err) {
-                    if (err != null) {
-                        console.log(err);
-                    }
-                });
+                const date = new Date();
+                const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+                const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
+                
+                const path_write_image = `result/image/${this.nameElement}`
+                fs.mkdir(path_write_image, (err) =>{
+                    if (err.code != "EEXIST" && err != null) { console.log(err)};
+                    fs.mkdir(`${path_write_image}/${dataProtocol}/`, () =>{
+                        if (err.code != "EEXIST" && err != null) { console.log(err)};
+                        fs.writeFile(`${path_write_image}/${dataProtocol}/${this.nameElement}_${timeProtocol}_${this.imgnum}.jpg`, base64Data, 'base64', function (err) {
+                            if (err != null) {
+                                console.log(err);
+                            }
+                        });
+                    })
+                })
+                
+                // if(fs.existsSync(path_write_image)) path_write_image = `result/image/${this.imgnum}_cope.jpg`
+                
 
                 finished = true;
             }

@@ -330,9 +330,9 @@ export default class Method_2D extends PureComponent {
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
         const dir = `result/protocol/${nameFolderProtocol}`
         fs.mkdir(dir, err => {
-            if (err.code != "EEXIST") { console.log(err); throw err };
+            if (err.code != "EEXIST" && err != null) { console.log(err)};
             fs.mkdir(`${dir}/${dataProtocol}`, err => {
-                if (err.code != "EEXIST") { console.log(err); throw err };
+                if (err.code != "EEXIST" && err != null) { console.log(err)};
                 let file = fs.createWriteStream(`./${dir}/${dataProtocol}/2D_${timeProtocol}.dat`);
                 file.on('error', function (err) { console.log(err) })
                 // const keys = Object.keys(this.masInformation);
