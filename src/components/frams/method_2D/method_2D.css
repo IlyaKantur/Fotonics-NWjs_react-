@@ -42,11 +42,11 @@
   #left_Panel {
     position: relative;
     width: 210px;
-    height: 100vh;
+    height: 100%;
   }
   
   #midle_Panel {
-    height: 100vh;
+    height: 100%;
     flex: 1;
   }
   
@@ -294,18 +294,18 @@
   }
   
   #panel_mid_bot {
-    position: relative;
+    /* position: relative; */
     width: 100%;
     height: 25px;
     background-color: rgb(180, 180, 180);
   }
   
   #Consol {
-    flex: 1;
     overflow-y: auto;
     background-color: rgb(220, 220, 220);
     font-size: 14px;
     width: 100%;
+    height: calc(100% - 27px);
   }
   
   /* Нижняя часть */
