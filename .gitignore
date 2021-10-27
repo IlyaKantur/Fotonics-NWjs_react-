@@ -12,6 +12,7 @@
 /semantic
 # production
 /build
+/result/image
 
 # misc
 .DS_Store

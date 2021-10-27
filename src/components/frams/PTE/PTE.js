@@ -82,8 +82,8 @@ export default class PTE extends PureComponent {
             <div id="Panel_PT">
                 <div id="left_panel">
                     <div id="search_element">
-                        <input className='inp_ser_el'
-                            id={`inp_ser_el`}
+                        <input 
+                            id='inp_ser_el'
                             type="search"
                             placeholder="Поиск, в формате H"
                             maxLength="2"

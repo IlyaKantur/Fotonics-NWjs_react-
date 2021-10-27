@@ -269,15 +269,21 @@ export default class Method_2D extends PureComponent {
         })
     }
 
+    // Калибровка
+
+    search_energe = (name) => {
+        console.log(name)
+    }
+
     calibration = () => {
         if (this.finished) {
             const { masx, massum } = this.state;
             let del_en = (this.masInformation_2D.en_second_point - this.masInformation_2D.en_first_point) /
                 (this.masInformation_2D.n_second_point - this.masInformation_2D.n_first_point);
             let newCoor = [];
-            newCoor[0] = this.masInformation_2D.en_first_point - del_en.toFixed(3) * this.masInformation_2D.n_first_point
+            newCoor[0] = this.masInformation_2D.en_first_point - del_en * this.masInformation_2D.n_first_point
             for (let i = 1; i < masx.length; i++) {
-                newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(3));
+                newCoor[i] = Number((newCoor[i - 1] + del_en));
             }
             let masInput = document.querySelectorAll('.x_element_2D');
             for (let i = 0; i < masInput.length; i++) {
@@ -290,6 +296,8 @@ export default class Method_2D extends PureComponent {
             })
         }
     }
+
+    // Сглаживание
 
     smoothing = () => {
         if (this.finished) {
@@ -389,6 +397,7 @@ export default class Method_2D extends PureComponent {
                 coor_massum={coor_massum}
                 coor_masx={coor_masx}
                 calibration={this.calibration}
+                search_energe={this.search_energe}
                 applyCoor={this.applyCoor}
                 returnCoor={this.returnCoor}
                 data={data}

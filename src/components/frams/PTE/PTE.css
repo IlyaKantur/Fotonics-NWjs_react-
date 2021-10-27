@@ -33,7 +33,10 @@
     flex-direction: row;
     height: 21px;
 }
-
+#but_ser_el{
+    width: 20%;
+    text-align: center;
+}
 #search_alert{
     /* margin-top: 25px; */
     background-color:white;

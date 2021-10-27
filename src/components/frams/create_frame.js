@@ -39,6 +39,7 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement, createTab }) =>
                     onAlert={onAlert}
                     id_item = {item}
                     Plot = {Plot}
+                    baseElement = {baseElement}
                     ></Method_2D>
                 break;
             case 'PTE':

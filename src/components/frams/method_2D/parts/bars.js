@@ -43,7 +43,9 @@ export default class Bars extends PureComponent {
     }
 
     state = {
-        reload: false
+        reload: false,
+        search_name: '',
+        search_alert_text: {}
     }
 
     hide_parametr(id) {
@@ -53,11 +55,17 @@ export default class Bars extends PureComponent {
         })
     }
 
+    search_but = () => {
+        let inp_search = document.getElementById(`inp_ser_energy`)
+        let name_search_el = inp_search.value;
+        this.props.search_energe(name_search_el)
+    }
+
     render() {
         const { className, loadFolder, loadFoldImg,
             loadFonImg, startPush, id_item,
             masInformation_2D, stored_value,
-            calibration, save, smoothing
+            calibration, search_energe, save, smoothing
         } = this.props;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
@@ -227,6 +235,20 @@ export default class Bars extends PureComponent {
                     <li><a href="#" onClick={() => this.hide_parametr('сalibration')}>Калибровка</a>
                         <ul style={{ display: this.masVisible['сalibration'] ? 'block' : 'none' }}>
                             <button id="click_calibration" onClick={calibration}>Калибровка</button>
+                            <div style={{display: 'flex', flexDirection: 'row'}}>
+                                <input 
+                                    id='inp_ser_energy'
+                                    type="search"
+                                    placeholder="Поиск, в формате H"
+                                    maxLength="2"
+                                    // value={this.state.search_name}
+                                    // onChange={(e) => {
+                                    //     this.chek_name(e)
+                                    // }}
+                                />
+                                <button style={{width: '20%'}} id="but_ser_energy" onClick={() => { this.search_but() }}>🔍</button>
+                            </div>
+                            
                             <input id='en_first_point' type='number' placeholder="Эн. первой точки"
                                 onChange={(e) => stored_value(e.target.id, e.target.value)}
                             // value={en_first_point}

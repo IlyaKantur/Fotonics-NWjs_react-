@@ -282,9 +282,9 @@ export default class Processing {
                 
                 const path_write_image = `result/image/${this.nameElement}`
                 fs.mkdir(path_write_image, (err) =>{
-                    if (err.code != "EEXIST" && err != null) { console.log(err)};
-                    fs.mkdir(`${path_write_image}/${dataProtocol}/`, () =>{
-                        if (err.code != "EEXIST" && err != null) { console.log(err)};
+                    if (err != null) {console.log(err)};
+                    fs.mkdir(`${path_write_image}/${dataProtocol}/`, (err) =>{
+                        if (err != null) { console.log(err)};
                         fs.writeFile(`${path_write_image}/${dataProtocol}/${this.nameElement}_${timeProtocol}_${this.imgnum}.jpg`, base64Data, 'base64', function (err) {
                             if (err != null) {
                                 console.log(err);
