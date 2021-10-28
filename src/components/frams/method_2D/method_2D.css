@@ -244,7 +244,7 @@
   
   #img {
     position: relative;
-    width: 240px;
+    width: 340px;
     height: 100%;
   }
   
@@ -253,7 +253,7 @@
     margin: 50px 0 0 30px;
     position: relative;
     background: #fff;
-    max-width: 200px;
+    width: 300px;
     height: 200px;
     border: solid blue;
   }

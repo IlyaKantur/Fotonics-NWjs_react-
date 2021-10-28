@@ -354,10 +354,11 @@ export default class Method_2D extends PureComponent {
         })
     }
 
-    onConsoleMessage = (message) => {
+    onConsoleMessage = (message, work) => {
         this.setState(({ consoleMessage }) => {
             let id;
             if (consoleMessage.length == 0) { id = 0; }
+            else if(work) { id = consoleMessage[consoleMessage.length - 1].id; }
             else { id = consoleMessage[consoleMessage.length - 1].id + 1; }
             let hours = new Date().getHours();
             let minutes = new Date().getMinutes();
@@ -367,6 +368,7 @@ export default class Method_2D extends PureComponent {
             if (seconds < 10) seconds = `0${seconds}`;
             const time = `${hours}:${minutes}:${seconds}`
             const before = consoleMessage;
+            if(work) before.pop()
             const newMessage = { message: message, id: id, time: time };
             const newM = [...before, newMessage];
             return {

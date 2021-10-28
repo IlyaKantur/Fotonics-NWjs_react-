@@ -98,7 +98,7 @@ export default class Processing {
             // }
             this.startOb = new Date().getTime();
             this.proces = true;
-            this.onConsoleMessage('Start')
+            this.onConsoleMessage('Начало обработки')
             this.workOnImg(this.masImg, this.chek_obsorv).then(({massum, masx, finished, oldY, imgnum}) => resolve({massum, masx, finished, oldY, imgnum}));
         })
     }
@@ -260,7 +260,11 @@ export default class Processing {
             // Созранение фото
             
             this.imgnum++;
-            console.log(`Обработанано ${this.imgnum} снимков из ${this.masImg.length}`)
+            let message = `Обработанано ${this.imgnum} снимков из ${this.masImg.length}`
+            if(this.imgnum == 1) this.onConsoleMessage(message, false)
+            else this.onConsoleMessage(message, true)
+            
+            console.log(message)
 
             let massum = this.massum;
             let masx = this.masx;
@@ -271,7 +275,7 @@ export default class Processing {
             if ((this.imgnum == this.masImg.length && !this.chek_obsorv) || (this.iter && this.imgnum == this.iterN)) {
                 let message = `Обработана за: ${((new Date().getTime() - this.startOb) / 1000).toFixed(3)} секунд`
                 console.log(message)
-                this.onConsoleMessage(message)
+                this.onConsoleMessage(message, false)
 
                 const url = this.himgsum.toDataURL('image/jpg');
                 const base64Data = url.replace(/^data:image\/png;base64,/, "");

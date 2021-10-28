@@ -122,6 +122,7 @@ export default class Camera extends PureComponent {
               audio={false}
               ref={this.webcamRef}
               videoConstraints={{deviceId: deviceId}}
+              screenshotQuality={{screenshotQuality: 1}}
               screenshotFormat="image/png"
               width={width}
               height={height}
