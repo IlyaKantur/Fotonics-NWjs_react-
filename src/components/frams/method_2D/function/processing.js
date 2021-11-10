@@ -9,12 +9,15 @@ export default class Processing {
         this.ImgSum = document.getElementById(`ImgSum_${id_f_nameF}`);
         this.himg = document.getElementById(`hiddenimg_${id_f_nameF}`);
         this.himgsum = document.getElementById(`hiddenimgsum_${id_f_nameF}`);
+        this.himgClear = document.getElementById(`hiddenimgClear_${id_f_nameF}`)
         this.ctx = this.ImgNew.getContext("2d");
         this.ctxsum = this.ImgSum.getContext("2d");
         this.ctxh = this.himg.getContext("2d");
         this.ctxhs = this.himgsum.getContext("2d");
+        this.ctxhc = this.himgClear.getContext("2d");
 
         // Checkbox
+        this.double_processing = masInformation_2D.double_processing
         this.saveLast = masInformation_2D.SaveLast;
         this.iter = masInformation_2D.Iter; // Ограничение
         this.intPix = masInformation_2D.IntPix; // Суммировать интенсивность пикселей
@@ -85,17 +88,21 @@ export default class Processing {
             this.himg.height = this.iy;
             this.himgsum.width = this.ix;
             this.himgsum.height = this.iy;
+            this.himgClear.width = this.ix;
+            this.himgClear.height = this.iy;
             this.imgsum = this.masImg[0];
+
+            if (this.fon.length == undefined) {
+                this.fon_load = true
+                this.ctxhs.clearRect(0, 0, this.himg.width, this.himg.height);
+                this.ctxhs.drawImage(this.fon, 0, 0);
+                this.imgfon = this.ctxhs.getImageData(0, 0, this.ix, this.iy).data;
+                this.ctxhs.clearRect(0, 0, this.himg.width, this.himg.height);
+            }
+
             this.ctxsum.drawImage(this.imgsum, 0, 0, this.cx, this.cy);
             this.ctxhs.drawImage(this.imgsum, 0, 0, this.ix, this.iy);
-            // if (this.fon.length == undefined) {
-            //     this.fon_load = true
-            //     this.ctxhs.clearRect(0, 0, this.himg.width, this.himg.height);
-            //     this.ctxhs.drawImage(this.fon, 0, 0);
-            //     this.imgfon = this.ctxhs.getImageData(0, 0, this.ix, this.iy).data;
-            //     this.ctxhs.clearRect(0, 0, this.himg.width, this.himg.height);
-            //     this.ctxhs.drawImage(this.imgsum, 0, 0);
-            // }
+            
             this.startOb = new Date().getTime();
             this.proces = true;
             this.onConsoleMessage('Начало обработки')
@@ -148,81 +155,89 @@ export default class Processing {
             let Img = this.ctx.getImageData(0, 0, this.cx, this.cy);
             let Imgsum = this.ctxsum.getImageData(0, 0, this.cx, this.cy);
             let imgSum = this.ctxhs.getImageData(0, 0, this.ix, this.iy);
+            let imgClear = this.ctxhc.getImageData(0, 0, this.ix, this.iy);
             let mas0 = [];
             let mas = [];
             let ii = 0;
             let xbeg, xfin, ybeg, yfin;
-            for (let i = 0; i < imgData.length; i += 4) {
-                if (this.intPix) {
-                    mas0[ii] = imgData[i];
-                    if (!this.bf && this.fon_load && mas0[ii] >= this.imgfon[i]) {
-                        mas0[ii] -= this.imgfon[i];
-                    }
-                    if (this.delta && mas0[ii] >= this.dfon) {
-                        mas0[ii] -= this.dfon;
-                    }
-                }
-                else{
-                    if(imgData[i] >= this.minInt) {
-                        mas0[ii] = 1
+            if(!this.double_processing)
+            {
+                for (let i = 0; i < imgData.length; i += 4) {
+                    if (this.intPix) {
+                        mas0[ii] = imgData[i];
+
+                        //Test
+                        // if(mas0[ii]>200)console.log(`dirty ii:${ii} Int:${mas0[ii]}`)
+
+                        if (!this.bf && this.fon_load) {                            
+                            mas0[ii] -= this.imgfon[i];
+                            
+                        }
+                        // if(mas0[ii]>200)console.log(`clean ii:${ii} Int:${mas0[ii]}`)
+                        if (this.delta && mas0[ii] >= this.dfon) {
+                            mas0[ii] -= this.dfon;
+                        }
                     }
                     else{
-                        mas0[ii] = 0;
+                        if(imgData[i] >= this.minInt) {
+                            mas0[ii] = 1
+                        }
+                        else{
+                            mas0[ii] = 0;
+                        }
                     }
+                    ii++;
                 }
-                ii++;
-            }
-            let yy = 0;
-            if (this.gran) {
-                xbeg = +this.g_Xx;
-                xfin = +this.g_XX;
-                ybeg = +this.g_Yy;
-                yfin = +this.g_YY;
-                yy = (ybeg - 1) * this.ix + xbeg;
-            } else {
-                xbeg = 0;
-                xfin = this.ix;
-                ybeg = 0;
-                yfin = this.iy
-            }
-            if (this.bpix) {
-                // Есть вопрос к этой части
-                for (let i = 0; i < mas0.length; i++) {
-                    let del = ((mas0[i - 1] + mas0[i + this.iy] + mas0[i + 1]) / 3);
-                    if (mas0[i] > del + 40 && del == 0) {
-                        // let t = mas0[i];
-                        mas0[i] -= mas0[i];
-                    } else if (mas0[i] > del + 40 && del > 0) {
-                        // let t = mas0[i];
-                        mas0[i] -= (mas0[i] - del).toFixed(0);
-                        mas0[i];
-                    }
-                }
-            }
-
-            for (let x = xbeg; x < xfin; x++) {
-                if (this.imgnum == 0) {
-                    this.massum[x] = 0;
-                }
-                mas[x] = 0;
-                this.masx[x] = x;
-                this.oldX[x] = this.masx[x];
-            }
-            for (let y = ybeg; y < yfin; y++) {
-                for (let x = xbeg; x < xfin; x++) {
-                    mas[x] += mas0[yy];
-                    yy += 1;
-                }
+                let yy = 0;
                 if (this.gran) {
-                    yy += (this.ix - xfin) + xbeg
+                    xbeg = +this.g_Xx;
+                    xfin = +this.g_XX;
+                    ybeg = +this.g_Yy;
+                    yfin = +this.g_YY;
+                    yy = (ybeg - 1) * this.ix + xbeg;
+                } else {
+                    xbeg = 0;
+                    xfin = this.ix;
+                    ybeg = 0;
+                    yfin = this.iy
+                }
+                if (this.bpix) {
+                    // Есть вопрос к этой части
+                    for (let i = 0; i < mas0.length; i++) {
+                        let del = ((mas0[i - 1] + mas0[i + this.iy] + mas0[i + 1]) / 3);
+                        if (mas0[i] > del + 40 && del == 0) {
+                            mas0[i] -= mas0[i];
+                        } else if (mas0[i] > del + 40 && del > 0) {
+                            mas0[i] -= (mas0[i] - del).toFixed(0);
+                        }
+                    }
+                }
+
+                for (let x = xbeg; x < xfin; x++) {
+                    if (this.imgnum == 0) {
+                        this.massum[x] = 0;
+                    }
+                    mas[x] = 0;
+                    this.masx[x] = x;
+                    this.oldX[x] = this.masx[x];
+                }
+                for (let y = ybeg; y < yfin; y++) {
+                    for (let x = xbeg; x < xfin; x++) {
+                        mas[x] += mas0[yy];
+                        yy += 1;
+                    }
+                    if (this.gran) {
+                        yy += (this.ix - xfin) + xbeg
+                    }
+                }
+
+                for (let x = xbeg; x < xfin; x++) {
+                    this.massum[x] += mas[x];
+                    this.oldY[x] = this.massum[x];
                 }
             }
 
-            for (let x = xbeg; x < xfin; x++) {
-                this.massum[x] += mas[x];
-                this.oldY[x] = this.massum[x];
-            }
-
+            //суммарное фото
             for (let i = 0; i < imgData.length; i += 4) {
                 if (i % 4 == 3) {
                     continue;
@@ -250,10 +265,23 @@ export default class Processing {
                 }
             }
 
+            // очишенное изображение
+            ii = 0
+            for (let i = 0; i < imgClear.data.length; i += 4) {
+                if (i % 4 == 3) {
+                    continue;
+                }
+                imgClear.data[i] = mas0[ii];
+                imgClear.data[i + 1] = mas0[ii];
+                imgClear.data[i + 2] = mas0[ii];
+                imgClear.data[i + 3] = 255
+                ii++
+            }
+
             //вывод в панель
 
             
-
+            this.ctxhc.putImageData(imgClear, 0, 0);
             this.ctxhs.putImageData(imgSum, 0, 0);
             this.ctxsum.putImageData(Imgsum, 0, 0);
 
@@ -280,6 +308,9 @@ export default class Processing {
                 const url = this.himgsum.toDataURL('image/jpg');
                 const base64Data = url.replace(/^data:image\/png;base64,/, "");
 
+                const urlClearImg = this.himgClear.toDataURL('image/jpg');
+                const base64DataClearImg = urlClearImg.replace(/^data:image\/png;base64,/, "");
+
                 const date = new Date();
                 const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
                 const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
@@ -289,7 +320,14 @@ export default class Processing {
                     if (err != null) {console.log(err)};
                     fs.mkdir(`${path_write_image}/${dataProtocol}/`, (err) =>{
                         if (err != null) { console.log(err)};
+
                         fs.writeFile(`${path_write_image}/${dataProtocol}/${this.nameElement}_${timeProtocol}_${this.imgnum}.jpg`, base64Data, 'base64', function (err) {
+                            if (err != null) {
+                                console.log(err);
+                            }
+                        });
+
+                        fs.writeFile(`${path_write_image}/${dataProtocol}/${this.nameElement}_${timeProtocol}_${this.imgnum}_clear.jpg`, base64DataClearImg, 'base64', function (err) {
                             if (err != null) {
                                 console.log(err);
                             }

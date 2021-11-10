@@ -113,6 +113,7 @@ export default class L_P_Panel extends PureComponent {
                         <div id="hidden_elem">
                             <canvas className="hiddenimg" id={`hiddenimg_${id_f_nameF}`}></canvas>
                             <canvas className="hiddenimgsum" id={`hiddenimgsum_${id_f_nameF}`}></canvas>
+                            <canvas className="hiddenimgClear" id={`hiddenimgClear_${id_f_nameF}`}></canvas>
                         </div>
                     </div>
 

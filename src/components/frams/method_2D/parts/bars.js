@@ -85,6 +85,17 @@ export default class Bars extends PureComponent {
                                     <span className="checkmark"></span>
                                 </label>
                             </li>
+                            <li>
+                                <label className="container">Двойная обработка
+                                <input className="double_processing" id={`double_processing${id_f_nameF}`}
+                                        onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                                        type="checkbox"
+                                        defaultChecked={masInformation_2D.double_processing}
+                                    />
+                                    {/* defaultChecked='checked' */}
+                                    <span className="checkmark"></span>
+                                </label>
+                            </li>
                         </ul>
                     </li>
 

@@ -258,7 +258,7 @@
     border: solid blue;
   }
 
-  .hiddenimg, .hiddenimgsum{
+  .hiddenimg, .hiddenimgsum, .hiddenimgClear{
     display: none;
   }
   

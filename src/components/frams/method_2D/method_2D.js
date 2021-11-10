@@ -25,6 +25,7 @@ export default class Method_2D extends PureComponent {
         this.masInformation_2D = {
             method: 'Двумерный',
             chek_obsorv: false,
+            double_processing: false,
             SaveLast: false,
             nameElement: '',
             AxisX: 'X',
@@ -281,9 +282,9 @@ export default class Method_2D extends PureComponent {
             let del_en = (this.masInformation_2D.en_second_point - this.masInformation_2D.en_first_point) /
                 (this.masInformation_2D.n_second_point - this.masInformation_2D.n_first_point);
             let newCoor = [];
-            newCoor[0] = this.masInformation_2D.en_first_point - del_en * this.masInformation_2D.n_first_point
+            newCoor[0] = +(this.masInformation_2D.en_first_point - del_en * this.masInformation_2D.n_first_point).toFixed(8)
             for (let i = 1; i < masx.length; i++) {
-                newCoor[i] = Number((newCoor[i - 1] + del_en));
+                newCoor[i] = +Number((newCoor[i - 1] + del_en)).toFixed(8);
             }
             let masInput = document.querySelectorAll('.x_element_2D');
             for (let i = 0; i < masInput.length; i++) {
