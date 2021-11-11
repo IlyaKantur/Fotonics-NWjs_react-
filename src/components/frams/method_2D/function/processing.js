@@ -166,14 +166,9 @@ export default class Processing {
                     if (this.intPix) {
                         mas0[ii] = imgData[i];
 
-                        //Test
-                        // if(mas0[ii]>200)console.log(`dirty ii:${ii} Int:${mas0[ii]}`)
-
-                        if (!this.bf && this.fon_load) {                            
+                        if (!this.bf && this.fon_load) {                  
                             mas0[ii] -= this.imgfon[i];
-                            
                         }
-                        // if(mas0[ii]>200)console.log(`clean ii:${ii} Int:${mas0[ii]}`)
                         if (this.delta && mas0[ii] >= this.dfon) {
                             mas0[ii] -= this.dfon;
                         }
@@ -267,15 +262,26 @@ export default class Processing {
 
             // очишенное изображение
             ii = 0
+            if(this.imgnum == 0){
+                imgClear.data.map(item => item = 0)
+            }
+
             for (let i = 0; i < imgClear.data.length; i += 4) {
                 if (i % 4 == 3) {
                     continue;
                 }
-                imgClear.data[i] = mas0[ii];
-                imgClear.data[i + 1] = mas0[ii];
-                imgClear.data[i + 2] = mas0[ii];
-                imgClear.data[i + 3] = 255
-                ii++
+                if (imgClear.data[i] >= mas0[ii]) {
+                    ii++
+                    imgClear.data[i + 3] = 255
+                    continue;
+                } else {
+                    imgClear.data[i] += mas0[ii];
+                    imgClear.data[i + 1] += mas0[ii];
+                    imgClear.data[i + 2] += mas0[ii];
+                    imgClear.data[i + 3] = 255
+                    ii++
+                }
+                
             }
 
             //вывод в панель
