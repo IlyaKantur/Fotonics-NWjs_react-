@@ -165,13 +165,6 @@ export default class Processing {
                 for (let i = 0; i < imgData.length; i += 4) {
                     if (this.intPix) {
                         mas0[ii] = imgData[i];
-
-                        if (!this.bf && this.fon_load) {                  
-                            mas0[ii] -= this.imgfon[i];
-                        }
-                        if (this.delta && mas0[ii] >= this.dfon) {
-                            mas0[ii] -= this.dfon;
-                        }
                     }
                     else{
                         if(imgData[i] >= this.minInt) {
@@ -196,17 +189,36 @@ export default class Processing {
                     ybeg = 0;
                     yfin = this.iy
                 }
+
+                // фильтрация
+
+                //вычитание фонового изображения
+                ii = 0
+                if (!this.bf && this.fon_load) {  
+                    mas0 = mas0.map((item, i) => {
+                        if(item > this.imgfon[ii] && mas0[i - 1] < this.imgfon[ii] && mas0[i + 1] < this.imgfon[ii]) item = 0
+                        else item -= this.imgfon[ii];
+                        ii += 4
+                        return item;
+                    })                
+                }
+                //уменьшение на заданое число
+                if (this.delta && mas0[ii] >= this.dfon) {
+                    mas0[ii] -= this.dfon;
+                }
+
+                //очистка от артифактов
                 if (this.bpix) {
                     // Есть вопрос к этой части
                     for (let i = 0; i < mas0.length; i++) {
-                        let del = ((mas0[i - 1] + mas0[i + this.iy] + mas0[i + 1]) / 3);
-                        if (mas0[i] > del + 40 && del == 0) {
-                            mas0[i] -= mas0[i];
-                        } else if (mas0[i] > del + 40 && del > 0) {
-                            mas0[i] -= (mas0[i] - del).toFixed(0);
+                        let del = +((mas0[i - 1] + mas0[i + this.iy] + mas0[i + 1] + mas0[i - this.iy] ) / 4).toFixed(0);
+                        if (mas0[i] > del + 60) {
+                            mas0[i] -= del;
                         }
                     }
                 }
+
+                //перепись до границ
 
                 for (let x = xbeg; x < xfin; x++) {
                     if (this.imgnum == 0) {
