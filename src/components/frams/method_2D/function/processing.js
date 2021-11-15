@@ -158,13 +158,37 @@ export default class Processing {
             let imgClear = this.ctxhc.getImageData(0, 0, this.ix, this.iy);
             let mas0 = [];
             let mas = [];
+            let masfon = [];
             let ii = 0;
+            let yy = 0;
             let xbeg, xfin, ybeg, yfin;
+
+            let ibeg = 0;
+            let ifin = mas0.length;
+            if (this.gran) {
+                xbeg = +this.g_Xx;
+                xfin = +this.g_XX;
+                ybeg = +this.g_Yy;
+                yfin = +this.g_YY;
+                yy = ybeg * this.ix + xbeg;
+
+                ibeg = ybeg * this.ix + xbeg;
+                ifin = yfin * this.ix + xfin;
+
+
+            } else {
+                xbeg = 0;
+                xfin = this.ix;
+                ybeg = 0;
+                yfin = this.iy
+            }
+
             if(!this.double_processing)
             {
                 for (let i = 0; i < imgData.length; i += 4) {
                     if (this.intPix) {
                         mas0[ii] = imgData[i];
+                        if(this.fon_load) masfon[ii] = this.imgfon[i]
                     }
                     else{
                         if(imgData[i] >= this.minInt) {
@@ -176,46 +200,40 @@ export default class Processing {
                     }
                     ii++;
                 }
-                let yy = 0;
-                if (this.gran) {
-                    xbeg = +this.g_Xx;
-                    xfin = +this.g_XX;
-                    ybeg = +this.g_Yy;
-                    yfin = +this.g_YY;
-                    yy = (ybeg - 1) * this.ix + xbeg;
-                } else {
-                    xbeg = 0;
-                    xfin = this.ix;
-                    ybeg = 0;
-                    yfin = this.iy
-                }
 
                 // фильтрация
 
-                //вычитание фонового изображения
-                ii = 0
-                if (!this.bf && this.fon_load) {  
-                    mas0 = mas0.map((item, i) => {
-                        if(item > this.imgfon[ii] && mas0[i - 1] < this.imgfon[ii] && mas0[i + 1] < this.imgfon[ii]) item = 0
-                        else item -= this.imgfon[ii];
-                        ii += 4
-                        return item;
-                    })                
-                }
-                //уменьшение на заданое число
-                if (this.delta && mas0[ii] >= this.dfon) {
-                    mas0[ii] -= this.dfon;
-                }
+                if (!this.bf &&(this.fon_load || this.delta || this.bpix)) {  
 
-                //очистка от артифактов
-                if (this.bpix) {
-                    // Есть вопрос к этой части
-                    for (let i = 0; i < mas0.length; i++) {
-                        let del = +((mas0[i - 1] + mas0[i + this.iy] + mas0[i + 1] + mas0[i - this.iy] ) / 4).toFixed(0);
-                        if (mas0[i] > del + 60) {
-                            mas0[i] -= del;
+                    ii = xbeg;
+                    for(let i = ibeg; i < ifin; i++){
+
+                        //вычитание фонового изображения
+                        if(this.fon_load)
+                        {
+                            if(mas0[i] > masfon[i] && mas0[i - 1] < masfon[i] && mas0[i + 1] < masfon[i]) mas0[i] = 0
+                            else mas0[i] -= masfon[i];
                         }
-                    }
+                        //очистка от артифактов
+                        if (this.bpix) {
+                            
+                            for (let i = 0; i < mas0.length; i++) {
+                                let del = +((mas0[i - 1] + mas0[i + this.iy] + mas0[i + 1] + mas0[i - this.iy] ) / 4).toFixed(0);
+                                if (mas0[i] > del + 60) {
+                                    mas0[i] -= del;
+                                }
+                            }
+                        }
+                        //уменьшение на заданое число
+                        if (this.delta && mas0[i] >= this.dfon) {
+                            mas0[i] -= this.dfon;
+                        }
+                        if(mas0[i] < 0) mas0[i] = 0
+
+                        if (this.gran && ii++ == xfin) {
+                            i += (this.ix - xfin) + xbeg - 1; ii = xbeg;
+                        }
+                    }              
                 }
 
                 //перепись до границ
@@ -273,7 +291,8 @@ export default class Processing {
             }
 
             // очишенное изображение
-            ii = 0
+            ii = 0;
+            yy = xbeg;
             if(this.imgnum == 0){
                 imgClear.data.map(item => item = 0)
             }
@@ -287,11 +306,25 @@ export default class Processing {
                     imgClear.data[i + 3] = 255
                     continue;
                 } else {
-                    imgClear.data[i] += mas0[ii];
-                    imgClear.data[i + 1] += mas0[ii];
-                    imgClear.data[i + 2] += mas0[ii];
-                    imgClear.data[i + 3] = 255
-                    ii++
+                    if (this.gran && (ii >= ibeg && ii <= ifin && (yy == xbeg || yy == xfin || (ii > ibeg && ii < ibeg + (xfin - xbeg)) || (ii > ifin - (xfin - xbeg) && ii < ifin)) )) {
+                        // || (ii > ibeg && ii < ibeg + (xfin - xbeg)) || (ii > ifin - (xfin - xbeg) && ii < ifin))
+                        imgClear.data[i] = 255;
+                        imgClear.data[i + 1] = 0;
+                        imgClear.data[i + 2] = 0;
+                        imgClear.data[i + 3] = 255;
+        
+                        yy++
+                        ii++;
+                    }
+                    else{
+                        imgClear.data[i] += mas0[ii];
+                        imgClear.data[i + 1] += mas0[ii];
+                        imgClear.data[i + 2] += mas0[ii];
+                        imgClear.data[i + 3] = 255;
+                        if(ii > ibeg) yy++
+                        ii++
+                    }
+                    if(yy == this.ix) yy = 0   
                 }
                 
             }

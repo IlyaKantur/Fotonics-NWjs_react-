@@ -44,10 +44,10 @@ export default class Method_2D extends PureComponent {
             n_first_point: 0,
             n_second_point: 0,
             Gran: false,
-            Xx: 200,
-            XX: 1000,
+            Xx: 300,
+            XX: 1100,
             Yy: 100,
-            YY: 800,
+            YY: 900,
             add_information: '',
         }
         this.nameInformation_2D =
