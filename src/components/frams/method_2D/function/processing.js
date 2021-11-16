@@ -164,7 +164,7 @@ export default class Processing {
             let xbeg, xfin, ybeg, yfin;
 
             let ibeg = 0;
-            let ifin = mas0.length;
+            let ifin = this.ix * this.iy;
             if (this.gran) {
                 xbeg = +this.g_Xx;
                 xfin = +this.g_XX;
