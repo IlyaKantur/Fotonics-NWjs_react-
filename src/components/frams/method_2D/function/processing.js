@@ -24,14 +24,21 @@ export default class Processing {
         this.bf = masInformation_2D.BF; // Без фона
         this.delta = masInformation_2D.Delta; // Вычет шума
         this.bpix = masInformation_2D.BPix; // Вычет битого
+        this.gain1 = masInformation_2D.gain1; // усиление. метод 1
         this.gran = masInformation_2D.Gran; // Границы
 
         // Введеные значения
         this.nameElement = masInformation_2D.nameElement || 'NoName';
 
         this.iterN = masInformation_2D.IterN; // Ограничение по количеству обработанных снимков
+
         this.minInt = masInformation_2D.MinInt; // Порог интенсивности, если < тогда 0 
+
         this.dfon = masInformation_2D.DFon; // Значение вычитаемого шума
+
+        this.k_gain1 = masInformation_2D.k_gain1; // Коэффициент усиление. метод 1
+        this.minInt_gain1 = masInformation_2D.minInt_gain1; // Порог интенсивнотси, выше которого усиление. метод 1
+
         this.g_Xx = masInformation_2D.Xx;
         this.g_XX = masInformation_2D.XX;
         this.g_Yy = masInformation_2D.Yy;
@@ -190,7 +197,8 @@ export default class Processing {
                         mas0[ii] = imgData[i];
                         if(this.fon_load) masfon[ii] = this.imgfon[i]
                     }
-                    else{
+                    else
+                    {
                         if(imgData[i] >= this.minInt) {
                             mas0[ii] = 1
                         }
@@ -203,7 +211,7 @@ export default class Processing {
 
                 // фильтрация
 
-                if (!this.bf &&(this.fon_load || this.delta || this.bpix)) {  
+                if ((!this.bf &&(this.fon_load || this.delta || this.bpix )) || this.gain1) {  
 
                     ii = xbeg;
                     for(let i = ibeg; i < ifin; i++){
@@ -216,19 +224,23 @@ export default class Processing {
                         }
                         //очистка от артифактов
                         if (this.bpix) {
-                            
-                            for (let i = 0; i < mas0.length; i++) {
-                                let del = +((mas0[i - 1] + mas0[i + this.iy] + mas0[i + 1] + mas0[i - this.iy] ) / 4).toFixed(0);
-                                if (mas0[i] > del + 60) {
-                                    mas0[i] -= del;
-                                }
+                            let del = +(((mas0[i - 1] + mas0[i + this.ix] + mas0[i] + mas0[i + 1] + mas0[i - this.ix] ) / 5).toFixed(0));
+                            if (mas0[i] > del + 20) {
+                                mas0[i] -= del;
                             }
                         }
                         //уменьшение на заданое число
                         if (this.delta && mas0[i] >= this.dfon) {
                             mas0[i] -= this.dfon;
                         }
-                        if(mas0[i] < 0) mas0[i] = 0
+
+                        //усиление. метод 1
+                        if(this.gain1 && mas0[i] >= this.minInt_gain1){
+                            mas0[i] = +((mas0[i] * (1 + (+this.k_gain1/100))).toFixed(0))
+                        }
+
+                        if(mas0[i] < 0) mas0[i] = 0;
+                        if(mas0[i] > 255) mas0[i] = 255;
 
                         if (this.gran && ii++ == xfin) {
                             i += (this.ix - xfin) + xbeg - 1; ii = xbeg;

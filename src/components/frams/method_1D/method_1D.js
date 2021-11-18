@@ -217,6 +217,7 @@ export default class Method_1D extends PureComponent {
         if (this.masDataY.length !== 0) {
             // let date_start = new Date().getTime();
             let sum = [], coor = [], countSum = this.masInformation.countSum;
+
             this.masDataY.map((item, j) => {
                 if (j === 0) sum = Array.apply(null, Array(Math.ceil(item.length / countSum))).map(Number.prototype.valueOf, 0);
                 let midle = 0, k = 0, x = 0;
@@ -224,8 +225,8 @@ export default class Method_1D extends PureComponent {
                     midle += Number(y);
                     k++;
                     if (k == countSum || i == item.length - 1) {
-                        sum[x] = sum[x] + Math.ceil(midle / countSum);
-                        // sum[x] = sum[x] + midle
+                        // sum[x] = sum[x] + Math.ceil(midle / countSum);
+                        sum[x] = sum[x] + midle
                         coor[x] = x;
                         k = 0; midle = 0; x++;
                     }

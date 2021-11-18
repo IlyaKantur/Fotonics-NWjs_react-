@@ -35,6 +35,7 @@ export default class Bars extends PureComponent {
             file: false,
             processing: false,
             filtering: false,
+            gain: false,
             borders: false,
             details: false,
             calibration: false,
@@ -125,39 +126,6 @@ export default class Bars extends PureComponent {
                         </ul>
                     </li>
 
-                    <li><a href="#" onClick={() => this.hide_parametr('processing')}>Обработка</a>
-                        <ul style={{ display: this.masVisible['processing'] ? 'block' : 'none' }}>
-                            <li><label className="container">Ограничение
-                            <input className="Iter" id={`Iter_${id_f_nameF}`}
-                                    onChange={(e) => stored_value(e.target.className, e.target.checked)}
-                                    type="checkbox"
-                                    defaultChecked={masInformation_2D.Iter}
-                                />
-                                <span className="checkmark"></span>
-                            </label></li>
-                            <li><input className="IterN" id={`IterN_${id_f_nameF}`}
-                                onChange={(e) => stored_value(e.target.className, +e.target.value)}
-                                type="number"
-                                placeholder='Количество'
-                            /></li>
-                            <li><label className="container">Инт. Пикселя
-                            <input className="IntPix" id={`IntPix_${id_f_nameF}`}
-                                    onChange={(e) => stored_value(e.target.className, e.target.checked)}
-                                    type="checkbox"
-                                    defaultChecked={masInformation_2D.IntPix}
-                                />
-                                <span className="checkmark"></span>
-                            </label></li>
-                            <li><input className="MinInt" id={`MinInt_${id_f_nameF}`}
-                                onChange={(e) => stored_value(e.target.className, +e.target.value)}
-                                type="number"
-                                placeholder={`Мин. инт: ${masInformation_2D.MinInt}`}
-                            /></li>
-                            <li><button id="Start" onClick={() => startPush(id_f_nameF)}>Старт</button></li>
-                            {/* <li><button id="Restart">Очистка</button></li> */}
-                        </ul>
-                    </li>
-
                     <li><a href="#" onClick={() => this.hide_parametr('filtering')}>Фильтрация</a>
                         <ul style={{ display: this.masVisible['filtering'] ? 'block' : 'none' }}>
                             <li><label className="container">Без Фильтрация
@@ -194,19 +162,30 @@ export default class Bars extends PureComponent {
                         </ul>
                     </li>
 
-                    <li><a href="#" onClick={() => this.hide_parametr('smoothing')}>Сглаживание</a>
-                        <ul style={{ display: this.masVisible['smoothing'] ? 'block' : 'none' }}>
-                            <button onClick={() => smoothing()}>Сглаживание</button>
-                            <li><input className="n_smoothing" id={`n_smoothing_${id_f_nameF}`}
+                    <li><a href="#" onClick={() => this.hide_parametr('gain')}>Усиление</a>
+                        <ul style={{ display: this.masVisible['gain'] ? 'block' : 'none' }}>
+                            <li><label className="container">Усиление_1
+                                <input className="gain1" id={`gain1_${id_f_nameF}`}
+                                        onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                                        type="checkbox"
+                                        defaultChecked={masInformation_2D.gain1}
+                                    />
+                                    <span className="checkmark"></span>
+                                </label></li>
+                            <li><input className="k_gain1" id={`k_gain1_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
-                                placeholder="3"
+                                placeholder="0%"
                             />
                             </li>
-
+                            <li><input className="minInt_gain1" id={`minInt_gain1_${id_f_nameF}`}
+                                onChange={(e) => stored_value(e.target.className, +e.target.value)}
+                                type="number"
+                                placeholder="Порог инт: 100"
+                            />
+                            </li>
                         </ul>
                     </li>
-
                     <li><a href="#" onClick={() => this.hide_parametr('borders')}>Границы</a>
                         <ul style={{ display: this.masVisible['borders'] ? 'block' : 'none' }}>
                             <li><label className="container">Границы
@@ -217,7 +196,7 @@ export default class Bars extends PureComponent {
                                 />
                                 <span className="checkmark"></span>
                             </label></li>X
-                        <li><input className="Xx" id={`Xx_${id_f_nameF}`}
+                            <li><input className="Xx" id={`Xx_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
                                 placeholder={masInformation_2D.Xx}
@@ -229,7 +208,7 @@ export default class Bars extends PureComponent {
                                 placeholder={masInformation_2D.XX}
                             />
                             </li>Y
-                        <li><input className="Yy" id={`Yy_${id_f_nameF}`}
+                            <li><input className="Yy" id={`Yy_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
                                 placeholder={masInformation_2D.Yy}
@@ -241,6 +220,53 @@ export default class Bars extends PureComponent {
                                 placeholder={masInformation_2D.YY}
                             />
                             </li>
+                        </ul>
+                    </li>
+
+                    <li><a href="#" onClick={() => this.hide_parametr('processing')}>Обработка</a>
+                        <ul style={{ display: this.masVisible['processing'] ? 'block' : 'none' }}>
+                            <li><label className="container">Ограничение
+                            <input className="Iter" id={`Iter_${id_f_nameF}`}
+                                    onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                                    type="checkbox"
+                                    defaultChecked={masInformation_2D.Iter}
+                                />
+                                <span className="checkmark"></span>
+                            </label></li>
+                            <li><input className="IterN" id={`IterN_${id_f_nameF}`}
+                                onChange={(e) => stored_value(e.target.className, +e.target.value)}
+                                type="number"
+                                placeholder='Количество'
+                            /></li>
+                            <li><label className="container">Инт. Пикселя
+                            <input className="IntPix" id={`IntPix_${id_f_nameF}`}
+                                    onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                                    type="checkbox"
+                                    defaultChecked={masInformation_2D.IntPix}
+                                />
+                                <span className="checkmark"></span>
+                            </label></li>
+                            <li><input className="MinInt" id={`MinInt_${id_f_nameF}`}
+                                onChange={(e) => stored_value(e.target.className, +e.target.value)}
+                                type="number"
+                                placeholder={`Мин. инт: ${masInformation_2D.MinInt}`}
+                            /></li>
+                            <li><button id="Start" onClick={() => startPush(id_f_nameF)}>Старт</button></li>
+                            {/* <li><button id="Restart">Очистка</button></li> */}
+                        </ul>
+                    </li>
+
+                    
+
+                    <li><a href="#" onClick={() => this.hide_parametr('smoothing')}>Сглаживание</a>
+                        <ul style={{ display: this.masVisible['smoothing'] ? 'block' : 'none' }}>
+                            <li><input className="n_smoothing" id={`n_smoothing_${id_f_nameF}`}
+                                onChange={(e) => stored_value(e.target.className, +e.target.value)}
+                                type="number"
+                                placeholder="3"
+                            />
+                            </li>
+                            <button onClick={() => smoothing()}>Сглаживание</button>
                         </ul>
                     </li>
                     <li><a href="#" onClick={() => this.hide_parametr('сalibration')}>Калибровка</a>

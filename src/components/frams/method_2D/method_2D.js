@@ -38,6 +38,9 @@ export default class Method_2D extends PureComponent {
             Delta: false,
             DFon: 3,
             BPix: false,
+            gain1: false,
+            k_gain1: 0,
+            minInt_gain1: 100,
             n_smoothing: 3,
             en_first_point: 0,
             en_second_point: 0,
@@ -270,34 +273,6 @@ export default class Method_2D extends PureComponent {
         })
     }
 
-    // Калибровка
-
-    search_energe = (name) => {
-        console.log(name)
-    }
-
-    calibration = () => {
-        if (this.finished) {
-            const { masx, massum } = this.state;
-            let del_en = (this.masInformation_2D.en_second_point - this.masInformation_2D.en_first_point) /
-                (this.masInformation_2D.n_second_point - this.masInformation_2D.n_first_point);
-            let newCoor = [];
-            newCoor[0] = +(this.masInformation_2D.en_first_point - del_en * this.masInformation_2D.n_first_point).toFixed(8)
-            for (let i = 1; i < masx.length; i++) {
-                newCoor[i] = +Number((newCoor[i - 1] + del_en)).toFixed(8);
-            }
-            let masInput = document.querySelectorAll('.x_element_2D');
-            for (let i = 0; i < masInput.length; i++) {
-                masInput[i].innerHTML = `${newCoor[i]}`;
-            }
-            this.reloadData(newCoor, massum);
-            this.setState({
-                coor_massum: massum,
-                coor_masx: newCoor
-            })
-        }
-    }
-
     // Сглаживание
 
     smoothing = () => {
@@ -332,6 +307,35 @@ export default class Method_2D extends PureComponent {
             })
         }
     }
+    
+    // Калибровка
+    search_energe = (name) => {
+        console.log(name)
+    }
+    
+    calibration = () => {
+        if (this.finished) {
+            const { masx, massum } = this.state;
+            let del_en = (this.masInformation_2D.en_second_point - this.masInformation_2D.en_first_point) /
+                (this.masInformation_2D.n_second_point - this.masInformation_2D.n_first_point);
+            let newCoor = [];
+            newCoor[0] = +(this.masInformation_2D.en_first_point - del_en * this.masInformation_2D.n_first_point).toFixed(8)
+            for (let i = 1; i < masx.length; i++) {
+                newCoor[i] = +Number((newCoor[i - 1] + del_en)).toFixed(8);
+            }
+            let masInput = document.querySelectorAll('.x_element_2D');
+            for (let i = 0; i < masInput.length; i++) {
+                masInput[i].innerHTML = `${newCoor[i]}`;
+            }
+            this.reloadData(newCoor, massum);
+            this.setState({
+                coor_massum: massum,
+                coor_masx: newCoor
+            })
+        }
+    }
+
+    
 
     save_protocol = () => {
         const nameFolderProtocol = this.masInformation_2D.nameElement || 'NoName';
