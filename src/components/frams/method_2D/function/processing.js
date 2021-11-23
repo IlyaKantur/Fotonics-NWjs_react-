@@ -224,9 +224,11 @@ export default class Processing {
                         }
                         //очистка от артифактов
                         if (this.bpix) {
-                            let del = +(((mas0[i - 1] + mas0[i + this.ix] + mas0[i] + mas0[i + 1] + mas0[i - this.ix] ) / 5).toFixed(0));
-                            if (mas0[i] > del + 20) {
-                                mas0[i] -= del;
+                            let del = +((( (mas0[i - 1] == undefined ? 0 : mas0[i - 1])  + (mas0[i + this.ix] == undefined ? 0 : mas0[i + this.ix])
+                                      + (mas0[i + 1] == undefined ? 0 : mas0[i + 1]) + (mas0[i - this.ix] == undefined ? 0 : mas0[i - this.ix]) ) / 4).toFixed(0));
+                            
+                            if (mas0[i] > del) {
+                                mas0[i] = del;
                             }
                         }
                         //уменьшение на заданое число
