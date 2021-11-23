@@ -38,6 +38,7 @@ export default class Method_2D extends PureComponent {
             Delta: false,
             DFon: 3,
             BPix: false,
+            DBPix: 20,
             gain1: false,
             k_gain1: 0,
             minInt_gain1: 100,

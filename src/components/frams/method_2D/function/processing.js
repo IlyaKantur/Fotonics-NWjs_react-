@@ -36,6 +36,8 @@ export default class Processing {
 
         this.dfon = masInformation_2D.DFon; // Значение вычитаемого шума
 
+        this.dbpix = masInformation_2D.DBPix; // Параметр вычет битого
+
         this.k_gain1 = masInformation_2D.k_gain1; // Коэффициент усиление. метод 1
         this.minInt_gain1 = masInformation_2D.minInt_gain1; // Порог интенсивнотси, выше которого усиление. метод 1
 
@@ -227,7 +229,11 @@ export default class Processing {
                             let del = +((( (mas0[i - 1] == undefined ? 0 : mas0[i - 1])  + (mas0[i + this.ix] == undefined ? 0 : mas0[i + this.ix])
                                       + (mas0[i + 1] == undefined ? 0 : mas0[i + 1]) + (mas0[i - this.ix] == undefined ? 0 : mas0[i - this.ix]) ) / 4).toFixed(0));
                             
-                            if (mas0[i] > del) {
+                            if(i==700058)
+                            {
+                                console.log()
+                            }
+                            if (mas0[i] > del + this.dbpix) {
                                 mas0[i] = del;
                             }
                         }

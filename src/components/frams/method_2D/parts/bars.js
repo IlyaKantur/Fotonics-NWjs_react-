@@ -147,7 +147,7 @@ export default class Bars extends PureComponent {
                             <li><input className="DFon" id={`DFon_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
-                                placeholder="3"
+                                placeholder="Параметр шума: 3"
                             />
                             </li>
                             <li><label className="container">Вычет битого
@@ -158,6 +158,12 @@ export default class Bars extends PureComponent {
                                 />
                                 <span className="checkmark"></span>
                             </label></li>
+                            <li><input className="DBPix" id={`DBPix_${id_f_nameF}`}
+                                onChange={(e) => stored_value(e.target.className, +e.target.value)}
+                                type="number"
+                                placeholder="Параметр битого: 20"
+                            />
+                            </li>
                             <li><button id="Fonfold" onClick={() => loadFonImg(id_f_nameF)}>Фон</button></li>
                         </ul>
                     </li>
