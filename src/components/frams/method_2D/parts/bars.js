@@ -144,11 +144,19 @@ export default class Bars extends PureComponent {
                                 />
                                 <span className="checkmark"></span>
                             </label></li>
-                            <li><input className="DFon" id={`DFon_${id_f_nameF}`}
-                                onChange={(e) => stored_value(e.target.className, +e.target.value)}
-                                type="number"
-                                placeholder="Параметр шума: 3"
-                            />
+                            <li>
+                                <div style={{display: "flex", flexDirection: "row"}}>
+                                    <input className="DFonFrom" id={`DFonFrom_${id_f_nameF}`}
+                                        onChange={(e) => stored_value(e.target.className, +e.target.value)}
+                                        type="number"
+                                        placeholder="От: 3"
+                                    />
+                                    <input className="DFonTo" id={`DFonTo_${id_f_nameF}`}
+                                        onChange={(e) => stored_value(e.target.className, +e.target.value)}
+                                        type="number"
+                                        placeholder="До: 6"
+                                    />
+                                </div>
                             </li>
                             <li><label className="container">Вычет битого
                             <input className="BPix" id={`BPix_${id_f_nameF}`}

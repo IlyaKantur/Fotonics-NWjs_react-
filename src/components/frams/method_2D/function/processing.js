@@ -34,7 +34,8 @@ export default class Processing {
 
         this.minInt = masInformation_2D.MinInt; // Порог интенсивности, если < тогда 0 
 
-        this.dfon = masInformation_2D.DFon; // Значение вычитаемого шума
+        this.dfonfrom = masInformation_2D.DFonFrom; // Значение вычитаемого шума
+        this.dfonto = masInformation_2D.DFonTo;
 
         this.dbpix = masInformation_2D.DBPix; // Параметр вычет битого
 
@@ -229,17 +230,13 @@ export default class Processing {
                             let del = +((( (mas0[i - 1] == undefined ? 0 : mas0[i - 1])  + (mas0[i + this.ix] == undefined ? 0 : mas0[i + this.ix])
                                       + (mas0[i + 1] == undefined ? 0 : mas0[i + 1]) + (mas0[i - this.ix] == undefined ? 0 : mas0[i - this.ix]) ) / 4).toFixed(0));
                             
-                            if(i==700058)
-                            {
-                                console.log()
-                            }
                             if (mas0[i] > del + this.dbpix) {
-                                mas0[i] = del;
+                                mas0[i] = del + this.dbpix;
                             }
                         }
                         //уменьшение на заданое число
-                        if (this.delta && mas0[i] >= this.dfon) {
-                            mas0[i] -= this.dfon;
+                        if (this.delta && mas0[i] >= this.dfonfrom && mas0[i] <= this.dfonto) {
+                            mas0[i] = 0;
                         }
 
                         //усиление. метод 1
@@ -321,7 +318,7 @@ export default class Processing {
                 if (i % 4 == 3) {
                     continue;
                 }
-                if (imgClear.data[i] >= mas0[ii]) {
+                if (imgClear.data[i] > mas0[ii]) {
                     ii++
                     imgClear.data[i + 3] = 255
                     continue;
