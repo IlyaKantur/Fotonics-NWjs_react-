@@ -113,7 +113,7 @@ export default class Processing {
             this.ctxsum.drawImage(this.imgsum, 0, 0, this.cx, this.cy);
             this.ctxhs.drawImage(this.imgsum, 0, 0, this.ix, this.iy);
             
-            this.startOb = new Date().getTime();
+            this.startOb = performance.now();
             this.proces = true;
             this.onConsoleMessage('Начало обработки')
             this.workOnImg(this.masImg, this.chek_obsorv).then(({massum, masx, finished, oldY, imgnum}) => resolve({massum, masx, finished, oldY, imgnum}));
@@ -156,6 +156,9 @@ export default class Processing {
 
     processing = () => {
         return new Promise((resolve, reject) => {
+
+            if(this.imgnum == 0) console.log(`Начало  ${this.startOb - performance.now()}`)
+
             let imgg = this.masImg[this.imgnum];
             this.ctx.clearRect(0, 0, this.cx, this.cy);
             this.ctx.drawImage(imgg, 0, 0, this.cx, this.cy);
@@ -193,8 +196,13 @@ export default class Processing {
                 yfin = this.iy
             }
 
+            let s = performance.now();
+            let start = performance.now();
+
             if(!this.double_processing)
             {
+                
+                //Перевод снимка
                 for (let i = 0; i < imgData.length; i += 4) {
                     if (this.intPix) {
                         mas0[ii] = imgData[i];
@@ -211,6 +219,9 @@ export default class Processing {
                     }
                     ii++;
                 }
+
+                console.log(`Перевод снимка ${performance.now() - start}`)
+                start = performance.now();
 
                 // фильтрация
 
@@ -253,6 +264,9 @@ export default class Processing {
                     }              
                 }
 
+                console.log(`Фильтрация ${performance.now() - start}`)
+                start = performance.now();
+
                 //перепись до границ
 
                 for (let x = xbeg; x < xfin; x++) {
@@ -273,10 +287,16 @@ export default class Processing {
                     }
                 }
 
+                
+
+                // Запись для графика
                 for (let x = xbeg; x < xfin; x++) {
                     this.massum[x] += mas[x];
                     this.oldY[x] = this.massum[x];
                 }
+
+                console.log(`Границы ${performance.now() - start}`)
+                start = performance.now();
             }
 
             //суммарное фото
@@ -293,6 +313,8 @@ export default class Processing {
                 }
             }
 
+            console.log(`Суммарное 1 ${performance.now() - start}`)
+            start = performance.now();
 
             for (let i = 0; i < Img.data.length; i += 4) {
                 if (i % 4 == 3) {
@@ -306,6 +328,9 @@ export default class Processing {
                     Imgsum.data[i + 2] += Img.data[i + 2];
                 }
             }
+
+            console.log(`Суммарное 2 ${performance.now() - start}`)
+            start = performance.now();
 
             // очишенное изображение
             ii = 0;
@@ -345,6 +370,8 @@ export default class Processing {
                 }
                 
             }
+            console.log(`Суммарное 3 ${performance.now() - start}`)
+            
 
             //вывод в панель
 
@@ -353,12 +380,14 @@ export default class Processing {
             this.ctxhs.putImageData(imgSum, 0, 0);
             this.ctxsum.putImageData(Imgsum, 0, 0);
 
-            // Созранение фото
+            // Созданение фото
             
             this.imgnum++;
             let message = `Обработанано ${this.imgnum} снимков из ${this.masImg.length}`
             if(this.imgnum == 1) this.onConsoleMessage(message, false)
             else this.onConsoleMessage(message, true)
+
+            console.log(`Конец фото: ${performance.now() - s}`)
             
             console.log(message)
 
@@ -368,8 +397,13 @@ export default class Processing {
             let oldY = this.oldY;
             let imgnum = this.imgnum;
 
+            
+
             if ((this.imgnum == this.masImg.length && !this.chek_obsorv) || (this.iter && this.imgnum == this.iterN)) {
-                let message = `Обработана за: ${((new Date().getTime() - this.startOb) / 1000).toFixed(3)} секунд`
+
+                start = performance.now();
+
+                let message = `Обработана за: ${((performance.now() - this.startOb) / 1000).toFixed(3)} секунд`
                 console.log(message)
                 this.onConsoleMessage(message, false)
 
@@ -403,6 +437,8 @@ export default class Processing {
                     })
                 })
                 
+                console.log(`Сохранения фото ${performance.now() - start}`)
+
                 // if(fs.existsSync(path_write_image)) path_write_image = `result/image/${this.imgnum}_cope.jpg`
                 
 
