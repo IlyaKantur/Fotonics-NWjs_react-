@@ -196,8 +196,8 @@ export default class Processing {
                 yfin = this.iy
             }
 
-            let s = performance.now();
-            let start = performance.now();
+            // let s = performance.now();
+            // let start = performance.now();
 
             if(!this.double_processing)
             {
@@ -220,8 +220,8 @@ export default class Processing {
                     ii++;
                 }
 
-                console.log(`Перевод снимка ${performance.now() - start}`)
-                start = performance.now();
+                // console.log(`Перевод снимка ${performance.now() - start}`)
+                // start = performance.now();
 
                 // фильтрация
 
@@ -264,8 +264,8 @@ export default class Processing {
                     }              
                 }
 
-                console.log(`Фильтрация ${performance.now() - start}`)
-                start = performance.now();
+                // console.log(`Фильтрация ${performance.now() - start}`)
+                // start = performance.now();
 
                 //перепись до границ
 
@@ -295,8 +295,8 @@ export default class Processing {
                     this.oldY[x] = this.massum[x];
                 }
 
-                console.log(`Границы ${performance.now() - start}`)
-                start = performance.now();
+                // console.log(`Границы ${performance.now() - start}`)
+                // start = performance.now();
             }
 
             //суммарное фото
@@ -313,8 +313,8 @@ export default class Processing {
                 }
             }
 
-            console.log(`Суммарное 1 ${performance.now() - start}`)
-            start = performance.now();
+            // console.log(`Суммарное 1 ${performance.now() - start}`)
+            // start = performance.now();
 
             for (let i = 0; i < Img.data.length; i += 4) {
                 if (i % 4 == 3) {
@@ -329,8 +329,8 @@ export default class Processing {
                 }
             }
 
-            console.log(`Суммарное 2 ${performance.now() - start}`)
-            start = performance.now();
+            // console.log(`Суммарное 2 ${performance.now() - start}`)
+            // start = performance.now();
 
             // очишенное изображение
             ii = 0;
@@ -370,7 +370,7 @@ export default class Processing {
                 }
                 
             }
-            console.log(`Суммарное 3 ${performance.now() - start}`)
+            // console.log(`Суммарное 3 ${performance.now() - start}`)
             
 
             //вывод в панель
@@ -387,7 +387,7 @@ export default class Processing {
             if(this.imgnum == 1) this.onConsoleMessage(message, false)
             else this.onConsoleMessage(message, true)
 
-            console.log(`Конец фото: ${performance.now() - s}`)
+            // console.log(`Конец фото: ${performance.now() - s}`)
             
             console.log(message)
 
@@ -437,7 +437,7 @@ export default class Processing {
                     })
                 })
                 
-                console.log(`Сохранения фото ${performance.now() - start}`)
+                // console.log(`Сохранения фото ${performance.now() - start}`)
 
                 // if(fs.existsSync(path_write_image)) path_write_image = `result/image/${this.imgnum}_cope.jpg`
                 

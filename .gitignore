@@ -13,6 +13,8 @@
 # production
 /build
 /result/image
+/result/protocol
+/result/TestObr 
 
 # misc
 .DS_Store
