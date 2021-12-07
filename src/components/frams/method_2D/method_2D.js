@@ -213,7 +213,7 @@ export default class Method_2D extends PureComponent {
                 massum: massum,
             })
             if (!finished && !chek_obsorv) {
-                this.timerId = setInterval(() => this.work(folder), 10)
+                this.timerId = setInterval(() => this.work(folder), 0)
             }
             else if(!finished && chek_obsorv){
                 if(this.masImg.length == imgnum){
