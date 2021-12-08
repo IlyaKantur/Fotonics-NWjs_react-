@@ -8,6 +8,8 @@ import Alert from '../alert/alert.js';
 
 import './App.css';
 
+// import {GPU} from ('gpu.js')
+
 export default class App extends Component {
 
     constructor(props) {

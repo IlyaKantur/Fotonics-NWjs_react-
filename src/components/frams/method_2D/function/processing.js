@@ -1,5 +1,6 @@
-import loadImg from './loadImg.js';
+// import loadImg from './loadImg.js';
 const fs = window.require('fs');
+import {GPU} from 'gpu.js';
 
 export default class Processing {
 
@@ -51,7 +52,7 @@ export default class Processing {
         this.iy = 0;
         this.cx = 0;
         this.cy = 0;
-        this.imgfon = 0;
+        this.ImgFon = 0;
         this.startOb = 0;
         this.imgsum = new Image();
         this.proces = false;
@@ -75,7 +76,7 @@ export default class Processing {
         this.imgFolder = imgFolder;
 
         //Test
-        this.TimeSum = 0; 
+        this.TimeSum = 0;
     }
 
     read_x_y = () => {
@@ -109,7 +110,7 @@ export default class Processing {
                 this.fon_load = true
                 this.ctxhs.clearRect(0, 0, this.himg.width, this.himg.height);
                 this.ctxhs.drawImage(this.fon, 0, 0);
-                this.imgfon = this.ctxhs.getImageData(0, 0, this.ix, this.iy).data;
+                this.ImgFon = this.ctxhs.getImageData(0, 0, this.ix, this.iy).data;
                 this.ctxhs.clearRect(0, 0, this.himg.width, this.himg.height);
             }
 
@@ -118,7 +119,7 @@ export default class Processing {
             
             this.startOb = performance.now();
             this.proces = true;
-            this.onConsoleMessage('Начало обработки')
+            this.onConsoleMessage('Начало обработки', false)
             this.workOnImg(this.masImg, this.chek_obsorv).then(({massum, masx, finished, oldY, imgnum}) => resolve({massum, masx, finished, oldY, imgnum}));
         })
     }
@@ -136,7 +137,7 @@ export default class Processing {
     processing = () => {
         return new Promise((resolve, reject) => {
 
-            if(this.imgnum == 0) console.log(`Начало  ${performance.now() - this.startOb}`)
+            // if(this.imgnum == 0) console.log(`Начало  ${performance.now() - this.startOb}`)
 
             let imgg = this.masImg[this.imgnum];
             this.ctx.clearRect(0, 0, this.cx, this.cy);
@@ -148,12 +149,12 @@ export default class Processing {
             let ImgSum = this.ctxsum.getImageData(0, 0, this.cx, this.cy);
             let ImgSumH = this.ctxhs.getImageData(0, 0, this.ix, this.iy);
             let ImgClear = this.ctxhc.getImageData(0, 0, this.ix, this.iy);
-            let mas0 = [];
+            // let mas0 = [];
             let mas = [];
             let masfon = [];
             let ii = 0;
             let yy = 0;
-            let xbeg, xfin, ybeg, yfin;
+            let xbeg, xfin, ybeg, yfin, beg, fin;
 
             let ibeg = 0;
             let ifin = this.ix * this.iy;
@@ -167,6 +168,8 @@ export default class Processing {
                 ibeg = ybeg * this.ix + xbeg;
                 ifin = yfin * this.ix + xfin;
 
+                beg = (ybeg * this.ix + xbeg) * 4;
+                fin = (yfin * this.ix + xfin) * 4;
 
             } else {
                 xbeg = 0;
@@ -180,31 +183,56 @@ export default class Processing {
 
             if(!this.double_processing)
             {
-                
                 //Перевод снимка
-                for (let i = 0; i < ImgDataH.length; i += 4) {
-                    if (this.intPix) {
-                        mas0[ii] = ImgDataH[i];
-                        if(this.fon_load) masfon[ii] = this.imgfon[i]
+                // for (let i = 0; i < ImgDataH.length; i += 4) {
+                //     if (this.intPix) {
+                //         mas0[ii] = ImgDataH[i];
+                //         // if(this.fon_load) masfon[ii] = this.ImgFon[i]
+                //     }
+                //     else
+                //     {
+                //         if(ImgDataH[i] >= this.minInt) {
+                //             mas0[ii] = 1
+                //         }
+                //         else{
+                //             mas0[ii] = 0;
+                //         }
+                //     }
+                //     ii++;
+                // }
+
+                const gpu = new GPU();
+                const kernel = gpu.createKernel(function() {
+                    const i = 1;
+                    const j = 0.89;
+                    return i + j;
+                   }).setOutput([ImgDataH.length]);
+                
+                const c = kernel();
+
+
+                let test = [];
+                for(let i = 0; i < ImgDataH.length; i++) test[i] = i
+
+                const gpu = new GPU();
+                const getMas0 = gpu.createKernel((test)=>{
+                    let mas0 = [];
+                    let ii = 0;
+                    for (let i = 0; i < test.length; i += 4) {
+                        mas0[ii] = test[i];
+                        ii++;
                     }
-                    else
-                    {
-                        if(ImgDataH[i] >= this.minInt) {
-                            mas0[ii] = 1
-                        }
-                        else{
-                            mas0[ii] = 0;
-                        }
-                    }
-                    ii++;
-                }
+                    return mas0
+                }).setOutput([test.length])
+                
+                let mas0 = getMas0(test);
 
                 console.log(`Перевод снимка ${performance.now() - start}`)
                 start = performance.now();
 
                 // фильтрация
 
-                if ((!this.bf &&(this.fon_load || this.delta || this.bpix )) || this.gain1) {  
+                if ((!this.bf &&(this.fon_load || this.delta || this.bpix )) || this.gain1) {
 
                     ii = xbeg;
                     for(let i = ibeg; i < ifin; i++){
@@ -243,7 +271,7 @@ export default class Processing {
                     }              
                 }
 
-                console.log(`Фильтрация ${performance.now() - start}`)
+                // console.log(`Фильтрация ${performance.now() - start}`)
                 start = performance.now();
 
                 //Суммирование
@@ -272,7 +300,7 @@ export default class Processing {
                     this.oldY[x] = this.massum[x];
                 }
 
-                console.log(`Границы ${performance.now() - start}`)
+                // console.log(`Границы ${performance.now() - start}`)
                 start = performance.now();
             }
 
@@ -291,35 +319,35 @@ export default class Processing {
                 }
             }
 
-            console.log(`Суммарное 1 ${performance.now() - start}`)
+            // console.log(`Суммарное 1 ${performance.now() - start}`)
             start = performance.now();
 
             if(this.imgnum == 0){
                 ImgClear.data.map(item => item = 0)
             }
 
+            ii = 0;
             for (let i = 0; i < ImgDataH.length; i += 4) {
                 if (i % 4 == 3) {
                     continue;
                 }
-                if (ImgSumH.data[i] >= ImgDataH[i]) {
-                    continue;
-                } else {
+                if (ImgSumH.data[i] < ImgDataH[i]) 
+                {
                     ImgSumH.data[i] += ImgDataH[i];
                     ImgSumH.data[i + 1] += ImgDataH[i + 1];
                     ImgSumH.data[i + 2] += ImgDataH[i + 2];
                 }
-                if(ImgClear.data[i] >= mas0[ii]){
-                    continue;
-                } else{
+                if(ImgClear.data[i] < mas0[ii])
+                {
                     ImgClear.data[i] += mas0[ii];
                     ImgClear.data[i + 1] += mas0[ii];
                     ImgClear.data[i + 2] += mas0[ii];
                     ImgClear.data[i + 3] = 255;
                 }
+                ii++
             }
 
-            console.log(`Суммарное 2 ${performance.now() - start}`)
+            // console.log(`Суммарное 2 ${performance.now() - start}`)
             start = performance.now();
 
             // очишенное изображение
@@ -377,8 +405,8 @@ export default class Processing {
             if(this.imgnum == 1) this.onConsoleMessage(message, false)
             else this.onConsoleMessage(message, true)
 
-            this.TimeSum += performance.now() - s
-            console.log(`КОНЕЦ ФОТО: ${this.TimeSum}`)
+            
+            // console.log(`КОНЕЦ ФОТО: ${performance.now() - s}`)
             
             console.log(message)
 
@@ -397,6 +425,7 @@ export default class Processing {
                 let message = `Обработана за: ${((performance.now() - this.startOb) / 1000).toFixed(3)} секунд`
                 console.log(message)
                 this.onConsoleMessage(message, false)
+                
 
                 const url = this.himgsum.toDataURL('image/jpg');
                 const base64Data = url.replace(/^data:image\/png;base64,/, "");
@@ -428,13 +457,17 @@ export default class Processing {
                     })
                 })
                 
-                console.log(`Сохранения фото ${performance.now() - start}`)
+                // console.log(`Сохранения фото ${performance.now() - start}`)
 
                 // if(fs.existsSync(path_write_image)) path_write_image = `result/image/${this.imgnum}_cope.jpg`
                 
-
                 finished = true;
+                this.TimeSum += performance.now() - s;
+                console.log(`Суммарное время: ${((this.TimeSum) / 1000).toFixed(3)} сек`)
             }
+            console.log(performance.now() - s)
+            this.TimeSum += performance.now() - s;
+
             resolve({
                 massum,
                 masx,

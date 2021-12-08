@@ -204,7 +204,7 @@ export default class Method_2D extends PureComponent {
         })
 
         this.proces.start().then(({ massum, masx, finished, oldY, imgnum }) => {
-            this.reloadData(masx, massum)
+            // this.reloadData(masx, massum)
             this.imgnum = imgnum;
             this.finished = finished;
             this.setState({
@@ -241,7 +241,7 @@ export default class Method_2D extends PureComponent {
         const {chek_obsorv} = this.masInformation_2D;
         this.proces.workOnImg(this.masImg, chek_obsorv).then(({ massum, masx, finished, oldY, imgnum }) => {
             if(chek_obsorv) this.masImg[this.imgnum] = null;
-            this.reloadData(masx, massum)
+            // this.reloadData(masx, massum)
             this.imgnum = imgnum;
             this.finished = finished;
             this.setState({
@@ -267,7 +267,6 @@ export default class Method_2D extends PureComponent {
                     coor_masx: masx
                 })
             }
-
             // let req = requestAnimationFrame(() => this.work(id_f_nameF, chek_obsorv));
             // if (finished) {
             //     cancelAnimationFrame(req);

@@ -73,6 +73,7 @@
     "babel-loader": "^8.2.2",
     "express": "^4.17.1",
     "fomantic-ui": "^2.8.8",
+    "gpu.js": "^2.11.4",
     "http-server": "^13.0.2",
     "nwjs": "^1.4.4",
     "nwjs-packager": "^1.5.0",
