@@ -77,6 +77,7 @@ export default class Processing {
 
         //Test
         this.TimeSum = 0;
+        this.gpu = new GPU();
     }
 
     read_x_y = () => {
@@ -149,7 +150,7 @@ export default class Processing {
             let ImgSum = this.ctxsum.getImageData(0, 0, this.cx, this.cy);
             let ImgSumH = this.ctxhs.getImageData(0, 0, this.ix, this.iy);
             let ImgClear = this.ctxhc.getImageData(0, 0, this.ix, this.iy);
-            // let mas0 = [];
+            let mas0 = [];
             let mas = [];
             let masfon = [];
             let ii = 0;
@@ -184,48 +185,43 @@ export default class Processing {
             if(!this.double_processing)
             {
                 //Перевод снимка
-                // for (let i = 0; i < ImgDataH.length; i += 4) {
-                //     if (this.intPix) {
-                //         mas0[ii] = ImgDataH[i];
-                //         // if(this.fon_load) masfon[ii] = this.ImgFon[i]
-                //     }
-                //     else
-                //     {
-                //         if(ImgDataH[i] >= this.minInt) {
-                //             mas0[ii] = 1
+                for (let i = 0; i < ImgDataH.length; i += 4) {
+                    if (this.intPix) {
+                        mas0[ii] = ImgDataH[i];
+                        // if(this.fon_load) masfon[ii] = this.ImgFon[i]
+                    }
+                    else
+                    {
+                        if(ImgDataH[i] >= this.minInt) {
+                            mas0[ii] = 1
+                        }
+                        else{
+                            mas0[ii] = 0;
+                        }
+                    }
+                    ii++;
+                }
+
+                //
+
+                // function gpuMultiplyMatrix() {
+                //     const gpu = new GPU();
+                //     const multiplyMatrix = gpu.createKernel(function (a, matrixSize) {
+                //         let sum = 0;
+                    
+                //         for (let i = 0; i < matrixSize; i++) {
+                //             sum += a[this.thread.y][i];
                 //         }
-                //         else{
-                //             mas0[ii] = 0;
-                //         }
-                //     }
-                //     ii++;
+                //         return sum;
+                //     }).setOutput([matrixSize, 1])
+
+                //     const resultMatrix = multiplyMatrix(ImgDataH, ImgDataH.length);
+                
+                //     return resultMatrix;
                 // }
 
-                const gpu = new GPU();
-                const kernel = gpu.createKernel(function() {
-                    const i = 1;
-                    const j = 0.89;
-                    return i + j;
-                   }).setOutput([ImgDataH.length]);
-                
-                const c = kernel();
-
-
-                let test = [];
-                for(let i = 0; i < ImgDataH.length; i++) test[i] = i
-
-                const gpu = new GPU();
-                const getMas0 = gpu.createKernel((test)=>{
-                    let mas0 = [];
-                    let ii = 0;
-                    for (let i = 0; i < test.length; i += 4) {
-                        mas0[ii] = test[i];
-                        ii++;
-                    }
-                    return mas0
-                }).setOutput([test.length])
-                
-                let mas0 = getMas0(test);
+                // console.log(gpuMultiplyMatrix());
+                //
 
                 console.log(`Перевод снимка ${performance.now() - start}`)
                 start = performance.now();
@@ -463,9 +459,11 @@ export default class Processing {
                 
                 finished = true;
                 this.TimeSum += performance.now() - s;
-                console.log(`Суммарное время: ${((this.TimeSum) / 1000).toFixed(3)} сек`)
+                const mes = `Суммарное время: ${((this.TimeSum) / 1000).toFixed(3)} секунд`
+                console.log(mes)
+                this.onConsoleMessage(mes, false)
             }
-            console.log(performance.now() - s)
+            console.log(`${(performance.now() - s) / 1000} секунд`)
             this.TimeSum += performance.now() - s;
 
             resolve({
