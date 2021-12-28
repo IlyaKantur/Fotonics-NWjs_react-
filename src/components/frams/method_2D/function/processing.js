@@ -155,6 +155,7 @@ export default class Processing {
             let masfon = [];
             let ii = 0;
             let yy = 0;
+            
             let xbeg, xfin, ybeg, yfin, beg, fin;
 
             let ibeg = 0;
@@ -184,11 +185,12 @@ export default class Processing {
 
             if(!this.double_processing)
             {
+                let zz = 0;
                 //Перевод снимка
                 for (let i = 0; i < ImgDataH.length; i += 4) {
                     if (this.intPix) {
                         mas0[ii] = ImgDataH[i];
-                        // if(this.fon_load) masfon[ii] = this.ImgFon[i]
+                        if(this.fon_load) masfon[ii] = this.ImgFon[i]
                     }
                     else
                     {
@@ -202,26 +204,6 @@ export default class Processing {
                     ii++;
                 }
 
-                //
-
-                // function gpuMultiplyMatrix() {
-                //     const gpu = new GPU();
-                //     const multiplyMatrix = gpu.createKernel(function (a, matrixSize) {
-                //         let sum = 0;
-                    
-                //         for (let i = 0; i < matrixSize; i++) {
-                //             sum += a[this.thread.y][i];
-                //         }
-                //         return sum;
-                //     }).setOutput([matrixSize, 1])
-
-                //     const resultMatrix = multiplyMatrix(ImgDataH, ImgDataH.length);
-                
-                //     return resultMatrix;
-                // }
-
-                // console.log(gpuMultiplyMatrix());
-                //
 
                 console.log(`Перевод снимка ${performance.now() - start}`)
                 start = performance.now();
@@ -270,16 +252,17 @@ export default class Processing {
                 // console.log(`Фильтрация ${performance.now() - start}`)
                 start = performance.now();
 
-                //Суммирование
+                //Накопление
 
                 for (let x = xbeg; x < xfin; x++) {
                     if (this.imgnum == 0) {
                         this.massum[x] = 0;
                     }
                     mas[x] = 0;
-                    this.masx[x] = x;
-                    this.oldX[x] = this.masx[x];
+                    // this.masx[x] = x;
+                    // this.oldX[x] = this.masx[x];
                 }
+
                 for (let y = ybeg; y < yfin; y++) {
                     for (let x = xbeg; x < xfin; x++) {
                         mas[x] += mas0[yy];
@@ -290,17 +273,32 @@ export default class Processing {
                     }
                 }
 
+                let m = []; ii = 0;
+                for(let i = 0; i < (xfin - xbeg) / 4; i++)
+                {
+                    m[i] = 0;
+                    for(let j = 0; j < 4; j++)
+                    {
+                        m[i] += mas[ii];
+                        ii++;
+                    }
+                    this.masx[i] = i;
+                }
+                mas = m.slice();
+                this.oldX = this.masx.slice();
+
                 // Запись для графика
-                for (let x = xbeg; x < xfin; x++) {
+                for (let x = xbeg; x < mas.length; x++) {
                     this.massum[x] += mas[x];
                     this.oldY[x] = this.massum[x];
                 }
+
 
                 // console.log(`Границы ${performance.now() - start}`)
                 start = performance.now();
             }
 
-            //суммарное фото
+            //накопленое фото
 
             for (let i = 0; i < Img.data.length; i += 4) {
                 if (i % 4 == 3) {

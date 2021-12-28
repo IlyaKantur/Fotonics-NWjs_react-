@@ -169,7 +169,7 @@ export default class Bars extends PureComponent {
                             <li><input className="DBPix" id={`DBPix_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
-                                placeholder="Параметр битого: 20"
+                                placeholder="Параметр битого: 0"
                             />
                             </li>
                             <li><button id="Fonfold" onClick={() => loadFonImg(id_f_nameF)}>Фон</button></li>

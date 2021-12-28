@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, {Component, PureComponent } from 'react';
 import L_P_Panel from './parts/l_p_panel.js';
 import loadImg from './function/loadImg.js';
 import Processing from './function/processing.js'
@@ -39,7 +39,7 @@ export default class Method_2D extends PureComponent {
             DFonFrom: 3,
             DFonTo: 6,
             BPix: false,
-            DBPix: 20,
+            DBPix: 0,
             gain1: false,
             k_gain1: 0,
             minInt_gain1: 100,

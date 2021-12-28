@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 const fs = window.require('fs');
 import Menu from '../main/manu.js';
 // import MenuBar from '../main/MenuBar';
@@ -10,7 +10,7 @@ import './App.css';
 
 // import {GPU} from ('gpu.js')
 
-export default class App extends Component {
+export default class App extends PureComponent {
 
     constructor(props) {
         super(props)

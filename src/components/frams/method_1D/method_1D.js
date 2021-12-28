@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, {Component, PureComponent } from 'react';
 
 // import Plotly from 'plotly.js/lib/core';
 // import createPlotlyComponent from 'react-plotly.js/factory';
