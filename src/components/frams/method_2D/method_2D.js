@@ -43,6 +43,8 @@ export default class Method_2D extends PureComponent {
             gain1: false,
             k_gain1: 0,
             minInt_gain1: 100,
+            SumPix: false,
+            SumPixN: 2,
             n_smoothing: 3,
             en_first_point: 0,
             en_second_point: 0,

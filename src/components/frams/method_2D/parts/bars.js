@@ -252,6 +252,19 @@ export default class Bars extends PureComponent {
                                 type="number"
                                 placeholder='Количество'
                             /></li>
+                            <li><label className="container">Суммирование
+                            <input className="SumPix" id={`SumPix_${id_f_nameF}`}
+                                    onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                                    type="checkbox"
+                                    defaultChecked={masInformation_2D.SumPix}
+                                />
+                                <span className="checkmark"></span>
+                            </label></li>
+                            <li><input className="SumPixN" id={`SumPixN_${id_f_nameF}`}
+                                onChange={(e) => stored_value(e.target.className, +e.target.value)}
+                                type="number"
+                                placeholder={`Сум. по: ${masInformation_2D.SumPixN}`}
+                            /></li>
                             <li><label className="container">Инт. Пикселя
                             <input className="IntPix" id={`IntPix_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
