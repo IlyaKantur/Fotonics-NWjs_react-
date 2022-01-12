@@ -272,7 +272,7 @@ export default class Processing {
                     }
                 }
                 if(this.sumpix){
-                    let m = []; j = -1; ii = 0; this.masx = []
+                    let m = []; j = -1; ii = 0;
                     for (let i = 0; i < (xfin - xbeg) / this.sumpixN; i++) {
                         m[i] = 0;
                         for (let j = 0; j < this.sumpixN; j++) {
@@ -283,7 +283,7 @@ export default class Processing {
                     mas = m.slice();
                 }
 
-                this.oldX = this.masx.slice();
+                if (this.imgnum == 0) this.oldX = this.masx.slice();
 
                 // Запись для графика
                 for (let x = 0; x < mas.length; x++) {
