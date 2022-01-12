@@ -149,12 +149,12 @@ export default class Bars extends PureComponent {
                                     <input className="DFonFrom" id={`DFonFrom_${id_f_nameF}`}
                                         onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                         type="number"
-                                        placeholder="От: 3"
+                                        placeholder={`От: ${masInformation_2D.DFonFrom}`}
                                     />
                                     <input className="DFonTo" id={`DFonTo_${id_f_nameF}`}
                                         onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                         type="number"
-                                        placeholder="До: 6"
+                                        placeholder={`До: ${masInformation_2D.DFonTo}`}
                                     />
                                 </div>
                             </li>

@@ -36,7 +36,7 @@ export default class Method_2D extends PureComponent {
             MinInt: 5,
             BF: false,
             Delta: false,
-            DFonFrom: 3,
+            DFonFrom: 0,
             DFonTo: 6,
             BPix: false,
             DBPix: 0,

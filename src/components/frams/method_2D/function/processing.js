@@ -230,7 +230,7 @@ export default class Processing {
                                 mas0[i] = del + this.dbpix;
                             }
                         }
-                        //уменьшение на заданое число
+                        //убирать в заданом интервале
                         if (this.delta && mas0[i] >= this.dfonfrom && mas0[i] <= this.dfonto) {
                             mas0[i] = 0;
                         }
@@ -255,43 +255,44 @@ export default class Processing {
                 //Накопление
 
                 for (let x = xbeg; x < xfin; x++) {
-                    if (this.imgnum == 0) {
-                        this.massum[x] = 0;
-                    }
                     mas[x] = 0;
                     // this.masx[x] = x;
                     // this.oldX[x] = this.masx[x];
                 }
+
 
                 for (let y = ybeg; y < yfin; y++) {
                     for (let x = xbeg; x < xfin; x++) {
                         mas[x] += mas0[yy];
                         yy += 1;
                     }
-                    if (this.gran) {
+                    if 
+                    (this.gran) {
                         yy += (this.ix - xfin) + xbeg
                     }
                 }
 
-                let m = []; ii = 0;
-                for(let i = 0; i < (xfin - xbeg) / 4; i++)
+                let m = [], j = -1; ii = xbeg; 
+                for(let i = 0; i < (xfin -  xbeg)/ 2; i++)
                 {
                     m[i] = 0;
-                    for(let j = 0; j < 4; j++)
+                    for(let j = 0; j < 2; j++)
                     {
-                        m[i] += mas[ii];
-                        ii++;
+                        m[i] += mas[ii++];
                     }
-                    this.masx[i] = i;
+                    this.masx[++j] = j;
                 }
                 mas = m.slice();
                 this.oldX = this.masx.slice();
 
                 // Запись для графика
-                for (let x = xbeg; x < mas.length; x++) {
+                for (let x = 0; x < mas.length; x++) {
+                    if (this.imgnum == 0) {
+                        this.massum[x] = 0;
+                    }
                     this.massum[x] += mas[x];
-                    this.oldY[x] = this.massum[x];
                 }
+                this.oldY = this.massum.slice();
 
 
                 // console.log(`Границы ${performance.now() - start}`)
