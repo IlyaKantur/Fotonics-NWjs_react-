@@ -43,8 +43,8 @@ export default class Processing {
         this.k_gain1 = masInformation_2D.k_gain1; // Коэффициент усиление. метод 1
         this.minInt_gain1 = masInformation_2D.minInt_gain1; // Порог интенсивнотси, выше которого усиление. метод 1
 
-        this.sumpix = masInformation_2D.SumPix; // Суммирование пикселей, прим. 2->1
-        this.sumpixN = masInformation_2D.SumPixN; // Коэф суммирования.
+        this.sumcolumn = masInformation_2D.SumСolumn; // Суммирование пикселей, прим. 2->1
+        this.sumcolumnN = masInformation_2D.SumСolumnN; // Коэф суммирования.
 
         this.g_Xx = masInformation_2D.Xx;
         this.g_XX = masInformation_2D.XX;
@@ -271,11 +271,11 @@ export default class Processing {
                         yy += (this.ix - xfin) + xbeg
                     }
                 }
-                if(this.sumpix){ 
+                if(this.sumcolumn){ 
                     let m = []; j = -1; ii = 0;
-                    for (let i = 0; i < (xfin - xbeg) / this.sumpixN; i++) {
+                    for (let i = 0; i < (xfin - xbeg) / this.sumcolumnN; i++) {
                         m[i] = 0;
-                        for (let j = 0; j < this.sumpixN; j++) {
+                        for (let j = 0; j < this.sumcolumnN; j++) {
                             m[i] += mas[ii++];
                         }
                         if (this.imgnum == 0) this.masx[++j] = j;
