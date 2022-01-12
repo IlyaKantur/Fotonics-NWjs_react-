@@ -271,7 +271,7 @@ export default class Processing {
                         yy += (this.ix - xfin) + xbeg
                     }
                 }
-                if(this.sumpix){
+                if(this.sumpix){ 
                     let m = []; j = -1; ii = 0;
                     for (let i = 0; i < (xfin - xbeg) / this.sumpixN; i++) {
                         m[i] = 0;
