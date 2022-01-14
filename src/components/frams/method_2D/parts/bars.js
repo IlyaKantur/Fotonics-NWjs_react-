@@ -256,14 +256,14 @@ export default class Bars extends PureComponent {
                             <input className="SumСolumn" id={`SumСolumn_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
                                     type="checkbox"
-                                    defaultChecked={masInformation_2D.SumPix}
+                                    defaultChecked={masInformation_2D.SumСolumn}
                                 />
                                 <span className="checkmark"></span>
                             </label></li>
                             <li><input className="SumСolumnN" id={`SumСolumnN_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
-                                placeholder={`Сум. по: ${masInformation_2D.SumPixN}`}
+                                placeholder={`Сум. по: ${masInformation_2D.SumСolumnN}`}
                             /></li>
                             <li><label className="container">Инт. Пикселя
                             <input className="IntPix" id={`IntPix_${id_f_nameF}`}
