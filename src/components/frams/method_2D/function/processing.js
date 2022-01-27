@@ -156,10 +156,8 @@ export default class Processing {
             let mas0 = [];
             let mas = [];
             let masfon = [];
-            let ii = 0;
-            let yy = 0;
 
-            let xbeg, xfin, ybeg, yfin, beg, fin;
+            let xbeg, xfin, ybeg, yfin, beg, fin, j = 0, ii = 0, yy = 0;
 
             let ibeg = 0;
             let ifin = this.ix * this.iy;
@@ -168,7 +166,7 @@ export default class Processing {
                 xfin = +this.g_XX;
                 ybeg = +this.g_Yy;
                 yfin = +this.g_YY;
-                yy = ybeg * this.ix + xbeg;
+                // yy = ybeg * this.ix + xbeg;
 
                 ibeg = ybeg * this.ix + xbeg;
                 ifin = yfin * this.ix + xfin;
@@ -182,6 +180,7 @@ export default class Processing {
                 ybeg = 0;
                 yfin = this.iy
             }
+            let x_x = xfin - xbeg, y_y = yfin - ybeg;
 
             let s = performance.now();
             let start = performance.now();
@@ -205,6 +204,18 @@ export default class Processing {
                     ii++;
                 }
 
+                //SUMCOL
+                let m = [], jj = 0, x = -1; ii = ibeg;
+                for (let i = 0; i < (x_x / (this.sumcolumn ? this.sumcolumnN : 1)) * (y_y); i++) {
+                    m[i] = 0;
+                    for (let j = 0; j < (this.sumcolumn ? this.sumcolumnN : 1); j++) {
+                        m[i] += mas0[ii++]; jj++;
+                    }
+                    if (jj >= x_x && this.gran) { ii += (this.ix - xfin) + xbeg; jj = 0; }
+                    if (this.imgnum == 0) this.masx[++x] = x;
+                }
+                mas0 = m.slice();
+                //
 
                 console.log(`Перевод снимка ${performance.now() - start}`)
                 start = performance.now();
@@ -214,7 +225,7 @@ export default class Processing {
                 if ((!this.bf && (this.fon_load || this.delta || this.bpix)) || this.gain1) {
 
                     ii = xbeg;
-                    for (let i = ibeg; i < ifin; i++) {
+                    for (let i = 0; i < (ifin - ibeg) / (this.sumcolumn ? this.sumcolumnN : 1); i++) {
 
                         //вычитание фонового изображения
                         if (this.fon_load) {
@@ -254,34 +265,50 @@ export default class Processing {
 
                 //Накопление
 
-                for (let x = 0; x < xfin - xbeg; x++) {
+                //
+                for (let x = 0; x < ((x_x) / (this.sumcolumn ? this.sumcolumnN : 1)); x++) {
                     mas[x] = 0;
                     if (this.imgnum == 0) this.masx[x] = x;
-                    // this.oldX[x] = this.masx[x];
                 }
-
-                let j = 0;
-                for (let y = ybeg; y < yfin; y++) {
-                    for (let x = 0; x < xfin - xbeg; x++) {
+                for (let y = 0; y < y_y; y++) {
+                    for (let x = 0; x < ((x_x) / (this.sumcolumn ? this.sumcolumnN : 1)); x++) {
                         mas[x] += mas0[yy];
                         yy += 1;
                     }
-                    if
-                        (this.gran) {
-                        yy += (this.ix - xfin) + xbeg
-                    }
+                    // if(this.gran) {
+                    //     yy += (this.ix - xfin) + xbeg
+                    // }
                 }
-                if(this.sumcolumn){ 
-                    let m = []; j = -1; ii = 0;
-                    for (let i = 0; i < (xfin - xbeg) / this.sumcolumnN; i++) {
-                        m[i] = 0;
-                        for (let j = 0; j < this.sumcolumnN; j++) {
-                            m[i] += mas[ii++];
-                        }
-                        if (this.imgnum == 0) this.masx[++j] = j;
-                    }
-                    mas = m.slice();
-                }
+
+                //
+
+                // for (let x = 0; x < xfin - xbeg; x++) {
+                //     mas[x] = 0;
+                //     if (this.imgnum == 0) this.masx[x] = x;
+                //     // this.oldX[x] = this.masx[x];
+                // }
+
+
+                // for (let y = 0; y < yfin - ybeg; y++) {
+                //     for (let x = 0; x < xfin - xbeg; x++) {
+                //         mas[x] += mas0[yy];
+                //         yy += 1;
+                //     }
+                //     // if(this.gran) {
+                //     //     yy += (this.ix - xfin) + xbeg
+                //     // }
+                // }
+                // if(this.sumcolumn){ 
+                //     let m = []; j = -1; ii = 0;
+                //     for (let i = 0; i < (xfin - xbeg) / this.sumcolumnN; i++) {
+                //         m[i] = 0;
+                //         for (let j = 0; j < this.sumcolumnN; j++) {
+                //             m[i] += mas[ii++];
+                //         }
+                //         if (this.imgnum == 0) this.masx[++j] = j;
+                //     }
+                //     mas = m.slice();
+                // }
 
                 if (this.imgnum == 0) this.oldX = this.masx.slice();
 
