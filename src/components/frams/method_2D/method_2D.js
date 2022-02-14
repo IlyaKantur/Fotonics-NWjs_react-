@@ -1,4 +1,4 @@
-import React, {Component, PureComponent } from 'react';
+import React, {PureComponent } from 'react';
 import L_P_Panel from './parts/l_p_panel.js';
 import loadImg from './function/loadImg.js';
 import Processing from './function/processing.js'
@@ -83,17 +83,18 @@ export default class Method_2D extends PureComponent {
 
 
     reloadData = (masx, massum) => {
+        let mx = [], msum = [];
+        mx = masx.slice();
+        msum = massum.slice();
         const data = [
             {
-                x: masx,
-                y: massum,
+                x: mx,
+                y: msum,
                 type: 'scatter',
                 mode: 'lines+markers',
                 marker: { color: 'red' }
             }];
         this.setState({
-            masx: masx,
-            massum: massum,
             data: data,
             revision: this.state.revision + 1
         })
@@ -122,17 +123,16 @@ export default class Method_2D extends PureComponent {
     }
 
     applyCoor = () => {
-        const { masx } = this.state;
+        const { coor_masx } = this.state;
         let massum = [];
         if (this.finished) {
             let masInput = document.querySelectorAll('.y_input_2D');
             for (let i = 0; i < masInput.length; i++) {
                 massum[i] = +masInput[i].value;
             }
-            this.reloadData(masx, massum)
+            this.reloadData(coor_masx, massum)
             this.setState({
                 coor_massum: massum,
-                coor_masx: masx
             })
         }
     }
@@ -149,7 +149,6 @@ export default class Method_2D extends PureComponent {
             this.reloadData(masx, oldY)
             this.setState({
                 coor_massum: massum,
-                coor_masx: masx
             })
         }
     }
@@ -243,7 +242,7 @@ export default class Method_2D extends PureComponent {
         const {chek_obsorv} = this.masInformation_2D;
         this.proces.workOnImg(this.masImg, chek_obsorv).then(({ massum, masx, finished, oldY, imgnum }) => {
             if(chek_obsorv) this.masImg[this.imgnum] = null;
-            this.reloadData(masx, massum)
+            if(imgnum % 3 === 0) {this.reloadData(masx, massum)}
             this.imgnum = imgnum;
             this.finished = finished;
             this.setState({
@@ -306,7 +305,6 @@ export default class Method_2D extends PureComponent {
             this.reloadData(this.state.masx, massum);
             this.setState({
                 coor_massum: massum,
-                coor_masx: this.state.masx
             })
         }
     }

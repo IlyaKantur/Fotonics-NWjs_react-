@@ -63,7 +63,7 @@
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^5.10.0",
     "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^4.0.0"
+    "webpack-dev-server": "^4.7.4"
   },
   "dependencies": {
     "@babel/core": "^7.12.9",
@@ -78,6 +78,7 @@
     "nwjs": "^1.4.4",
     "nwjs-packager": "^1.5.0",
     "plotly.js": "^1.58.5",
+    "plotly.js-basic-dist-min": "^2.9.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-plotly.js": "^2.5.1",

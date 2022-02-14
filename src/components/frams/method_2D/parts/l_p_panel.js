@@ -12,6 +12,7 @@ import Console from '../../../console/console.js';
 
 export default class L_P_Panel extends PureComponent {
 
+
     state = {
         active_l_t: 1,
     }
@@ -34,6 +35,8 @@ export default class L_P_Panel extends PureComponent {
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
         let element, button_active_1, button_active_2, z1, z2;
+
+
         if (active_l_t == 1) {
             button_active_1 = "button_active";
             button_active_2 = "";

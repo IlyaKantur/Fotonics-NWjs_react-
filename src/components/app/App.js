@@ -26,7 +26,7 @@ export default class App extends PureComponent {
     state = {
         tab: [
             { nameWP: "choice", text: "Выбор", id_t: '1' },
-            // { nameWP: 'method_1D', text: "Обработка_1D", id_t: '1' },
+            { nameWP: 'method_1D', text: "Обработка_1D", id_t: '1' },
             { nameWP: "method_2D", text: "Обработка_2D", id_t: '1' },
             { nameWP: "PTE", text: "PTE", id_t: '1' },
             { nameWP: "camera", text: "Камера", id_t: '1' }
@@ -34,12 +34,12 @@ export default class App extends PureComponent {
         ],
         frame: [
             { nameF: "choice", id_f: '1' },
-            // { nameF: 'method_1D', id_f: '1' },
+            { nameF: 'method_1D', id_f: '1' },
             { nameF: "method_2D", id_f: '1' },
             { nameF: "PTE", id_f: '1' },
             { nameF: "camera", id_f: '1' }
         ],
-        activeFrame: { name: "method_2D", id: '1' },
+        activeFrame: { name: "method_1D", id: '1' },
         activeAlert: [{ text: 'test крестика', id: '0' }],
         baseElement: []
     }
