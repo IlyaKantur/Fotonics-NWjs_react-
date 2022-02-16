@@ -6,8 +6,8 @@ import Method_2D from './method_2D/method_2D.js';
 import PTE from './PTE/PTE.js';
 import Camera from './camera/camera.js';
 
-// import Plot from 'react-plotly.js';
-import Plot from 'plotly.js-basic-dist-min'
+import Plot from 'react-plotly.js';
+// import Plot from 'plotly.js-basic-dist-min'
 
 import './frames.css'
 
