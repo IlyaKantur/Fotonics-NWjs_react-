@@ -1,6 +1,5 @@
 // import loadImg from './loadImg.js';
 const fs = window.require('fs');
-import { GPU } from 'gpu.js';
 
 export default class Processing {
 
@@ -80,7 +79,6 @@ export default class Processing {
 
         //Test
         this.TimeSum = 0;
-        this.gpu = new GPU();
     }
 
     read_x_y = () => {
