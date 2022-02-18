@@ -17,7 +17,10 @@ export default class Method_1D extends PureComponent {
         this.revision_file = 0
         this.masInformation = {
             method: 'Однокоординатный',
+            Title: '',
             nameElement: '',
+            kA: false,
+            kB: false,
             AxisX: 'Energy',
             AxisY: 'Intensivnosti',
             countSum: 1,
@@ -205,7 +208,8 @@ export default class Method_1D extends PureComponent {
 
     click_save = () => {
         const { coor, massum } = this.state;
-        const path_save = `./result/TestObr/1D/${this.masInformation.nameElement ? this.masInformation.nameElement : 'NoName'}.dat`;
+        
+        const path_save = `./result/TestObr/1D/${this.masInformation.Title ? this.masInformation.Title : 'NoName'}.dat`;
 
         const file_1D = fs.createWriteStream(path_save);
         file_1D.on('error', function (err) { console.log(err) })
@@ -239,7 +243,7 @@ export default class Method_1D extends PureComponent {
     }
 
     save_protocol = () => {
-        const nameFolderProtocol = this.masInformation.nameElement || 'NoName';
+        const nameFolderProtocol = this.masInformation.Title || 'NoName';
         const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
@@ -336,6 +340,7 @@ export default class Method_1D extends PureComponent {
                         revision={revision}
                         coor={coor}
                         massum={massum}
+                        Title={this.masInformation.Title}
                         nameElement={this.masInformation.nameElement}
                         AxisX={this.masInformation.AxisX}
                         AxisY={this.masInformation.AxisY}
@@ -349,7 +354,7 @@ export default class Method_1D extends PureComponent {
                         revision_file={this.revision_file}
                         coor_file={coor_file}
                         massum_file={massum_file}
-                        nameElement={this.masInformation.nameElement}
+                        Title={this.masInformation.Title}
                         AxisX={this.masInformation.AxisX}
                         AxisY={this.masInformation.AxisY}
                     />
@@ -415,7 +420,7 @@ class Sum_graph extends PureComponent {
     render() {
         const { click_loadFolder, click_loadFile, click_save, click_sum,
             stored_value, click_calibration, click_smoothing,
-            data, revision, coor, massum, nameElement
+            data, revision, coor, massum, Title
             // options
         } = this.props;
 
@@ -425,6 +430,9 @@ class Sum_graph extends PureComponent {
                 <div id="control_panel">
                     <h3 onClick={() => this.hide_parametr('file')}>Файл</h3>
                     <div style={{ display: this.masVisible['file'] ? 'block' : 'none' }}>
+                        <input id='Title' type='text' placeholder="Соединение"
+                            onChange={(e) => stored_value(e.target.id, e.target.value)}
+                        ></input>
                         <input id='nameElement' type='text' placeholder="Элемент"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
@@ -488,7 +496,7 @@ class Sum_graph extends PureComponent {
                             data={data}
                             graphDiv="graph"
                             layout={{
-                                title: `${nameElement}`,
+                                title: `${Title}`,
                                 datarevision: { revision: revision },
                                 width: 900, height: 675,
                                 xaxis: {
@@ -521,7 +529,7 @@ class List_graph extends PureComponent {
 
     render() {
         const { mas_name_file, click_graph_file, data_file,
-            coor_file, massum_file, revision_file, nameElement
+            coor_file, massum_file, revision_file, Title
             // ptions
         } = this.props;
         return (
@@ -539,7 +547,7 @@ class List_graph extends PureComponent {
                             data={data_file}
                             graphDiv="graph"
                             layout={{
-                                title: `${nameElement}`,
+                                title: `${Title}`,
                                 datarevision: { revision: revision_file },
                                 width: 900, height: 675,
                                 xaxis: {
