@@ -340,10 +340,7 @@ export default class Method_1D extends PureComponent {
                         revision={revision}
                         coor={coor}
                         massum={massum}
-                        Title={this.masInformation.Title}
-                        nameElement={this.masInformation.nameElement}
-                        AxisX={this.masInformation.AxisX}
-                        AxisY={this.masInformation.AxisY}
+                        masInformation = {this.masInformation}
                     />
                     break;
                 case 'List_graph':
@@ -420,7 +417,7 @@ class Sum_graph extends PureComponent {
     render() {
         const { click_loadFolder, click_loadFile, click_save, click_sum,
             stored_value, click_calibration, click_smoothing,
-            data, revision, coor, massum, Title
+            data, revision, coor, massum, masInformation
             // options
         } = this.props;
 
@@ -436,6 +433,16 @@ class Sum_graph extends PureComponent {
                         <input id='nameElement' type='text' placeholder="Элемент"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
+                        <input className="kA" id={`kA`}
+                            onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                            type="checkbox"
+                            defaultChecked={masInformation.kA}
+                        />
+                        <input className="kB" id={`kB`}
+                            onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                            type="checkbox"
+                            defaultChecked={masInformation.kB}
+                        />
                         <input id='AxisX' type='text' placeholder="Ось X"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
@@ -496,7 +503,7 @@ class Sum_graph extends PureComponent {
                             data={data}
                             graphDiv="graph"
                             layout={{
-                                title: `${Title}`,
+                                title: `${masInformation.Title}`,
                                 datarevision: { revision: revision },
                                 width: 900, height: 675,
                                 xaxis: {
