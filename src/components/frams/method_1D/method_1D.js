@@ -433,16 +433,22 @@ class Sum_graph extends PureComponent {
                         <input id='nameElement' type='text' placeholder="Элемент"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
-                        <input className="kA" id={`kA`}
-                            onChange={(e) => stored_value(e.target.className, e.target.checked)}
-                            type="checkbox"
-                            defaultChecked={masInformation.kA}
-                        />
-                        <input className="kB" id={`kB`}
-                            onChange={(e) => stored_value(e.target.className, e.target.checked)}
-                            type="checkbox"
-                            defaultChecked={masInformation.kB}
-                        />
+                        <label className="container"> kA
+                            <input className="kA" id={`kA`}
+                                onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                                type="checkbox"
+                                defaultChecked={masInformation.kA}
+                            />
+                            <span className="checkmark"></span>
+                        </label>
+                        <label className="container"> kB
+                            <input className="kB" id={`kB`}
+                                onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                                type="checkbox"
+                                defaultChecked={masInformation.kB}
+                            />
+                            <span className="checkmark"></span>
+                        </label>
                         <input id='AxisX' type='text' placeholder="Ось X"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
