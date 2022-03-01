@@ -19,8 +19,10 @@ export default class Method_1D extends PureComponent {
             method: 'Однокоординатный',
             Title: '',
             nameElement: '',
-            kA: false,
-            kB: false,
+            checkeds = {
+                kA: false,
+                kB: false
+            },
             AxisX: 'Energy',
             AxisY: 'Intensivnosti',
             countSum: 1,
@@ -266,15 +268,22 @@ export default class Method_1D extends PureComponent {
     }
 
     click_calibration = () => {
-        const { coor, massum } = this.state;
-        let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) /
-            (this.masInformation.n_second_point - this.masInformation.n_first_point);
-        let newCoor = [];
-        newCoor[0] = this.masInformation.en_first_point - del_en.toFixed(5) * this.masInformation.n_first_point
-        for (let i = 1; i < coor.length; i++) {
-            newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(5));
-        }
-        this.reloadData(newCoor, massum);
+
+        const {baseElement} = this.props;
+        const id = baseElement.findIndex((item) => item.name_el == this.masInformation.nameElement)
+        if(this.masInformation.kA) console.log(baseElement[id].energy_foto[2])
+        else console.log(baseElement[id].energy_foto[4])
+        
+
+        // const { coor, massum } = this.state;
+        // let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) /
+        //     (this.masInformation.n_second_point - this.masInformation.n_first_point);
+        // let newCoor = [];
+        // newCoor[0] = this.masInformation.en_first_point - del_en.toFixed(5) * this.masInformation.n_first_point
+        // for (let i = 1; i < coor.length; i++) {
+        //     newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(5));
+        // }
+        // this.reloadData(newCoor, massum);
     }
 
     click_smoothing = () => {
@@ -413,6 +422,17 @@ class Sum_graph extends PureComponent {
     //     }
     // }
 
+    switch_k(className, checked){
+
+        let {checkeds} = this.props.masInformation
+
+        if(checkeds[className] == true){
+            
+        }
+
+        stored_value('kA', checkeds['kA'])
+        stored_value('kB', checkeds['kB'])
+    }
 
     render() {
         const { click_loadFolder, click_loadFile, click_save, click_sum,
@@ -420,7 +440,6 @@ class Sum_graph extends PureComponent {
             data, revision, coor, massum, masInformation
             // options
         } = this.props;
-
 
         return (
             <div id="sum_graph">
