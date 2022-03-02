@@ -19,8 +19,8 @@ export default class Method_1D extends PureComponent {
             method: 'Однокоординатный',
             Title: '',
             nameElement: '',
-            checkeds = {
-                kA: false,
+            checkeds_k: {
+                kA: true,
                 kB: false
             },
             AxisX: 'Energy',
@@ -270,20 +270,30 @@ export default class Method_1D extends PureComponent {
     click_calibration = () => {
 
         const {baseElement} = this.props;
+        const { coor, massum } = this.state;
         const id = baseElement.findIndex((item) => item.name_el == this.masInformation.nameElement)
-        if(this.masInformation.kA) console.log(baseElement[id].energy_foto[2])
-        else console.log(baseElement[id].energy_foto[4])
-        
+        if(this.masInformation.checkeds_k.kA){
+            this.masInformation.en_first_point = +baseElement[id].energy_foto[0] * 1000;
+            this.masInformation.en_second_point = +baseElement[id].energy_foto[1] * 1000;
+        } 
+        else {
+            this.masInformation.en_first_point = +baseElement[id].energy_foto[3] * 1000;
+            this.masInformation.en_second_point = +baseElement[id].energy_foto[5] * 1000;
+        }
 
-        // const { coor, massum } = this.state;
-        // let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) /
-        //     (this.masInformation.n_second_point - this.masInformation.n_first_point);
-        // let newCoor = [];
-        // newCoor[0] = this.masInformation.en_first_point - del_en.toFixed(5) * this.masInformation.n_first_point
-        // for (let i = 1; i < coor.length; i++) {
-        //     newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(5));
-        // }
-        // this.reloadData(newCoor, massum);
+        if(this.masInformation.n_first_point == 0 && this.masInformation.n_second_point == 0){
+            this.masInformation.n_first_point = massum.length / 2;
+        }
+        console.log(this.masInformation.en_first_point / this.masInformation.n_first_point);
+        let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) /
+            (this.masInformation.n_second_point - this.masInformation.n_first_point);
+        console.log(del_en);
+        let newCoor = [];
+        newCoor[0] = this.masInformation.en_first_point - del_en.toFixed(5) * this.masInformation.n_first_point
+        for (let i = 1; i < coor.length; i++) {
+            newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(5));
+        }
+        this.reloadData(newCoor, massum);
     }
 
     click_smoothing = () => {
@@ -325,10 +335,14 @@ export default class Method_1D extends PureComponent {
         })
     }
 
+    switch_k = (checkeds_k) =>{
+        this.masInformation.checkeds_k = checkeds_k
+    }
+
     render() {
         const {
             active_tab, coor, massum, coor_file, massum_file,
-            mas_name_file, revision, data, data_file
+            mas_name_file, revision, data, data_file, checkeds_k
         } = this.state;
         const elements = this.masTab.map((item) => {
             const { text } = item;
@@ -350,6 +364,8 @@ export default class Method_1D extends PureComponent {
                         coor={coor}
                         massum={massum}
                         masInformation = {this.masInformation}
+                        switch_k = {this.switch_k}
+                        checkeds_k = {checkeds_k}
                     />
                     break;
                 case 'List_graph':
@@ -386,7 +402,7 @@ export default class Method_1D extends PureComponent {
     }
 }
 
-class Sum_graph extends PureComponent {
+class Sum_graph extends Component {
 
     constructor(props)
     {
@@ -402,13 +418,39 @@ class Sum_graph extends PureComponent {
     }
 
     state = {
-        reload: false
+        reload: false,
+        checkeds_k: {
+            kA: true,
+            kB: false
+        }
     }
 
-    hide_parametr(id) {
+    hide_parametr = (id) => {
         this.masVisible[id] = !this.masVisible[id];
         this.setState({
             reload: !this.state.reload
+        })
+    }
+
+    switch_k = (className, checked) =>{
+
+        let {checkeds_k} = this.state
+
+        if(checked){
+            switch(className){
+                case 'kA' : 
+                    checkeds_k['kA'] = true;
+                    checkeds_k['kB'] = false;
+                    break;
+                case 'kB' : 
+                    checkeds_k['kA'] = false;
+                    checkeds_k['kB'] = true;
+                    break;
+            }
+        }
+        this.props.switch_k(checkeds_k)
+        this.setState({
+            checkeds_k: checkeds_k
         })
     }
 
@@ -422,17 +464,7 @@ class Sum_graph extends PureComponent {
     //     }
     // }
 
-    switch_k(className, checked){
-
-        let {checkeds} = this.props.masInformation
-
-        if(checkeds[className] == true){
-            
-        }
-
-        stored_value('kA', checkeds['kA'])
-        stored_value('kB', checkeds['kB'])
-    }
+    
 
     render() {
         const { click_loadFolder, click_loadFile, click_save, click_sum,
@@ -440,6 +472,8 @@ class Sum_graph extends PureComponent {
             data, revision, coor, massum, masInformation
             // options
         } = this.props;
+
+        const {checkeds_k} = this.state
 
         return (
             <div id="sum_graph">
@@ -454,17 +488,17 @@ class Sum_graph extends PureComponent {
                         ></input>
                         <label className="container"> kA
                             <input className="kA" id={`kA`}
-                                onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                                onChange={(e) => this.switch_k(e.target.className, e.target.checked)}
                                 type="checkbox"
-                                defaultChecked={masInformation.kA}
+                                checked={checkeds_k.kA}
                             />
                             <span className="checkmark"></span>
                         </label>
                         <label className="container"> kB
                             <input className="kB" id={`kB`}
-                                onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                                onChange={(e) => this.switch_k(e.target.className, e.target.checked)}
                                 type="checkbox"
-                                defaultChecked={masInformation.kB}
+                                checked={checkeds_k.kB}
                             />
                             <span className="checkmark"></span>
                         </label>
@@ -491,11 +525,11 @@ class Sum_graph extends PureComponent {
                         <button id="click_calibration" onClick={click_calibration}>Калибровка</button>
                         <input id='en_first_point' type='number' placeholder="Эн. первой точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
-                        // value={en_first_point}
+                            value={masInformation.en_first_point}
                         ></input>
                         <input id='en_second_point' type='number' placeholder="Эн. второй точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
-                        // value={en_second_point}
+                            value={masInformation.en_second_point}
                         ></input>
                         <input id='n_first_point' type='number' placeholder="N первой точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
