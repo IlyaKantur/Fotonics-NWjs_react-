@@ -296,6 +296,18 @@ export default class Method_1D extends PureComponent {
         this.reloadData(newCoor, massum);
     }
 
+    findPeaks = () => {
+        const {coor, massum} = this.state;
+        const lengh = 5;
+        let peaks, idPeaks;
+    //     for(let i = 0; i < massum.length; i++)
+    //     {
+    //         while(massum[i] < massum[i + 1] && lengh > j++)
+    //     }
+    }
+
+    //
+
     click_smoothing = () => {
         let { massum } = this.state;
         let n = Number(this.masInformation.n_smoothing);
