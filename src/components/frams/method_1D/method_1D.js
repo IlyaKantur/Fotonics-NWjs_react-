@@ -269,64 +269,76 @@ export default class Method_1D extends PureComponent {
 
     click_calibration = () => {
 
-        const {baseElement} = this.props;
-        const { coor, massum } = this.state;
-        const id = baseElement.findIndex((item) => item.name_el == this.masInformation.nameElement)
-        if(this.masInformation.checkeds_k.kA){
-            this.masInformation.en_first_point = +baseElement[id].energy_foto[0] * 1000;
-            this.masInformation.en_second_point = +baseElement[id].energy_foto[1] * 1000;
-        } 
-        else {
-            this.masInformation.en_first_point = +baseElement[id].energy_foto[3] * 1000;
-            this.masInformation.en_second_point = +baseElement[id].energy_foto[5] * 1000;
-        }
+        // const {baseElement} = this.props;
+        // const { coor, massum } = this.state;
+        // const id = baseElement.findIndex((item) => item.name_el == this.masInformation.nameElement)
+        // if(this.masInformation.checkeds_k.kA){
+        //     this.masInformation.en_first_point = +baseElement[id].energy_foto[0] * 1000;
+        //     this.masInformation.en_second_point = +baseElement[id].energy_foto[1] * 1000;
+        // } 
+        // else {
+        //     this.masInformation.en_first_point = +baseElement[id].energy_foto[3] * 1000;
+        //     this.masInformation.en_second_point = +baseElement[id].energy_foto[5] * 1000;
+        // }
 
-        if(this.masInformation.n_first_point == 0 && this.masInformation.n_second_point == 0){
-            this.masInformation.n_first_point = massum.length / 2;
-        }
-        console.log(this.masInformation.en_first_point / this.masInformation.n_first_point);
-        let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) /
-            (this.masInformation.n_second_point - this.masInformation.n_first_point);
-        console.log(del_en);
-        let newCoor = [];
-        newCoor[0] = this.masInformation.en_first_point - del_en.toFixed(5) * this.masInformation.n_first_point
-        for (let i = 1; i < coor.length; i++) {
-            newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(5));
-        }
-        this.reloadData(newCoor, massum);
+        // if(this.masInformation.n_first_point == 0 && this.masInformation.n_second_point == 0){
+        //     this.masInformation.n_first_point = massum.length / 2;
+        // }
+        // console.log(this.masInformation.en_first_point / this.masInformation.n_first_point);
+        // let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) /
+        //     (this.masInformation.n_second_point - this.masInformation.n_first_point);
+        // console.log(del_en);
+        // let newCoor = [];
+        // newCoor[0] = this.masInformation.en_first_point - del_en.toFixed(5) * this.masInformation.n_first_point
+        // for (let i = 1; i < coor.length; i++) {
+        //     newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(5));
+        // }
+        // this.reloadData(newCoor, massum);
+        this.findPeaks();
     }
 
     findPeaks = () => {
-        const {coor, massum} = this.state;
-        const lengh = 5;
-        let peaks, idPeaks;
-    //     for(let i = 0; i < massum.length; i++)
-    //     {
-    //         while(massum[i] < massum[i + 1] && lengh > j++)
-    //     }
+        const {massum} = this.state;
+        const lengh = 10;
+        let peaks, idPeaks, j = 0;
+        for(let i = 0; i < massum.length; i++)
+        {
+            if(massum[i] < massum[i + 1] && lengh > j++){
+                peaks = massum[i + 1];
+                idPeaks = i + 1
+            }
+            else if(j > lengh){
+                i = massum.length;
+            }
+            else j = 0;
+        }
+        console.log(`peaks: ${peaks}; idPeaks: ${idPeaks}`)
     }
 
     //
 
     click_smoothing = () => {
-        let { massum } = this.state;
-        let n = Number(this.masInformation.n_smoothing);
 
-        let sum = 0, del = 3, floor = Math.floor(n / 2);
-        for (let i = 1; i < n; i++) {
-            for (let j = 0; j < del; j++) {
-                sum += massum[j];
-            }
-            massum[i] = Math.ceil(sum / del);
-            del += 2;
-        }
-        for (let i = n; i < massum.length - floor; i++) {
-            sum = 0;
-            for (let j = 0; j < n; j++) {
-                sum += massum[i + j - floor];
-            }
-            massum[i] = Math.ceil(sum / n);
-        }
+        let { massum } = this.state;
+        ///
+        
+        // let n = Number(this.masInformation.n_smoothing);
+
+        // let sum = 0, del = 3, floor = Math.floor(n / 2);
+        // for (let i = 1; i < n; i++) {
+        //     for (let j = 0; j < del; j++) {
+        //         sum += massum[j];
+        //     }
+        //     massum[i] = Math.ceil(sum / del);
+        //     del += 2;
+        // }
+        // for (let i = n; i < massum.length - floor; i++) {
+        //     sum = 0;
+        //     for (let j = 0; j < n; j++) {
+        //         sum += massum[i + j - floor];
+        //     }
+        //     massum[i] = Math.ceil(sum / n);
+        // }
         this.reloadData(this.state.coor, massum);
     }
 
