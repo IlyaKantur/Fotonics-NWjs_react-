@@ -385,12 +385,12 @@ export default class Method_2D extends PureComponent {
     }
 
     save = () => {
-        const { masx, massum } = this.state;
+        const { coor_masx, coor_massum } = this.state;
         const path_save = `./result/TestObr/2D/${this.masInformation_2D.nameElement ? this.masInformation_2D.nameElement : 'NoName'}.dat`;
 
         const file_2D = fs.createWriteStream(path_save);
         file_2D.on('error', function (err) { console.log(err) })
-        masx.forEach((item, i) => file_2D.write(`${item} ${massum[i]} \n`));
+        coor_masx.forEach((item, i) => file_2D.write(`${item} ${coor_massum[i]} \n`));
         file_2D.end();
     }
 
