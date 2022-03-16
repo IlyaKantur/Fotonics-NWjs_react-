@@ -154,7 +154,7 @@ export default class Method_2D extends PureComponent {
     }
 
     startPush = (id_f_nameF) => {
-        const { imgFolder } = this.state;
+        const imgFolder  = this.imgFolder;
         this.setState({
             masx: [],
             massum: [],
