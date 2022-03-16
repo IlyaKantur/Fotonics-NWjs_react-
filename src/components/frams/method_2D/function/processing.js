@@ -183,7 +183,7 @@ export default class Processing {
 
 
             let s = performance.now();
-            let start = performance.now();
+            // let start = performance.now();
 
             if (!this.double_processing) {
                 let zz = 0;
@@ -222,8 +222,8 @@ export default class Processing {
                 }
                 //
 
-                console.log(`Перевод снимка ${performance.now() - start}`)
-                start = performance.now();
+                // console.log(`Перевод снимка ${performance.now() - start}`)
+                // start = performance.now();
 
                 // фильтрация
 
@@ -266,7 +266,7 @@ export default class Processing {
                 }
 
                 // console.log(`Фильтрация ${performance.now() - start}`)
-                start = performance.now();
+                // start = performance.now();
 
                 //Накопление
 
@@ -327,7 +327,7 @@ export default class Processing {
 
 
                 // console.log(`Границы ${performance.now() - start}`)
-                start = performance.now();
+                // start = performance.now();
             }
 
             //накопленое фото
@@ -346,7 +346,7 @@ export default class Processing {
             }
 
             // console.log(`Суммарное 1 ${performance.now() - start}`)
-            start = performance.now();
+            // start = performance.now();
 
             if (this.imgnum == 0) {
                 for (let i = 3; i < ImgClear.data.length; i += 4) ImgClear.data[i] = 255;
@@ -383,7 +383,7 @@ export default class Processing {
             }
 
             // console.log(`Суммарное 2 ${performance.now() - start}`)
-            start = performance.now();
+            // start = performance.now();
 
             // очишенное изображение
             // ii = 0;
@@ -455,7 +455,7 @@ export default class Processing {
 
             if ((this.imgnum == this.masImg.length && !this.chek_obsorv) || (this.iter && this.imgnum == this.iterN)) {
 
-                start = performance.now();
+                // start = performance.now();
 
                 let message = `Обработана за: ${((performance.now() - this.startOb) / 1000).toFixed(3)} секунд`
                 console.log(message)
@@ -502,7 +502,7 @@ export default class Processing {
                 console.log(mes)
                 this.onConsoleMessage(mes, false)
             }
-            console.log(`${(performance.now() - s) / 1000} секунд`)
+            // console.log(`${(performance.now() - s) / 1000} секунд`)
             this.TimeSum += performance.now() - s;
 
             resolve({
