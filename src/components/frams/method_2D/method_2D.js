@@ -22,6 +22,7 @@ export default class Method_2D extends PureComponent {
 
         this.proces;
 
+        
         this.masInformation_2D = {
             method: 'Двумерный',
             chek_obsorv: false,
