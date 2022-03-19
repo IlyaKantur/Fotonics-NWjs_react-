@@ -364,10 +364,10 @@ export default class Processing {
                 }
             }
             ii = 0; let jj = 0;
-            for (let i = beg; i < fin; i += 0) {
-                for(let j = 0; j < this.sumcolumnN; j++)
+            for (let i = 0; i < ImgDataH.length; i += 0) {
+                for(let j = 0; j < (this.sumcolumn ? this.sumcolumnN : 1); j++)
                 {
-                    if (ImgClear.data[i] < mas0[ii]) {
+                    if (ImgClear.data[i] <= mas0[ii]) {
                         ImgClear.data[i] += mas0[ii];
                         ImgClear.data[i + 1] += mas0[ii];
                         ImgClear.data[i + 2] += mas0[ii];
@@ -375,10 +375,6 @@ export default class Processing {
                     i += 4; jj++;
                 }
                 ii++;
-                if(ii == mas0.length-1 || i == fin - 1)
-                {
-                    console.log('')
-                }
                 if (jj >= x_x && this.gran) { i += ((this.ix - xfin) + xbeg) * 4; jj = 0; }
             }
 
