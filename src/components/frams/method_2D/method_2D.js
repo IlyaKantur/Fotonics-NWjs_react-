@@ -28,9 +28,14 @@ export default class Method_2D extends PureComponent {
             chek_obsorv: false,
             double_processing: false,
             SaveLast: false,
+            Title: '',
             nameElement: '',
-            AxisX: 'X',
-            AxisY: 'Y',
+            checkeds_k: {
+                kA: true,
+                kB: false
+            },
+            AxisX: 'Energy',
+            AxisY: 'Intensivnosti',
             Iter: false,
             IterN: 0,
             IntPix: false,
@@ -317,17 +322,27 @@ export default class Method_2D extends PureComponent {
     
     calibration = () => {
         if (this.finished) {
+
+            let newCoor = [];
+            const {baseElement} = this.props;
             const { masx, massum } = this.state;
+
+            const id = baseElement.findIndex((item) => item.name_el == this.masInformation_2D.nameElement)
+            if(this.masInformation.checkeds_k.kA){
+                this.masInformation_2D.en_first_point = +baseElement[id].energy_foto[0] * 1000;
+                this.masInformation_2D.en_second_point = +baseElement[id].energy_foto[1] * 1000;
+            } 
+            else {
+                this.masInformation_2D.en_first_point = +baseElement[id].energy_foto[3] * 1000;
+                this.masInformation_2D.en_second_point = +baseElement[id].energy_foto[5] * 1000;
+            }
+
             let del_en = (this.masInformation_2D.en_second_point - this.masInformation_2D.en_first_point) /
                 (this.masInformation_2D.n_second_point - this.masInformation_2D.n_first_point);
-            let newCoor = [];
-            newCoor[0] = +(this.masInformation_2D.en_first_point - del_en * this.masInformation_2D.n_first_point).toFixed(8)
+            
+            newCoor[0] = +(this.masInformation_2D.en_first_point - del_en * this.masInformation_2D.n_first_point).toFixed(4)
             for (let i = 1; i < masx.length; i++) {
-                newCoor[i] = +Number((newCoor[i - 1] + del_en)).toFixed(8);
-            }
-            let masInput = document.querySelectorAll('.x_element_2D');
-            for (let i = 0; i < masInput.length; i++) {
-                masInput[i].innerHTML = `${newCoor[i]}`;
+                newCoor[i] = +Number((newCoor[i - 1] + del_en)).toFixed(4);
             }
             this.reloadData(newCoor, massum);
             this.setState({
@@ -340,7 +355,7 @@ export default class Method_2D extends PureComponent {
     
 
     save_protocol = () => {
-        const nameFolderProtocol = this.masInformation_2D.nameElement || 'NoName';
+        const nameFolderProtocol = this.masInformation_2D.Title || 'NoName';
         const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
@@ -387,12 +402,16 @@ export default class Method_2D extends PureComponent {
 
     save = () => {
         const { coor_masx, coor_massum } = this.state;
-        const path_save = `./result/TestObr/2D/${this.masInformation_2D.nameElement ? this.masInformation_2D.nameElement : 'NoName'}.dat`;
+        const path_save = `./result/TestObr/2D/${this.masInformation_2D.Title ? this.masInformation_2D.Title : 'NoName'}.dat`;
 
         const file_2D = fs.createWriteStream(path_save);
         file_2D.on('error', function (err) { console.log(err) })
         coor_masx.forEach((item, i) => file_2D.write(`${item} ${coor_massum[i]} \n`));
         file_2D.end();
+    }
+
+    switch_k = (checkeds_k) =>{
+        this.masInformation.checkeds_k = checkeds_k
     }
 
     render() {
@@ -421,6 +440,7 @@ export default class Method_2D extends PureComponent {
                 stored_value={this.stored_value}
                 save={this.save}
                 smoothing={this.smoothing}
+                switch_k = {this.switch_k}
             ></L_P_Panel>
         )
     }

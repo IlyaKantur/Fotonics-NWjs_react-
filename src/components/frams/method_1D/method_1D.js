@@ -269,32 +269,29 @@ export default class Method_1D extends PureComponent {
 
     click_calibration = () => {
 
-        // const {baseElement} = this.props;
-        // const { coor, massum } = this.state;
-        // const id = baseElement.findIndex((item) => item.name_el == this.masInformation.nameElement)
-        // if(this.masInformation.checkeds_k.kA){
-        //     this.masInformation.en_first_point = +baseElement[id].energy_foto[0] * 1000;
-        //     this.masInformation.en_second_point = +baseElement[id].energy_foto[1] * 1000;
-        // } 
-        // else {
-        //     this.masInformation.en_first_point = +baseElement[id].energy_foto[3] * 1000;
-        //     this.masInformation.en_second_point = +baseElement[id].energy_foto[5] * 1000;
-        // }
+        let newCoor = [];
+        const {baseElement} = this.props;
+        const { coor, massum } = this.state;
+        
+        const id = baseElement.findIndex((item) => item.name_el == this.masInformation.nameElement)
+        if(this.masInformation.checkeds_k.kA){
+            this.masInformation.en_first_point = +baseElement[id].energy_foto[0] * 1000;
+            this.masInformation.en_second_point = +baseElement[id].energy_foto[1] * 1000;
+        } 
+        else {
+            this.masInformation.en_first_point = +baseElement[id].energy_foto[3] * 1000;
+            this.masInformation.en_second_point = +baseElement[id].energy_foto[5] * 1000;
+        }
+        
+        let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) /
+            (this.masInformation.n_second_point - this.masInformation.n_first_point);
 
-        // if(this.masInformation.n_first_point == 0 && this.masInformation.n_second_point == 0){
-        //     this.masInformation.n_first_point = massum.length / 2;
-        // }
-        // console.log(this.masInformation.en_first_point / this.masInformation.n_first_point);
-        // let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) /
-        //     (this.masInformation.n_second_point - this.masInformation.n_first_point);
-        // console.log(del_en);
-        // let newCoor = [];
-        // newCoor[0] = this.masInformation.en_first_point - del_en.toFixed(5) * this.masInformation.n_first_point
-        // for (let i = 1; i < coor.length; i++) {
-        //     newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(5));
-        // }
-        // this.reloadData(newCoor, massum);
-        this.findPeaks();
+        newCoor[0] = this.masInformation.en_first_point - del_en.toFixed(4) * this.masInformation.n_first_point
+        for (let i = 1; i < coor.length; i++) {
+            newCoor[i] = Number((newCoor[i - 1] + del_en).toFixed(4));
+        }
+        this.reloadData(newCoor, massum);
+        // this.findPeaks();
     }
 
     findPeaks = () => {
@@ -366,7 +363,7 @@ export default class Method_1D extends PureComponent {
     render() {
         const {
             active_tab, coor, massum, coor_file, massum_file,
-            mas_name_file, revision, data, data_file, checkeds_k
+            mas_name_file, revision, data, data_file
         } = this.state;
         const elements = this.masTab.map((item) => {
             const { text } = item;
@@ -389,7 +386,6 @@ export default class Method_1D extends PureComponent {
                         massum={massum}
                         masInformation = {this.masInformation}
                         switch_k = {this.switch_k}
-                        checkeds_k = {checkeds_k}
                     />
                     break;
                 case 'List_graph':

@@ -28,7 +28,7 @@ export default class Processing {
         this.gran = masInformation_2D.Gran; // Границы
 
         // Введеные значения
-        this.nameElement = masInformation_2D.nameElement || 'NoName';
+        this.Title = masInformation_2D.Title || 'NoName';
 
         this.iterN = masInformation_2D.IterN; // Ограничение по количеству обработанных снимков
 
@@ -468,19 +468,19 @@ export default class Processing {
                 const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
                 const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
 
-                const path_write_image = `result/image/${this.nameElement}`
+                const path_write_image = `result/image/${this.Title}`
                 fs.mkdir(path_write_image, (err) => {
                     if (err != null) { console.log(err) };
                     fs.mkdir(`${path_write_image}/${dataProtocol}/`, (err) => {
                         if (err != null) { console.log(err) };
 
-                        fs.writeFile(`${path_write_image}/${dataProtocol}/${this.nameElement}_${timeProtocol}_${this.imgnum}.jpg`, base64Data, 'base64', function (err) {
+                        fs.writeFile(`${path_write_image}/${dataProtocol}/${this.Title}_${timeProtocol}_${this.imgnum}.jpg`, base64Data, 'base64', function (err) {
                             if (err != null) {
                                 console.log(err);
                             }
                         });
 
-                        fs.writeFile(`${path_write_image}/${dataProtocol}/${this.nameElement}_${timeProtocol}_${this.imgnum}_clear.jpg`, base64DataClearImg, 'base64', function (err) {
+                        fs.writeFile(`${path_write_image}/${dataProtocol}/${this.Title}_${timeProtocol}_${this.imgnum}_clear.jpg`, base64DataClearImg, 'base64', function (err) {
                             if (err != null) {
                                 console.log(err);
                             }

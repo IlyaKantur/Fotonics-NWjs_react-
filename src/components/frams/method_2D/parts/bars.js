@@ -16,7 +16,7 @@ export default class Bars extends PureComponent {
     //     XX: 1000,
     //     Yy: 100,
     //     YY: 800,
-    //     nameElement: ''
+    //     Title: ''
     // }
 
     // stored_value(name ,value){
@@ -46,7 +46,11 @@ export default class Bars extends PureComponent {
     state = {
         reload: false,
         search_name: '',
-        search_alert_text: {}
+        search_alert_text: {},
+        checkeds_k: {
+            kA: true,
+            kB: false
+        }
     }
 
     hide_parametr(id) {
@@ -62,6 +66,28 @@ export default class Bars extends PureComponent {
         this.props.search_energe(name_search_el)
     }
 
+    switch_k = (className, checked) =>{
+
+        let {checkeds_k} = this.state
+
+        if(checked){
+            switch(className){
+                case 'kA' : 
+                    checkeds_k['kA'] = true;
+                    checkeds_k['kB'] = false;
+                    break;
+                case 'kB' : 
+                    checkeds_k['kA'] = false;
+                    checkeds_k['kB'] = true;
+                    break;
+            }
+        }
+        this.props.switch_k(checkeds_k)
+        this.setState({
+            checkeds_k: checkeds_k
+        })
+    }
+
     render() {
         const { className, loadFolder, loadFoldImg,
             loadFonImg, startPush, id_item,
@@ -70,6 +96,9 @@ export default class Bars extends PureComponent {
         } = this.props;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
+
+        const {checkeds_k} = this.state
+
         return (
             <>
                 <ul id="navbar" className={`bar ${className}`}>
@@ -114,9 +143,28 @@ export default class Bars extends PureComponent {
                                 <span className="checkmark"></span>
                             </label>
                             </li>
+                            <li><input id='Title' type='text' placeholder="Соединение"
+                                onChange={(e) => stored_value(e.target.id, e.target.value)}
+                            ></input></li>
                             <li><input id='nameElement' type='text' placeholder="Элемент"
                                 onChange={(e) => stored_value(e.target.id, e.target.value)}
                             ></input></li>
+                            <li><label className="container"> kA
+                                <input className="kA" id={`kA`}
+                                    onChange={(e) => this.switch_k(e.target.className, e.target.checked)}
+                                    type="checkbox"
+                                    checked={checkeds_k.kA}
+                                />
+                                <span className="checkmark"></span>
+                            </label></li>
+                            <li><label className="container"> kB
+                                <input className="kB" id={`kB`}
+                                    onChange={(e) => this.switch_k(e.target.className, e.target.checked)}
+                                    type="checkbox"
+                                    checked={checkeds_k.kB}
+                                />
+                                <span className="checkmark"></span>
+                            </label></li>
                             <li><input id='AxisX' type='text' placeholder="Ось X"
                                 onChange={(e) => stored_value(e.target.id, e.target.value)}
                             ></input></li>
