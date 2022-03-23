@@ -30,7 +30,7 @@ export default class Method_2D extends PureComponent {
             SaveLast: false,
             Title: '',
             nameElement: '',
-            checkeds_k: {
+            Levels: {
                 kA: true,
                 kB: false
             },
@@ -328,7 +328,7 @@ export default class Method_2D extends PureComponent {
             const { masx, massum } = this.state;
 
             const id = baseElement.findIndex((item) => item.name_el == this.masInformation_2D.nameElement)
-            if(this.masInformation_2D.checkeds_k.kA){
+            if(this.masInformation_2D.Levels.kA){
                 this.masInformation_2D.en_first_point = +baseElement[id].energy_foto[0] * 1000;
                 this.masInformation_2D.en_second_point = +baseElement[id].energy_foto[1] * 1000;
             } 
@@ -402,7 +402,16 @@ export default class Method_2D extends PureComponent {
 
     save = () => {
         const { coor_masx, coor_massum } = this.state;
-        const path_save = `./result/TestObr/2D/${this.masInformation_2D.Title ? this.masInformation_2D.Title : 'NoName'}.dat`;
+        const {Title, nameElement} = this.masInformation_2D;
+
+        const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+        const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
+
+        Title = Title || nameElement || 'Untitled';
+        nameElement = nameElement || 'Element'
+
+        const path = Title == nameElement ? nameElement : Title + `/` + nameElement;
+        const path_save = `./result/Processed/2D/${path}/${dataProtocol}/${nameElement}_${timeProtocol}.dat`;
 
         const file_2D = fs.createWriteStream(path_save);
         file_2D.on('error', function (err) { console.log(err) })
@@ -410,8 +419,8 @@ export default class Method_2D extends PureComponent {
         file_2D.end();
     }
 
-    switch_k = (checkeds_k) =>{
-        this.masInformation_2D.checkeds_k = checkeds_k
+    switch_k = (Levels) =>{
+        this.masInformation_2D.Levels = Levels
     }
 
     render() {

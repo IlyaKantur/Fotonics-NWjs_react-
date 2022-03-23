@@ -47,7 +47,7 @@ export default class Bars extends Component {
         reload: false,
         search_name: '',
         search_alert_text: {},
-        checkeds_k: {
+        Levels: {
             kA: true,
             kB: false
         }
@@ -68,23 +68,23 @@ export default class Bars extends Component {
 
     switch_k = (className, checked) =>{
 
-        let {checkeds_k} = this.state
+        let {Levels} = this.state
 
         if(checked){
             switch(className){
                 case 'kA' : 
-                    checkeds_k['kA'] = true;
-                    checkeds_k['kB'] = false;
+                    Levels['kA'] = true;
+                    Levels['kB'] = false;
                     break;
                 case 'kB' : 
-                    checkeds_k['kA'] = false;
-                    checkeds_k['kB'] = true;
+                    Levels['kA'] = false;
+                    Levels['kB'] = true;
                     break;
             }
         }
-        this.props.switch_k(checkeds_k)
+        this.props.switch_k(Levels)
         this.setState({
-            checkeds_k: checkeds_k
+            Levels: Levels
         })
     }
 
@@ -97,7 +97,7 @@ export default class Bars extends Component {
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
 
-        const {checkeds_k} = this.state
+        const {Levels} = this.state
 
         return (
             <>
@@ -153,7 +153,7 @@ export default class Bars extends Component {
                                 <input className="kA" id={`kA`}
                                     onChange={(e) => this.switch_k(e.target.className, e.target.checked)}
                                     type="checkbox"
-                                    checked={checkeds_k.kA}
+                                    checked={Levels.kA}
                                 />
                                 <span className="checkmark"></span>
                             </label></li>
@@ -161,7 +161,7 @@ export default class Bars extends Component {
                                 <input className="kB" id={`kB`}
                                     onChange={(e) => this.switch_k(e.target.className, e.target.checked)}
                                     type="checkbox"
-                                    checked={checkeds_k.kB}
+                                    checked={Levels.kB}
                                 />
                                 <span className="checkmark"></span>
                             </label></li>
