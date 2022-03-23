@@ -328,7 +328,7 @@ export default class Method_2D extends PureComponent {
             const { masx, massum } = this.state;
 
             const id = baseElement.findIndex((item) => item.name_el == this.masInformation_2D.nameElement)
-            if(this.masInformation.checkeds_k.kA){
+            if(this.masInformation_2D.checkeds_k.kA){
                 this.masInformation_2D.en_first_point = +baseElement[id].energy_foto[0] * 1000;
                 this.masInformation_2D.en_second_point = +baseElement[id].energy_foto[1] * 1000;
             } 
@@ -411,7 +411,7 @@ export default class Method_2D extends PureComponent {
     }
 
     switch_k = (checkeds_k) =>{
-        this.masInformation.checkeds_k = checkeds_k
+        this.masInformation_2D.checkeds_k = checkeds_k
     }
 
     render() {

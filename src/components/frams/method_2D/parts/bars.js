@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, {Component, PureComponent } from 'react';
 
-export default class Bars extends PureComponent {
+export default class Bars extends Component {
 
     // state = {
     //     // chek_obsorv: false,
