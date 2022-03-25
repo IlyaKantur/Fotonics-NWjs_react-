@@ -28,7 +28,7 @@ export default class Processing {
         this.gran = masInformation_2D.Gran; // Границы
 
         // Введеные значения
-        this.Title = masInformation_2D.Title || masInformation_2D.nameElement || 'Untitled'; // Названия соединение
+        this.Сompound = masInformation_2D.Сompound || masInformation_2D.nameElement || 'Сompoundd'; // Названия соединение
         this.nameElement = masInformation_2D.nameElement || "Element"; // Название элемента
         this.Levels = masInformation_2D.Levels;
 
@@ -470,7 +470,7 @@ export default class Processing {
                 const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
                 const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
 
-                const path = this.Title == this.nameElement ? this.nameElement : this.Title + `/` + this.nameElement;
+                const path = this.Сompound == this.nameElement ? this.nameElement : this.Сompound + `/` + this.nameElement;
                 const path_write_image = `result/image/${path}`
                 fs.mkdir(path_write_image, (err) => {
                     if (err != null) { console.log(err) };

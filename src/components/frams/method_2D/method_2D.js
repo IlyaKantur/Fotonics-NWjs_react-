@@ -28,7 +28,7 @@ export default class Method_2D extends PureComponent {
             chek_obsorv: false,
             double_processing: false,
             SaveLast: false,
-            Title: '',
+            Сompound: '',
             nameElement: '',
             Levels: {
                 kA: true,
@@ -355,7 +355,7 @@ export default class Method_2D extends PureComponent {
     
 
     save_protocol = () => {
-        const nameFolderProtocol = this.masInformation_2D.Title || 'NoName';
+        const nameFolderProtocol = this.masInformation_2D.Сompound || 'NoName';
         const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
@@ -402,15 +402,16 @@ export default class Method_2D extends PureComponent {
 
     save = () => {
         const { coor_masx, coor_massum } = this.state;
-        const {Title, nameElement} = this.masInformation_2D;
+        let {Сompound, nameElement} = this.masInformation_2D;
 
+        const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-        const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
+        const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`;
 
-        Title = Title || nameElement || 'Untitled';
-        nameElement = nameElement || 'Element'
+        Сompound = Сompound || nameElement || 'Сompound';
+        nameElement = nameElement || 'Element';
 
-        const path = Title == nameElement ? nameElement : Title + `/` + nameElement;
+        const path = Сompound == nameElement ? nameElement : Сompound + `/` + nameElement;
         const path_save = `./result/Processed/2D/${path}/${dataProtocol}/${nameElement}_${timeProtocol}.dat`;
 
         const file_2D = fs.createWriteStream(path_save);

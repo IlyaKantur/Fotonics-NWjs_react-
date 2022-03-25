@@ -1,4 +1,4 @@
-import React, {Component, PureComponent } from 'react';
+import React, { Component, PureComponent } from 'react';
 
 // import Plotly from 'plotly.js/lib/core';
 // import createPlotlyComponent from 'react-plotly.js/factory';
@@ -17,9 +17,9 @@ export default class Method_1D extends PureComponent {
         this.revision_file = 0
         this.masInformation = {
             method: 'Однокоординатный',
-            Title: '',
+            Сompound: '',
             nameElement: '',
-            checkeds_k: {
+            Levels: {
                 kA: true,
                 kB: false
             },
@@ -210,13 +210,41 @@ export default class Method_1D extends PureComponent {
 
     click_save = () => {
         const { coor, massum } = this.state;
-        
-        const path_save = `./result/Processed/1D/${this.masInformation.Title ? this.masInformation.Title : 'NoName'}.dat`;
+        let { Сompound, nameElement, Levels} = this.masInformation;
 
-        const file_1D = fs.createWriteStream(path_save);
-        file_1D.on('error', function (err) { console.log(err) })
-        coor.forEach((item, i) => file_1D.write(`${item} ${massum[i]} \n`));
-        file_1D.end();
+        const date = new Date();
+        const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+        const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`;
+
+        Сompound = Сompound || nameElement || 'Сompound';
+        nameElement = nameElement || 'Element';
+        Levels = Object.keys(Levels).filter(key => {return Levels[key]})
+
+        let path_save = `./result/Processed/1D/`;
+        // ${Сompound == nameElement ? nameElement : Сompound}
+        // /${dataProtocol}/${nameElement}_${timeProtocol}.dat
+
+        if(Сompound != nameElement){
+            path_save += `${Сompound}/`;
+            fs.mkdirSync(path_save, (err) => {})
+        }
+
+        path_save += `${nameElement}/`;
+        fs.mkdir(path_save, (err) => {
+            if (err != null) { console.log(err) };
+            path_save += `${Levels[0]}/`
+            fs.mkdir(path_save, (err) => {
+                if (err != null) { console.log(err) };
+                path_save += `${dataProtocol}/`;
+                fs.mkdir(path_save, (err) =>{
+                    if (err != null) { console.log(err) };
+                    const file_1D = fs.createWriteStream(`${path_save}/${nameElement}_${timeProtocol}.dat`);
+                    file_1D.on('error', function (err) { console.log(err) })
+                    coor.forEach((item, i) => file_1D.write(`${item} ${massum[i]} \n`));
+                    file_1D.end();
+                })
+            })
+        })
     }
 
     click_sum = () => {
@@ -245,7 +273,7 @@ export default class Method_1D extends PureComponent {
     }
 
     save_protocol = () => {
-        const nameFolderProtocol = this.masInformation.Title || 'NoName';
+        const nameFolderProtocol = this.masInformation.Сompound || 'Compound';
         const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
@@ -270,19 +298,19 @@ export default class Method_1D extends PureComponent {
     click_calibration = () => {
 
         let newCoor = [];
-        const {baseElement} = this.props;
+        const { baseElement } = this.props;
         const { coor, massum } = this.state;
-        
+
         const id = baseElement.findIndex((item) => item.name_el == this.masInformation.nameElement)
-        if(this.masInformation.checkeds_k.kA){
+        if (this.masInformation.Levels.kA) {
             this.masInformation.en_first_point = +baseElement[id].energy_foto[0] * 1000;
             this.masInformation.en_second_point = +baseElement[id].energy_foto[1] * 1000;
-        } 
+        }
         else {
             this.masInformation.en_first_point = +baseElement[id].energy_foto[3] * 1000;
             this.masInformation.en_second_point = +baseElement[id].energy_foto[5] * 1000;
         }
-        
+
         let del_en = (this.masInformation.en_second_point - this.masInformation.en_first_point) /
             (this.masInformation.n_second_point - this.masInformation.n_first_point);
 
@@ -295,16 +323,15 @@ export default class Method_1D extends PureComponent {
     }
 
     findPeaks = () => {
-        const {massum} = this.state;
+        const { massum } = this.state;
         const lengh = 10;
         let peaks, idPeaks, j = 0;
-        for(let i = 0; i < massum.length; i++)
-        {
-            if(massum[i] < massum[i + 1] && lengh > j++){
+        for (let i = 0; i < massum.length; i++) {
+            if (massum[i] < massum[i + 1] && lengh > j++) {
                 peaks = massum[i + 1];
                 idPeaks = i + 1
             }
-            else if(j > lengh){
+            else if (j > lengh) {
                 i = massum.length;
             }
             else j = 0;
@@ -318,7 +345,7 @@ export default class Method_1D extends PureComponent {
 
         let { massum } = this.state;
         ///
-        
+
         // let n = Number(this.masInformation.n_smoothing);
 
         // let sum = 0, del = 3, floor = Math.floor(n / 2);
@@ -356,8 +383,8 @@ export default class Method_1D extends PureComponent {
         })
     }
 
-    switch_k = (checkeds_k) =>{
-        this.masInformation.checkeds_k = checkeds_k
+    switch_k = (Levels) => {
+        this.masInformation.Levels = Levels
     }
 
     render() {
@@ -384,8 +411,8 @@ export default class Method_1D extends PureComponent {
                         revision={revision}
                         coor={coor}
                         massum={massum}
-                        masInformation = {this.masInformation}
-                        switch_k = {this.switch_k}
+                        masInformation={this.masInformation}
+                        switch_k={this.switch_k}
                     />
                     break;
                 case 'List_graph':
@@ -396,7 +423,7 @@ export default class Method_1D extends PureComponent {
                         revision_file={this.revision_file}
                         coor_file={coor_file}
                         massum_file={massum_file}
-                        Title={this.masInformation.Title}
+                        Сompound={this.masInformation.Сompound}
                         AxisX={this.masInformation.AxisX}
                         AxisY={this.masInformation.AxisY}
                     />
@@ -424,8 +451,7 @@ export default class Method_1D extends PureComponent {
 
 class Sum_graph extends Component {
 
-    constructor(props)
-    {
+    constructor(props) {
         super(props)
         // this.massum = this.props.massum
         this.masVisible = {
@@ -439,7 +465,7 @@ class Sum_graph extends Component {
 
     state = {
         reload: false,
-        checkeds_k: {
+        Levels: {
             kA: true,
             kB: false
         }
@@ -452,25 +478,25 @@ class Sum_graph extends Component {
         })
     }
 
-    switch_k = (className, checked) =>{
+    switch_k = (className, checked) => {
 
-        let {checkeds_k} = this.state
+        let { Levels } = this.state
 
-        if(checked){
-            switch(className){
-                case 'kA' : 
-                    checkeds_k['kA'] = true;
-                    checkeds_k['kB'] = false;
+        if (checked) {
+            switch (className) {
+                case 'kA':
+                    Levels['kA'] = true;
+                    Levels['kB'] = false;
                     break;
-                case 'kB' : 
-                    checkeds_k['kA'] = false;
-                    checkeds_k['kB'] = true;
+                case 'kB':
+                    Levels['kA'] = false;
+                    Levels['kB'] = true;
                     break;
             }
         }
-        this.props.switch_k(checkeds_k)
+        this.props.switch_k(Levels)
         this.setState({
-            checkeds_k: checkeds_k
+            Levels: Levels
         })
     }
 
@@ -484,7 +510,7 @@ class Sum_graph extends Component {
     //     }
     // }
 
-    
+
 
     render() {
         const { click_loadFolder, click_loadFile, click_save, click_sum,
@@ -493,14 +519,14 @@ class Sum_graph extends Component {
             // options
         } = this.props;
 
-        const {checkeds_k} = this.state
+        const { Levels } = this.state
 
         return (
             <div id="sum_graph">
                 <div id="control_panel">
                     <h3 onClick={() => this.hide_parametr('file')}>Файл</h3>
                     <div style={{ display: this.masVisible['file'] ? 'block' : 'none' }}>
-                        <input id='Title' type='text' placeholder="Соединение"
+                        <input id='Сompound' type='text' placeholder="Соединение"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
                         <input id='nameElement' type='text' placeholder="Элемент"
@@ -510,7 +536,7 @@ class Sum_graph extends Component {
                             <input className="kA" id={`kA`}
                                 onChange={(e) => this.switch_k(e.target.className, e.target.checked)}
                                 type="checkbox"
-                                checked={checkeds_k.kA}
+                                checked={Levels.kA}
                             />
                             <span className="checkmark"></span>
                         </label>
@@ -518,7 +544,7 @@ class Sum_graph extends Component {
                             <input className="kB" id={`kB`}
                                 onChange={(e) => this.switch_k(e.target.className, e.target.checked)}
                                 type="checkbox"
-                                checked={checkeds_k.kB}
+                                checked={Levels.kB}
                             />
                             <span className="checkmark"></span>
                         </label>
@@ -582,7 +608,7 @@ class Sum_graph extends Component {
                             data={data}
                             graphDiv="graph"
                             layout={{
-                                title: `${masInformation.Title}`,
+                                title: `${masInformation.Сompound}`,
                                 datarevision: { revision: revision },
                                 width: 900, height: 675,
                                 xaxis: {
@@ -615,7 +641,7 @@ class List_graph extends PureComponent {
 
     render() {
         const { mas_name_file, click_graph_file, data_file,
-            coor_file, massum_file, revision_file, Title
+            coor_file, massum_file, revision_file, Сompound
             // ptions
         } = this.props;
         return (
@@ -633,7 +659,7 @@ class List_graph extends PureComponent {
                             data={data_file}
                             graphDiv="graph"
                             layout={{
-                                title: `${Title}`,
+                                title: `${Сompound}`,
                                 datarevision: { revision: revision_file },
                                 width: 900, height: 675,
                                 xaxis: {

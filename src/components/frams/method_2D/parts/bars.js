@@ -16,7 +16,7 @@ export default class Bars extends Component {
     //     XX: 1000,
     //     Yy: 100,
     //     YY: 800,
-    //     Title: ''
+    //     Сompound: ''
     // }
 
     // stored_value(name ,value){
@@ -143,7 +143,7 @@ export default class Bars extends Component {
                                 <span className="checkmark"></span>
                             </label>
                             </li>
-                            <li><input id='Title' type='text' placeholder="Соединение"
+                            <li><input id='Сompound' type='text' placeholder="Соединение"
                                 onChange={(e) => stored_value(e.target.id, e.target.value)}
                             ></input></li>
                             <li><input id='nameElement' type='text' placeholder="Элемент"
