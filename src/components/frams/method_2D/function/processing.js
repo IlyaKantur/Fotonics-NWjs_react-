@@ -288,34 +288,6 @@ export default class Processing {
 
                 //
 
-                // for (let x = 0; x < xfin - xbeg; x++) {
-                //     mas[x] = 0;
-                //     if (this.imgnum == 0) this.masx[x] = x;
-                //     // this.oldX[x] = this.masx[x];
-                // }
-
-
-                // for (let y = 0; y < yfin - ybeg; y++) {
-                //     for (let x = 0; x < xfin - xbeg; x++) {
-                //         mas[x] += mas0[yy];
-                //         yy += 1;
-                //     }
-                //     // if(this.gran) {
-                //     //     yy += (this.ix - xfin) + xbeg
-                //     // }
-                // }
-                // if(this.sumcolumn){ 
-                //     let m = []; j = -1; ii = 0;
-                //     for (let i = 0; i < (xfin - xbeg) / this.sumcolumnN; i++) {
-                //         m[i] = 0;
-                //         for (let j = 0; j < this.sumcolumnN; j++) {
-                //             m[i] += mas[ii++];
-                //         }
-                //         if (this.imgnum == 0) this.masx[++j] = j;
-                //     }
-                //     mas = m.slice();
-                // }
-
                 if (this.imgnum == 0) this.oldX = this.masx.slice();
 
                 // Запись для графика
@@ -369,7 +341,13 @@ export default class Processing {
             for (let i = 0; i < ImgDataH.length; i += 0) {
                 for(let j = 0; j < (this.sumcolumn ? this.sumcolumnN : 1); j++)
                 {
-                    if (ImgClear.data[i] <= mas0[ii]) {
+                    if(!this.intPix && ImgClear.data[i] != 255 && mas0[ii] != 0)
+                    {
+                        ImgClear.data[i] = 255;
+                        ImgClear.data[i + 1] = 255;
+                        ImgClear.data[i + 2] = 255;
+                    }
+                    else if (ImgClear.data[i] <= mas0[ii]) {
                         ImgClear.data[i] += mas0[ii];
                         ImgClear.data[i + 1] += mas0[ii];
                         ImgClear.data[i + 2] += mas0[ii];
@@ -379,49 +357,6 @@ export default class Processing {
                 ii++;
                 if (jj >= x_x && this.gran) { i += ((this.ix - xfin) + xbeg) * 4; jj = 0; }
             }
-
-            // console.log(`Суммарное 2 ${performance.now() - start}`)
-            // start = performance.now();
-
-            // очишенное изображение
-            // ii = 0;
-            // yy = xbeg;
-            // if(this.imgnum == 0){
-            //     ImgClear.data.map(item => item = 0)
-            // }
-
-            // for (let i = 0; i < ImgClear.data.length; i += 4) {
-            //     if (i % 4 == 3) {
-            //         continue;
-            //     }
-            //     if (ImgClear.data[i] > mas0[ii]) {
-            //         ii++
-            //         ImgClear.data[i + 3] = 255
-            //         continue;
-            //     } else {
-            //         // if (this.gran && (ii >= ibeg && ii <= ifin && (yy == xbeg || yy == xfin || (ii > ibeg && ii < ibeg + (xfin - xbeg)) || (ii > ifin - (xfin - xbeg) && ii < ifin)) )) {
-            //         //     // || (ii > ibeg && ii < ibeg + (xfin - xbeg)) || (ii > ifin - (xfin - xbeg) && ii < ifin))
-            //         //     ImgClear.data[i] = 255;
-            //         //     ImgClear.data[i + 1] = 0;
-            //         //     ImgClear.data[i + 2] = 0;
-            //         //     ImgClear.data[i + 3] = 255;
-
-            //         //     yy++
-            //         //     ii++;
-            //         // }
-            //         // else{
-            //             ImgClear.data[i] += mas0[ii];
-            //             ImgClear.data[i + 1] += mas0[ii];
-            //             ImgClear.data[i + 2] += mas0[ii];
-            //             ImgClear.data[i + 3] = 255;
-            //             // if(ii > ibeg) yy++
-            //             ii++
-            //         // }
-            //         // if(yy == this.ix) yy = 0   
-            //     }
-
-            // }
-            // console.log(`Суммарное 3 ${performance.now() - start}`)
 
 
             //вывод в панель
@@ -485,8 +420,6 @@ export default class Processing {
                 }
                 path_save += `${nameElement}/`;
 
-                // const path = this.Сompound == this.nameElement ? this.nameElement : this.Сompound + `/` + this.nameElement;
-                // const path_write_image = `result/image/${path}`
                 fs.mkdir(path_save, (err) => {
                     if (err != null) { console.log(err) };
                     path_save += `${Levels[0]}/`
