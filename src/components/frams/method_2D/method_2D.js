@@ -38,7 +38,7 @@ export default class Method_2D extends PureComponent {
             AxisY: 'Intensivnosti',
             Iter: false,
             IterN: 0,
-            IntPix: false,
+            IntPix: true,
             MinInt: 5,
             BF: false,
             Delta: false,
