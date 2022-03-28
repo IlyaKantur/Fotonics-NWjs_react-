@@ -216,14 +216,16 @@ export default class Method_1D extends PureComponent {
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`;
 
-        Сompound = Сompound || nameElement || 'Сompound';
+        Сompound = Сompound || 'Сompound';
         nameElement = nameElement || 'Element';
         Levels = Object.keys(Levels).filter(key => {return Levels[key]})
 
         let path_save = `./result/Processed/1D/`;
+        let name_file = `${nameElement}_${Levels}_${timeProtocol}.dat`
 
-        if(Сompound != nameElement){
+        if(Сompound != 'Сompound'){
             path_save += `${Сompound}/`;
+            name_file = `${Сompound}_${nameElement}_${Levels}_${timeProtocol}.dat`
             fs.mkdirSync(path_save, (err) => {})
         }
 
@@ -236,10 +238,10 @@ export default class Method_1D extends PureComponent {
                 path_save += `${dataProtocol}/`;
                 fs.mkdir(path_save, (err) =>{
                     if (err != null) { console.log(err) };
-                    const file_1D = fs.createWriteStream(`${path_save}/${nameElement}_${Levels}_${timeProtocol}.dat`);
-                    file_1D.on('error', function (err) { console.log(err) })
-                    coor.forEach((item, i) => file_1D.write(`${item} ${massum[i]} \n`));
-                    file_1D.end();
+                    const file = fs.createWriteStream(`${path_save}/${name_file}`);
+                    file.on('error', function (err) { console.log(err) })
+                    coor.forEach((item, i) => file.write(`${item} ${massum[i]} \n`));
+                    file.end();
                 })
             })
         })

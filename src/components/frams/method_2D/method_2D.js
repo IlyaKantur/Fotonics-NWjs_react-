@@ -355,24 +355,45 @@ export default class Method_2D extends PureComponent {
     
 
     save_protocol = () => {
-        const nameFolderProtocol = this.masInformation_2D.Сompound || 'NoName';
+
+        let { Сompound, nameElement, Levels} = this.masInformation_2D;
+
         const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
-        const dir = `result/protocol/${nameFolderProtocol}`
-        fs.mkdir(dir, err => {
-            if (err.code != "EEXIST" && err != null) { console.log(err)};
-            fs.mkdir(`${dir}/${dataProtocol}`, err => {
-                if (err.code != "EEXIST" && err != null) { console.log(err)};
-                let file = fs.createWriteStream(`./${dir}/${dataProtocol}/2D_${timeProtocol}.dat`);
-                file.on('error', function (err) { console.log(err) })
-                // const keys = Object.keys(this.masInformation);
-                const values = Object.values(this.masInformation_2D);
-                file.write(
-                    `Дата записи: ${dataProtocol}\nВремя записи: ${timeProtocol}\n`
-                )
-                this.nameInformation_2D.forEach((item, i) => { file.write(`${item} ${values[i]} \n`) })
-                file.end();
+
+        Сompound = Сompound || 'Сompound';
+        nameElement = nameElement || 'Element';
+        Levels = Object.keys(Levels).filter(key => {return Levels[key]})
+
+        let path_save = `./result/protocol/2D/`;
+        let name_file = `Protocol_${nameElement}_${Levels}_${timeProtocol}.dat`
+
+        if(Сompound != 'Сompound'){
+            path_save += `${Сompound}/`;
+            name_file = `Protocol_${Сompound}_${nameElement}_${Levels}_${timeProtocol}.dat`
+            fs.mkdirSync(path_save, (err) => {})
+        }
+        path_save += `${nameElement}/`;
+
+        
+        fs.mkdir(path_save, (err) => {
+            if (err != null) {console.log(err)};
+            path_save += `${Levels[0]}/`
+            fs.mkdir(path_save, err => {
+                if (err != null) {console.log(err)};
+                path_save += `${dataProtocol}/`;
+                fs.mkdir(path_save, err => {
+                    let file = fs.createWriteStream(`${path_save}/${name_file}`);
+                    file.on('error', (err) => { console.log(err) })
+                    // const keys = Object.keys(this.masInformation);
+                    const values = Object.values(this.masInformation_2D);
+                    file.write(
+                        `Дата записи: ${dataProtocol}\nВремя записи: ${timeProtocol}\n`
+                    )
+                    this.nameInformation_2D.forEach((item, i) => { file.write(`${item} ${values[i]} \n`) })
+                    file.end();
+                })
             })
         })
     }
@@ -402,22 +423,41 @@ export default class Method_2D extends PureComponent {
 
     save = () => {
         const { coor_masx, coor_massum } = this.state;
-        let {Сompound, nameElement} = this.masInformation_2D;
+        let {Сompound, nameElement, Levels} = this.masInformation_2D;
 
         const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`;
 
-        Сompound = Сompound || nameElement || 'Сompound';
+        Сompound = Сompound || 'Сompound';
         nameElement = nameElement || 'Element';
+        Levels = Object.keys(Levels).filter(key => {return Levels[key]})
 
-        const path = Сompound == nameElement ? nameElement : Сompound + `/` + nameElement;
-        const path_save = `./result/Processed/2D/${path}/${dataProtocol}/${nameElement}_${timeProtocol}.dat`;
+        let path_save = `./result/Processed/2D/`;
+        let name_file = `${nameElement}_${Levels}_${timeProtocol}.dat`
 
-        const file_2D = fs.createWriteStream(path_save);
-        file_2D.on('error', function (err) { console.log(err) })
-        coor_masx.forEach((item, i) => file_2D.write(`${item} ${coor_massum[i]} \n`));
-        file_2D.end();
+        if(Сompound != 'Сompound'){
+            path_save += `${Сompound}/`;
+            name_file = `${Сompound}_${nameElement}_${Levels}_${timeProtocol}.dat`
+            fs.mkdirSync(path_save, (err) => {})
+        }
+
+        path_save += `${nameElement}/`;
+        fs.mkdir(path_save, (err) => {
+            if (err != null) { console.log(err) };
+            path_save += `${Levels[0]}/`
+            fs.mkdir(path_save, (err) => {
+                if (err != null) { console.log(err) };
+                path_save += `${dataProtocol}/`;
+                fs.mkdir(path_save, (err) =>{
+                    if (err != null) { console.log(err) };
+                    const file = fs.createWriteStream(`${path_save}/${name_file}`);
+                    file.on('error', function (err) { console.log(err) })
+                    coor_masx.forEach((item, i) => file.write(`${item} ${coor_massum[i]} \n`));
+                    file.end();
+                })
+            })
+        })
     }
 
     switch_k = (Levels) =>{

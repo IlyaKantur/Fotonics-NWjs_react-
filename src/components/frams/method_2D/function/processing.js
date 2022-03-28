@@ -28,7 +28,7 @@ export default class Processing {
         this.gran = masInformation_2D.Gran; // Границы
 
         // Введеные значения
-        this.Сompound = masInformation_2D.Сompound || masInformation_2D.nameElement || 'Сompoundd'; // Названия соединение
+        this.Сompound = masInformation_2D.Сompound || 'Сompound'; // Названия соединение
         this.nameElement = masInformation_2D.nameElement || "Element"; // Название элемента
         this.Levels = masInformation_2D.Levels;
 
@@ -459,6 +459,7 @@ export default class Processing {
                 console.log(message)
                 this.onConsoleMessage(message, false)
 
+                let Сompound, nameElement, Levels;
 
                 const url = this.himgsum.toDataURL('image/jpg');
                 const base64Data = url.replace(/^data:image\/png;base64,/, "");
@@ -470,23 +471,40 @@ export default class Processing {
                 const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
                 const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
 
-                const path = this.Сompound == this.nameElement ? this.nameElement : this.Сompound + `/` + this.nameElement;
-                const path_write_image = `result/image/${path}`
-                fs.mkdir(path_write_image, (err) => {
+                Сompound = this.Сompound || 'Сompound';
+                nameElement = this.nameElement || 'Element';
+                Levels = Object.keys(this.Levels).filter(key => {return this.Levels[key]})
+
+                let path_save = `./result/image/2D/`;
+                let name_file = `${nameElement}_${Levels}_${timeProtocol}.jpg`
+
+                if(Сompound != 'Сompound'){
+                    path_save += `${Сompound}/`;
+                    name_file = `${Сompound}_${nameElement}_${Levels}_${timeProtocol}`
+                    fs.mkdirSync(path_save, (err) => {})
+                }
+                path_save += `${nameElement}/`;
+
+                // const path = this.Сompound == this.nameElement ? this.nameElement : this.Сompound + `/` + this.nameElement;
+                // const path_write_image = `result/image/${path}`
+                fs.mkdir(path_save, (err) => {
                     if (err != null) { console.log(err) };
-                    fs.mkdir(`${path_write_image}/${dataProtocol}/`, (err) => {
+                    path_save += `${Levels[0]}/`
+                    fs.mkdir(path_save, (err) => {
                         if (err != null) { console.log(err) };
-
-                        fs.writeFile(`${path_write_image}/${dataProtocol}/${this.nameElement}_${timeProtocol}_${this.imgnum}.jpg`, base64Data, 'base64', function (err) {
-                            if (err != null) {
-                                console.log(err);
-                            }
-                        });
-
-                        fs.writeFile(`${path_write_image}/${dataProtocol}/${this.nameElement}_${timeProtocol}_${this.imgnum}_clear.jpg`, base64DataClearImg, 'base64', function (err) {
-                            if (err != null) {
-                                console.log(err);
-                            }
+                        path_save += `${dataProtocol}/`;
+                        fs.mkdir(path_save, (err) => {
+                            fs.writeFile(`${path_save}/${name_file}.jpg`, base64Data, 'base64', function (err) {
+                                if (err != null) {
+                                    console.log(err);
+                                }
+                            });
+    
+                            fs.writeFile(`${path_save}/${name_file}_clear.jpg`, base64DataClearImg, 'base64', function (err) {
+                                if (err != null) {
+                                    console.log(err);
+                                }
+                            });
                         });
                     })
                 })
