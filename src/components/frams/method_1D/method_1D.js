@@ -221,8 +221,6 @@ export default class Method_1D extends PureComponent {
         Levels = Object.keys(Levels).filter(key => {return Levels[key]})
 
         let path_save = `./result/Processed/1D/`;
-        // ${Сompound == nameElement ? nameElement : Сompound}
-        // /${dataProtocol}/${nameElement}_${timeProtocol}.dat
 
         if(Сompound != nameElement){
             path_save += `${Сompound}/`;
@@ -238,7 +236,7 @@ export default class Method_1D extends PureComponent {
                 path_save += `${dataProtocol}/`;
                 fs.mkdir(path_save, (err) =>{
                     if (err != null) { console.log(err) };
-                    const file_1D = fs.createWriteStream(`${path_save}/${nameElement}_${timeProtocol}.dat`);
+                    const file_1D = fs.createWriteStream(`${path_save}/${nameElement}_${Levels}_${timeProtocol}.dat`);
                     file_1D.on('error', function (err) { console.log(err) })
                     coor.forEach((item, i) => file_1D.write(`${item} ${massum[i]} \n`));
                     file_1D.end();
