@@ -188,21 +188,10 @@ export default class Processing {
             // let start = performance.now();
 
             if (!this.double_processing) {
-                let zz = 0;
                 //Перевод снимка
                 for (let i = 0; i < ImgDataH.length; i += 4) {
-                    if (this.intPix) {
-                        mas0[ii] = ImgDataH[i];
-                        if (this.fon_load) masfon[ii] = this.ImgFon[i]
-                    }
-                    else {
-                        if (ImgDataH[i] >= this.minInt) {
-                            mas0[ii] = 1
-                        }
-                        else {
-                            mas0[ii] = 0;
-                        }
-                    }
+                    mas0[ii] = ImgDataH[i];
+                    if (this.fon_load) masfon[ii] = this.ImgFon[i]
                     ii++;
                 }
 
@@ -279,7 +268,12 @@ export default class Processing {
                 }
                 for (let y = 0; y < y_y; y++) {
                     for (let x = 0; x < ((x_x) / (this.sumcolumn ? this.sumcolumnN : 1)); x++) {
-                        mas[x] += mas0[yy++];
+                        if(this.intPix == false){
+                            if(mas0[yy] >= this.minInt) {mas[x] += 1;}
+                            else {mas[x] += 0;}
+                        }
+                        else {mas[x] += mas0[yy];}
+                        yy++;
                     }
                     // if(this.gran) {
                     //     yy += (this.ix - xfin) + xbeg
@@ -341,13 +335,7 @@ export default class Processing {
             for (let i = 0; i < ImgDataH.length; i += 0) {
                 for(let j = 0; j < (this.sumcolumn ? this.sumcolumnN : 1); j++)
                 {
-                    if(!this.intPix && ImgClear.data[i] != 255 && mas0[ii] != 0)
-                    {
-                        ImgClear.data[i] = 255;
-                        ImgClear.data[i + 1] = 255;
-                        ImgClear.data[i + 2] = 255;
-                    }
-                    else if (ImgClear.data[i] <= mas0[ii]) {
+                    if (ImgClear.data[i] < mas0[ii]) {
                         ImgClear.data[i] += mas0[ii];
                         ImgClear.data[i + 1] += mas0[ii];
                         ImgClear.data[i + 2] += mas0[ii];

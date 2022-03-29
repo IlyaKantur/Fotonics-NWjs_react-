@@ -34,8 +34,8 @@ export default class Method_2D extends PureComponent {
                 kA: true,
                 kB: false
             },
-            AxisX: 'Energy',
-            AxisY: 'Intensivnosti',
+            AxisX: 'Энергия фотонов, эВ',
+            AxisY: 'Интенсивность, у.е.',
             Iter: false,
             IterN: 0,
             IntPix: true,

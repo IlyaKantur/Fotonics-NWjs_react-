@@ -23,8 +23,8 @@ export default class Method_1D extends PureComponent {
                 kA: true,
                 kB: false
             },
-            AxisX: 'Energy',
-            AxisY: 'Intensivnosti',
+            AxisX: 'Энергия фотонов, эВ',
+            AxisY: 'Интенсивность, у.е.',
             countSum: 1,
             en_first_point: 0,
             en_second_point: 0,
