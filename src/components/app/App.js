@@ -39,7 +39,7 @@ export default class App extends PureComponent {
             { nameF: "camera", id_f: '1' }
         ],
         activeFrame: { name: "method_2D", id: '1' },
-        activeAlert: [{ text: 'test крестика', id: '0' }],
+        activeAlert: [],
         baseElement: []
     }
 

@@ -81,6 +81,8 @@ export default class Processing {
 
         //Test
         this.TimeSum = 0;
+        this.finishImgTime = 0
+        this.loseTime = 0
     }
 
     read_x_y = () => {
@@ -142,6 +144,10 @@ export default class Processing {
         return new Promise((resolve, reject) => {
 
             // if(this.imgnum == 0) console.log(`Начало  ${performance.now() - this.startOb}`)
+            if(this.imgnum != 0){
+                this.loseTime += (performance.now() - this.finishImgTime)/1000
+                console.log((performance.now() - this.finishImgTime)/1000)
+            }
 
             let imgg = this.masImg[this.imgnum];
             this.ctx.clearRect(0, 0, this.cx, this.cy);
@@ -187,116 +193,114 @@ export default class Processing {
             let s = performance.now();
             // let start = performance.now();
 
-            if (!this.double_processing) {
-                //Перевод снимка
-                for (let i = 0; i < ImgDataH.length; i += 4) {
-                    mas0[ii] = ImgDataH[i];
-                    if (this.fon_load) masfon[ii] = this.ImgFon[i]
-                    ii++;
-                }
+            //Перевод снимка
+            for (let i = 0; i < ImgDataH.length; i += 4) {
+                mas0[ii] = ImgDataH[i];
+                if (this.fon_load) masfon[ii] = this.ImgFon[i]
+                ii++;
+            }
 
-                //SUMCOL
-                if (this.sumcolumn || this.gran) {
-                    let m = [], mf = [], jj = 0, x = -1; ii = ibeg;
-                    for (let i = 0; i < (x_x / (this.sumcolumn ? this.sumcolumnN : 1)) * (y_y); i++) {
-                        m[i] = 0;
-                        if (this.fon_load) mf[i] = 0;
-                        for (let j = 0; j < (this.sumcolumn ? this.sumcolumnN : 1); j++) {
-                            m[i] += mas0[ii++]; jj++;
-                            if (this.fon_load) mf[i] = masfon[ii++];
-                        }
-                        if (jj >= x_x && this.gran) { ii += (this.ix - xfin) + xbeg; jj = 0; }
-                        
+            //SUMCOL
+            if (this.sumcolumn || this.gran) {
+                let m = [], mf = [], jj = 0, x = -1; ii = ibeg;
+                for (let i = 0; i < (x_x / (this.sumcolumn ? this.sumcolumnN : 1)) * (y_y); i++) {
+                    m[i] = 0;
+                    if (this.fon_load) mf[i] = 0;
+                    for (let j = 0; j < (this.sumcolumn ? this.sumcolumnN : 1); j++) {
+                        m[i] += mas0[ii++]; jj++;
+                        if (this.fon_load) mf[i] = masfon[ii++];
                     }
-                    mas0 = m.slice();
-                    masfon = mf.slice();
+                    if (jj >= x_x && this.gran) { ii += (this.ix - xfin) + xbeg; jj = 0; }
+
                 }
-                //
+                mas0 = m.slice();
+                masfon = mf.slice();
+            }
+            //
 
-                // console.log(`Перевод снимка ${performance.now() - start}`)
-                // start = performance.now();
+            // console.log(`Перевод снимка ${performance.now() - start}`)
+            // start = performance.now();
 
-                // фильтрация
+            // фильтрация
 
-                if ((!this.bf && (this.fon_load || this.delta || this.bpix)) || this.gain1) {
+            if ((!this.bf && (this.fon_load || this.delta || this.bpix)) || this.gain1) {
 
-                    ii = xbeg;
-                    for (let i = 0; i < mas0.length; i++) {
+                ii = xbeg;
+                for (let i = 0; i < mas0.length; i++) {
 
-                        //вычитание фонового изображения
-                        if (this.fon_load) {
-                            if (mas0[i] > masfon[i] && mas0[i - 1] < masfon[i] && mas0[i + 1] < masfon[i]) mas0[i] = 0
-                            else mas0[i] -= masfon[i];
-                        }
-                        //очистка от артифактов
-                        if (this.bpix) {
-                            let del = +((((mas0[i - 1] == undefined ? 0 : mas0[i - 1]) + (mas0[i + x_x] == undefined ? 0 : mas0[i + x_x])
-                                + (mas0[i + 1] == undefined ? 0 : mas0[i + 1]) + (mas0[i - x_x] == undefined ? 0 : mas0[i - x_x])) / 4).toFixed(0));
-
-                            if (mas0[i] > del + this.dbpix) {
-                                mas0[i] = del + this.dbpix;
-                            }
-                        }
-                        //убирать в заданом интервале
-                        if (this.delta && mas0[i] >= this.dfonfrom && mas0[i] <= this.dfonto) {
-                            mas0[i] = 0;
-                        }
-
-                        //усиление. метод 1
-                        if (this.gain1 && mas0[i] >= this.minInt_gain1) {
-                            mas0[i] = +((mas0[i] * (1 + (+this.k_gain1 / 100))).toFixed(0))
-                        }
-
-                        if (mas0[i] < 0) mas0[i] = 0;
-                        if (mas0[i] > 255) mas0[i] = 255;
-
-                        // if (this.gran && ii++ == xfin) {
-                        //     i += (this.ix - xfin) + xbeg - 1; ii = xbeg;
-                        // }
+                    //вычитание фонового изображения
+                    if (this.fon_load) {
+                        if (mas0[i] > masfon[i] && mas0[i - 1] < masfon[i] && mas0[i + 1] < masfon[i]) mas0[i] = 0
+                        else mas0[i] -= masfon[i];
                     }
-                }
+                    //очистка от артифактов
+                    if (this.bpix) {
+                        let del = +((((mas0[i - 1] == undefined ? 0 : mas0[i - 1]) + (mas0[i + x_x] == undefined ? 0 : mas0[i + x_x])
+                            + (mas0[i + 1] == undefined ? 0 : mas0[i + 1]) + (mas0[i - x_x] == undefined ? 0 : mas0[i - x_x])) / 4).toFixed(0));
 
-                // console.log(`Фильтрация ${performance.now() - start}`)
-                // start = performance.now();
-
-                //Накопление
-
-                //
-                for (let x = 0; x < ((x_x) / (this.sumcolumn ? this.sumcolumnN : 1)); x++) {
-                    mas[x] = 0;
-                    if (this.imgnum == 0) this.masx[x] = x;
-                }
-                for (let y = 0; y < y_y; y++) {
-                    for (let x = 0; x < ((x_x) / (this.sumcolumn ? this.sumcolumnN : 1)); x++) {
-                        if(this.intPix == false){
-                            if(mas0[yy] >= this.minInt) {mas[x] += 1;}
-                            else {mas[x] += 0;}
+                        if (mas0[i] > del + this.dbpix) {
+                            mas0[i] = del + this.dbpix;
                         }
-                        else {mas[x] += mas0[yy];}
-                        yy++;
                     }
-                    // if(this.gran) {
-                    //     yy += (this.ix - xfin) + xbeg
+                    //убирать в заданом интервале
+                    if (this.delta && mas0[i] >= this.dfonfrom && mas0[i] <= this.dfonto) {
+                        mas0[i] = 0;
+                    }
+
+                    //усиление. метод 1
+                    if (this.gain1 && mas0[i] >= this.minInt_gain1) {
+                        mas0[i] = +((mas0[i] * (1 + (+this.k_gain1 / 100))).toFixed(0))
+                    }
+
+                    if (mas0[i] < 0) mas0[i] = 0;
+                    if (mas0[i] > 255) mas0[i] = 255;
+
+                    // if (this.gran && ii++ == xfin) {
+                    //     i += (this.ix - xfin) + xbeg - 1; ii = xbeg;
                     // }
                 }
-
-                //
-
-                if (this.imgnum == 0) this.oldX = this.masx.slice();
-
-                // Запись для графика
-                for (let x = 0; x < mas.length; x++) {
-                    if (this.imgnum == 0) {
-                        this.massum[x] = 0;
-                    }
-                    this.massum[x] += mas[x];
-                }
-                this.oldY = this.massum.slice();
-
-
-                // console.log(`Границы ${performance.now() - start}`)
-                // start = performance.now();
             }
+
+            // console.log(`Фильтрация ${performance.now() - start}`)
+            // start = performance.now();
+
+            //Накопление
+
+            //
+            for (let x = 0; x < ((x_x) / (this.sumcolumn ? this.sumcolumnN : 1)); x++) {
+                mas[x] = 0;
+                if (this.imgnum == 0) this.masx[x] = x;
+            }
+            for (let y = 0; y < y_y; y++) {
+                for (let x = 0; x < ((x_x) / (this.sumcolumn ? this.sumcolumnN : 1)); x++) {
+                    if (this.intPix == false) {
+                        if (mas0[yy] >= this.minInt) { mas[x] += 1; }
+                        else { mas[x] += 0; }
+                    }
+                    else { mas[x] += mas0[yy]; }
+                    yy++;
+                }
+                // if(this.gran) {
+                //     yy += (this.ix - xfin) + xbeg
+                // }
+            }
+
+            //
+
+            if (this.imgnum == 0) this.oldX = this.masx.slice();
+
+            // Запись для графика
+            for (let x = 0; x < mas.length; x++) {
+                if (this.imgnum == 0) {
+                    this.massum[x] = 0;
+                }
+                this.massum[x] += mas[x];
+            }
+            this.oldY = this.massum.slice();
+
+
+            // console.log(`Границы ${performance.now() - start}`)
+            // start = performance.now();
 
             //накопленое фото
 
@@ -333,8 +337,7 @@ export default class Processing {
             }
             ii = 0; let jj = 0;
             for (let i = 0; i < ImgDataH.length; i += 0) {
-                for(let j = 0; j < (this.sumcolumn ? this.sumcolumnN : 1); j++)
-                {
+                for (let j = 0; j < (this.sumcolumn ? this.sumcolumnN : 1); j++) {
                     if (ImgClear.data[i] < mas0[ii]) {
                         ImgClear.data[i] += mas0[ii];
                         ImgClear.data[i + 1] += mas0[ii];
@@ -396,15 +399,15 @@ export default class Processing {
 
                 Сompound = this.Сompound || 'Сompound';
                 nameElement = this.nameElement || 'Element';
-                Levels = Object.keys(this.Levels).filter(key => {return this.Levels[key]})
+                Levels = Object.keys(this.Levels).filter(key => { return this.Levels[key] })
 
                 let path_save = `./result/image/2D/`;
                 let name_file = `${nameElement}_${Levels}_${timeProtocol}.jpg`
 
-                if(Сompound != 'Сompound'){
+                if (Сompound != 'Сompound') {
                     path_save += `${Сompound}/`;
                     name_file = `${Сompound}_${nameElement}_${Levels}_${timeProtocol}`
-                    fs.mkdirSync(path_save, (err) => {})
+                    fs.mkdirSync(path_save, (err) => { })
                 }
                 path_save += `${nameElement}/`;
 
@@ -420,7 +423,7 @@ export default class Processing {
                                     console.log(err);
                                 }
                             });
-    
+
                             fs.writeFile(`${path_save}/${name_file}_clear.jpg`, base64DataClearImg, 'base64', function (err) {
                                 if (err != null) {
                                     console.log(err);
@@ -438,10 +441,13 @@ export default class Processing {
                 this.TimeSum += performance.now() - s;
                 const mes = `Суммарное время: ${((this.TimeSum) / 1000).toFixed(3)} секунд`
                 console.log(mes)
+                console.log(this.loseTime);
                 this.onConsoleMessage(mes, false)
             }
             // console.log(`${(performance.now() - s) / 1000} секунд`)
             this.TimeSum += performance.now() - s;
+            this.finishImgTime = performance.now();
+
 
             resolve({
                 massum,
