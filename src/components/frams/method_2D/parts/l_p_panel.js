@@ -25,18 +25,19 @@ export default class L_P_Panel extends PureComponent {
 
     render() {
         const { loadFolder, loadFoldImg, loadFonImg,
-                startPush, applyCoor, returnCoor, data,
-                revision, consoleMessage, onConsoleMessage,
-                id_item, finished, masInformation_2D, stored_value,
-                calibration, search_energe, save, smoothing, coor_massum, coor_masx,
-                switch_k, Levels
+            startPush, applyCoor, returnCoor, data,
+            revision, consoleMessage, onConsoleMessage,
+            id_item, finished, masInformation_2D, stored_value,
+            calibration, search_energe, save, smoothing, coor_massum, coor_masx,
+            switch_k, Levels
         } = this.props;
-        let {Plot } = this.props;
+        let { Plot } = this.props;
         const { active_l_t } = this.state;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
         let element, button_active_1, button_active_2, z1, z2;
 
+        console.log(data);
 
         if (active_l_t == 1) {
             button_active_1 = "button_active";
@@ -66,7 +67,7 @@ export default class L_P_Panel extends PureComponent {
                     stored_value={stored_value}
                     save={save}
                     smoothing={smoothing}
-                    switch_k = {switch_k}
+                    switch_k={switch_k}
                 ></Bars>;
                 <Coor
                     className={z2}
@@ -94,26 +95,12 @@ export default class L_P_Panel extends PureComponent {
                             <canvas className="ImgSum" id={`ImgSum_${id_f_nameF}`}></canvas>
                         </div>
                         <div id="graf">
-                            <div className="React_Chart" id={`React_Chart_${id_f_nameF}`}>
-                                <Plot
-                                    data={data}
-                                    graphDiv="graph"
-                                    layout={{
-                                        title: masInformation_2D.nameElement, datarevision: { revision },
-                                        width: 700, height: 525,
-                                        xaxis: {
-                                            title: masInformation_2D.AxisX,
-                                            // showgrid: false,
-                                            // zeroline: false
-                                        },
-                                        yaxis: {
-                                            title: masInformation_2D.AxisY,
-                                            // showline: false
-                                        }
-                                    }}
-                                    revision={revision}
-                                />
-                            </div>
+                            <Plot_Graph
+                                data={data}
+                                masInformation_2D={masInformation_2D}
+                                Plot = {Plot}
+                                revision = {revision}
+                            />
                         </div>
                         <div id="hidden_elem">
                             <canvas className="hiddenimg" id={`hiddenimg_${id_f_nameF}`}></canvas>
@@ -137,4 +124,33 @@ export default class L_P_Panel extends PureComponent {
         )
     }
 
+}
+
+class Plot_Graph extends PureComponent {
+
+    render() {
+        const {data, masInformation_2D, revision, Plot} = this.props;
+        return (
+            <div className="React_Chart" id={`React_Chart`}>
+                <Plot
+                    data={data}
+                    graphDiv="graph"
+                    layout={{
+                        title: masInformation_2D.nameElement, datarevision: { revision },
+                        width: 700, height: 525,
+                        xaxis: {
+                            title: masInformation_2D.AxisX,
+                            // showgrid: false,
+                            // zeroline: false
+                        },
+                        yaxis: {
+                            title: masInformation_2D.AxisY,
+                            // showline: false
+                        }
+                    }}
+                    revision={revision}
+                />
+            </div>
+        )
+    }
 }

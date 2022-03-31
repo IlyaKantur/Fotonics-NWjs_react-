@@ -219,7 +219,8 @@ export default class Method_2D extends PureComponent {
                 massum: massum,
             })
             if (!finished && !chek_obsorv) {
-                this.timerId = setInterval(() => this.work(folder), 0)
+                // this.timerId = setInterval(() => this.work(folder), 0)
+                this.work(folder)
             }
             else if(!finished && chek_obsorv){
                 if(this.masImg.length == imgnum){
@@ -272,6 +273,9 @@ export default class Method_2D extends PureComponent {
                     coor_massum: massum,
                     coor_masx: masx
                 })
+            }
+            else{
+                setTimeout(()=> this.work(folder), 0);
             }
         })
     }
