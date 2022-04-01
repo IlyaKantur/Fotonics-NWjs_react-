@@ -130,11 +130,12 @@ class Plot_Graph extends PureComponent {
 
     render() {
         const {data, masInformation_2D, revision, Plot} = this.props;
+        const config = {displaylogo:false, displayModeBar: false}//помогает но не сильно
         return (
             <div className="React_Chart" id={`React_Chart`}>
                 <Plot
-                    data={data}
                     graphDiv="graph"
+                    data={data}
                     layout={{
                         title: masInformation_2D.nameElement, datarevision: { revision },
                         width: 700, height: 525,
@@ -148,7 +149,9 @@ class Plot_Graph extends PureComponent {
                             // showline: false
                         }
                     }}
+
                     revision={revision}
+                    
                 />
             </div>
         )
