@@ -1,4 +1,4 @@
-import React, {PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import L_P_Panel from './parts/l_p_panel.js';
 import loadImg from './function/loadImg.js';
 import Processing from './function/processing.js'
@@ -13,16 +13,23 @@ export default class Method_2D extends PureComponent {
         super(props);
         this.defolt_folder_base = './Foto/Foto_base';
         this.defolt_folder_observ = './Foto/Foto_observ';
+        this.folder;
 
         this.imgnum = 0;
         this.imgFolder = null;
         this.masImg = [];
         this.imgFon = [];
-        this.finished = false
+
+        this.masx = [];
+        this.massum = [];
+
+        this.finished = false;
+        this.continue = true;
 
         this.proces;
 
-        
+        this.timeWork = 0;
+
         this.masInformation_2D = {
             method: 'Двумерный',
             chek_obsorv: false,
@@ -69,6 +76,11 @@ export default class Method_2D extends PureComponent {
                 "Дельта:", "*Вычет битого пикселя:", "*Включить границы:", "Начало по горизонтале:", "Конец по горизонтали",
                 "Начало по вертикали:", "Конец по вертикали:", `Дополнительная информация \n`
             ]
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeWork);
+        this.finished = true
     }
 
     state = {
@@ -159,7 +171,7 @@ export default class Method_2D extends PureComponent {
     }
 
     startPush = (id_f_nameF) => {
-        const imgFolder  = this.imgFolder;
+        const imgFolder = this.imgFolder;
         this.setState({
             masx: [],
             massum: [],
@@ -169,32 +181,32 @@ export default class Method_2D extends PureComponent {
             coor_massum: []
         })
         this.reloadData([], [])
-        
+
         // let cookies = nw.Window.get().cookies.getAll
         // nw.App.clearAppCache(nw.App.manifest);//
 
         const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked;
-        let folder = imgFolder || this.defolt_folder_observ;
+        this.folder = imgFolder || this.defolt_folder_observ;
         if (chek_obsorv) {
             // вставить надпись в консоль о начале наблюдения
             console.log("Наблюдение")
-            loadImg().loadObservation(folder, 0).then(({ masImg }) => {
+            loadImg().loadObservation(this.folder, 0).then(({ masImg }) => {
                 this.masImg = masImg
-                this.start({ id_f_nameF, folder});
+                this.start({ id_f_nameF });
             })
         } else {
             if (this.masImg.length == 0) {
                 loadImg().loadFolderImg(this.defolt_folder_base).then(({ masImg }) => {
                     this.masImg = masImg;
-                    this.start({ id_f_nameF, folder});
+                    this.start({ id_f_name });
                 })
             } else {
-                this.start({ id_f_nameF, folder});
+                this.start({ id_f_nameF });
             }
         }
     }
 
-    start = ({ id_f_nameF, folder}) => {
+    start = ({ id_f_nameF }) => {
         console.log("Click Start");
         const chek_obsorv = document.getElementById(`chek_obsorv_${id_f_nameF}`).checked;
         this.finished = false;
@@ -220,17 +232,17 @@ export default class Method_2D extends PureComponent {
             })
             if (!finished && !chek_obsorv) {
                 // this.timerId = setInterval(() => this.work(folder), 0)
-                this.work(folder)
+                this.work()
             }
-            else if(!finished && chek_obsorv){
-                if(this.masImg.length == imgnum){
-                    loadImg().loadObservation(folder, imgnum).then(({ masImg }) => {
+            else if (!finished && chek_obsorv) {
+                if (this.masImg.length == imgnum) {
+                    loadImg().loadObservation(this.folder, imgnum).then(({ masImg }) => {
                         this.masImg = masImg
-                        setTimeout(()=> this.work(folder), 0);
+                        this.timeWork = setTimeout(() => this.work(), 0);
                     })
                 }
-                else{
-                    setTimeout(()=> this.work(folder), 0);
+                else {
+                    this.timeWork = setTimeout(() => this.work(), 0);
                 }
             }
             else {
@@ -244,40 +256,71 @@ export default class Method_2D extends PureComponent {
 
         })
     }
-    work = (folder) => {
-        const {chek_obsorv} = this.masInformation_2D;
-        this.proces.workOnImg(this.masImg, chek_obsorv).then(({ massum, masx, finished, oldY, imgnum }) => {
-            if(chek_obsorv) this.masImg[this.imgnum] = null;
-            if(imgnum % 5 === 0 || finished) {this.reloadData(masx, massum)}
-            this.imgnum = imgnum;
-            this.finished = finished;
-            this.setState({
-                oldY: oldY,
-            })
-            if(!finished && chek_obsorv){
-                if(this.masImg.length == imgnum){
-                    loadImg().loadObservation(folder, imgnum).then(({ masImg }) => {
-                        this.masImg = masImg
-                        setTimeout(()=> this.work(folder), 0);
-                    })
-                }
-                else{
-                    setTimeout(()=> this.work(folder), 0);
-                }
-            }
-            if (finished) {
+    work = () => {
+        const { chek_obsorv } = this.masInformation_2D;
+        if (!this.finished && this.continue) {
+            this.proces.workOnImg(this.masImg, chek_obsorv).then(({ massum, masx, finished, oldY, imgnum }) => {
+                if (chek_obsorv) this.masImg[this.imgnum] = null;
+                if (imgnum % 5 === 0 || finished) { this.reloadData(masx, massum) }
+                this.imgnum = imgnum;
                 this.finished = finished;
-                this.timerId = clearInterval(this.timerId);
-                this.save_protocol();
                 this.setState({
-                    coor_massum: massum,
-                    coor_masx: masx
+                    oldY: oldY,
                 })
-            }
-            else{
-                setTimeout(()=> this.work(folder), 0);
-            }
+                if (!finished && chek_obsorv) {
+                    if (this.masImg.length == imgnum) {
+                        loadImg().loadObservation(this.folder, imgnum).then(({ masImg }) => {
+                            this.masImg = masImg
+                            this.timeWork = setTimeout(() => this.work(), 0);
+                        })
+                    }
+                    else {
+                        this.timeWork = setTimeout(() => this.work(), 0);
+                    }
+                }
+
+                this.masx = masx.slice();
+                this.massum = massum.slice();
+
+                if (finished) {
+                    this.Finished();
+                }
+                else {
+                    this.timeWork = setTimeout(() => this.work(), 0);
+                }
+            })
+        }
+
+    }
+
+    Finished = () => {
+        this.finished = true;
+        this.timerId = clearInterval(this.timerId);
+        this.save_protocol();
+        this.setState({
+            coor_massum: this.massum,
+            coor_masx: this.masx
         })
+    }
+
+    PauseContinue = (text_PauseContinue) => {
+        switch (text_PauseContinue) {
+            case 'Пауза':
+                clearTimeout(this.timeWork);
+                this.continue = false;
+                break;
+            case 'Продолжить':
+                this.continue = true;
+                this.work();
+                break;
+        }
+    }
+
+    Stop = (stopSave) => {
+        if(stopSave) this.Finished()
+        else{
+            
+        }
     }
 
     // Сглаживание
@@ -313,24 +356,24 @@ export default class Method_2D extends PureComponent {
             })
         }
     }
-    
+
     // Калибровка
     search_energe = (name) => {
         console.log(name)
     }
-    
+
     calibration = () => {
         if (this.finished) {
 
             let newCoor = [];
-            const {baseElement} = this.props;
+            const { baseElement } = this.props;
             const { masx, massum } = this.state;
 
             const id = baseElement.findIndex((item) => item.name_el == this.masInformation_2D.nameElement)
-            if(this.masInformation_2D.Levels.kA){
+            if (this.masInformation_2D.Levels.kA) {
                 this.masInformation_2D.en_first_point = +baseElement[id].energy_foto[0] * 1000;
                 this.masInformation_2D.en_second_point = +baseElement[id].energy_foto[1] * 1000;
-            } 
+            }
             else {
                 this.masInformation_2D.en_first_point = +baseElement[id].energy_foto[3] * 1000;
                 this.masInformation_2D.en_second_point = +baseElement[id].energy_foto[5] * 1000;
@@ -338,7 +381,7 @@ export default class Method_2D extends PureComponent {
 
             let del_en = (this.masInformation_2D.en_second_point - this.masInformation_2D.en_first_point) /
                 (this.masInformation_2D.n_second_point - this.masInformation_2D.n_first_point);
-            
+
             newCoor[0] = +(this.masInformation_2D.en_first_point - del_en * this.masInformation_2D.n_first_point).toFixed(4)
             for (let i = 1; i < masx.length; i++) {
                 newCoor[i] = +Number((newCoor[i - 1] + del_en)).toFixed(4);
@@ -351,11 +394,11 @@ export default class Method_2D extends PureComponent {
         }
     }
 
-    
+
 
     save_protocol = () => {
 
-        let { Сompound, nameElement, Levels} = this.masInformation_2D;
+        let { Сompound, nameElement, Levels } = this.masInformation_2D;
 
         const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
@@ -363,24 +406,24 @@ export default class Method_2D extends PureComponent {
 
         Сompound = Сompound || 'Сompound';
         nameElement = nameElement || 'Element';
-        Levels = Object.keys(Levels).filter(key => {return Levels[key]})
+        Levels = Object.keys(Levels).filter(key => { return Levels[key] })
 
         let path_save = `./result/protocol/2D/`;
         let name_file = `Protocol_${nameElement}_${Levels}_${timeProtocol}.dat`
 
-        if(Сompound != 'Сompound'){
+        if (Сompound != 'Сompound') {
             path_save += `${Сompound}/`;
             name_file = `Protocol_${Сompound}_${nameElement}_${Levels}_${timeProtocol}.dat`
-            fs.mkdirSync(path_save, (err) => {})
+            fs.mkdirSync(path_save, (err) => { })
         }
         path_save += `${nameElement}/`;
 
-        
+
         fs.mkdir(path_save, (err) => {
-            if (err != null) {console.log(err)};
+            if (err != null) { console.log(err) };
             path_save += `${Levels[0]}/`
             fs.mkdir(path_save, err => {
-                if (err != null) {console.log(err)};
+                if (err != null) { console.log(err) };
                 path_save += `${dataProtocol}/`;
                 fs.mkdir(path_save, err => {
                     let file = fs.createWriteStream(`${path_save}/${name_file}`);
@@ -401,7 +444,7 @@ export default class Method_2D extends PureComponent {
         this.setState(({ consoleMessage }) => {
             let id;
             if (consoleMessage.length == 0) { id = 0; }
-            else if(work) { id = consoleMessage[consoleMessage.length - 1].id; }
+            else if (work) { id = consoleMessage[consoleMessage.length - 1].id; }
             else { id = consoleMessage[consoleMessage.length - 1].id + 1; }
             let hours = new Date().getHours();
             let minutes = new Date().getMinutes();
@@ -411,7 +454,7 @@ export default class Method_2D extends PureComponent {
             if (seconds < 10) seconds = `0${seconds}`;
             const time = `${hours}:${minutes}:${seconds}`
             const before = consoleMessage;
-            if(work) before.pop()
+            if (work) before.pop()
             const newMessage = { message: message, id: id, time: time };
             const newM = [...before, newMessage];
             return {
@@ -422,7 +465,7 @@ export default class Method_2D extends PureComponent {
 
     save = () => {
         const { coor_masx, coor_massum } = this.state;
-        let {Сompound, nameElement, Levels} = this.masInformation_2D;
+        let { Сompound, nameElement, Levels } = this.masInformation_2D;
 
         const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
@@ -430,15 +473,15 @@ export default class Method_2D extends PureComponent {
 
         Сompound = Сompound || 'Сompound';
         nameElement = nameElement || 'Element';
-        Levels = Object.keys(Levels).filter(key => {return Levels[key]})
+        Levels = Object.keys(Levels).filter(key => { return Levels[key] })
 
         let path_save = `./result/Processed/2D/`;
         let name_file = `${nameElement}_${Levels}_${timeProtocol}.dat`
 
-        if(Сompound != 'Сompound'){
+        if (Сompound != 'Сompound') {
             path_save += `${Сompound}/`;
             name_file = `${Сompound}_${nameElement}_${Levels}_${timeProtocol}.dat`
-            fs.mkdirSync(path_save, (err) => {})
+            fs.mkdirSync(path_save, (err) => { })
         }
 
         path_save += `${nameElement}/`;
@@ -448,7 +491,7 @@ export default class Method_2D extends PureComponent {
             fs.mkdir(path_save, (err) => {
                 if (err != null) { console.log(err) };
                 path_save += `${dataProtocol}/`;
-                fs.mkdir(path_save, (err) =>{
+                fs.mkdir(path_save, (err) => {
                     if (err != null) { console.log(err) };
                     const file = fs.createWriteStream(`${path_save}/${name_file}`);
                     file.on('error', function (err) { console.log(err) })
@@ -459,7 +502,7 @@ export default class Method_2D extends PureComponent {
         })
     }
 
-    switch_k = (Levels) =>{
+    switch_k = (Levels) => {
         this.masInformation_2D.Levels = Levels
     }
 
@@ -489,7 +532,9 @@ export default class Method_2D extends PureComponent {
                 stored_value={this.stored_value}
                 save={this.save}
                 smoothing={this.smoothing}
-                switch_k = {this.switch_k}
+                switch_k={this.switch_k}
+                PauseContinue={this.PauseContinue}
+                Stop={this.Stop}
             ></L_P_Panel>
         )
     }

@@ -11,7 +11,13 @@ body {
     background: #5f6e77e7;
 }
 
-.but > button{
+.Choice{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+}
+.but >div> button{
     position: relative;
     height: max-content;
     width: max-content;
@@ -20,19 +26,26 @@ body {
     border-radius: 5px;
     font-size: 20px;
 }
+.but > div{
+    
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+}
 .but{
+    position: absolute;
+    margin-top: 10vh;
     position: relative;
-    margin: 0;
-    top: 35%;
-    left: 45%;
+    display: flex;
+    flex-direction: row;
     height: max-content;
-    width: 150px;
+    width: max-content;
 }
 .Continue{
     margin: 0px 0px;
 }
 .DD{
-    margin: 40px 0px;
+    margin: 20px 0px;
 }
 
 h1{

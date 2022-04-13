@@ -29,15 +29,13 @@ export default class L_P_Panel extends PureComponent {
             revision, consoleMessage, onConsoleMessage,
             id_item, finished, masInformation_2D, stored_value,
             calibration, search_energe, save, smoothing, coor_massum, coor_masx,
-            switch_k, Levels
+            switch_k, Levels, PauseContinue, Stop
         } = this.props;
         let { Plot } = this.props;
         const { active_l_t } = this.state;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
         let element, button_active_1, button_active_2, z1, z2;
-
-        console.log(data);
 
         if (active_l_t == 1) {
             button_active_1 = "button_active";
@@ -68,6 +66,8 @@ export default class L_P_Panel extends PureComponent {
                     save={save}
                     smoothing={smoothing}
                     switch_k={switch_k}
+                    PauseContinue={PauseContinue}
+                    Stop={Stop}
                 ></Bars>;
                 <Coor
                     className={z2}

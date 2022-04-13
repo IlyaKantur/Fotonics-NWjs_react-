@@ -428,7 +428,4 @@ const info_element = (info_element_name, baseElement) => {
             </>
         )
     }
-
-
-
 }

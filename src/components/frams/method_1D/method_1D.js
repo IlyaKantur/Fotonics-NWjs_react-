@@ -346,23 +346,23 @@ export default class Method_1D extends PureComponent {
         let { massum } = this.state;
         ///
 
-        // let n = Number(this.masInformation.n_smoothing);
+        let n = Number(this.masInformation.n_smoothing);
 
-        // let sum = 0, del = 3, floor = Math.floor(n / 2);
-        // for (let i = 1; i < n; i++) {
-        //     for (let j = 0; j < del; j++) {
-        //         sum += massum[j];
-        //     }
-        //     massum[i] = Math.ceil(sum / del);
-        //     del += 2;
-        // }
-        // for (let i = n; i < massum.length - floor; i++) {
-        //     sum = 0;
-        //     for (let j = 0; j < n; j++) {
-        //         sum += massum[i + j - floor];
-        //     }
-        //     massum[i] = Math.ceil(sum / n);
-        // }
+        let sum = 0, del = 3, floor = Math.floor(n / 2);
+        for (let i = 1; i < n; i++) {
+            for (let j = 0; j < del; j++) {
+                sum += massum[j];
+            }
+            massum[i] = Math.ceil(sum / del);
+            del += 2;
+        }
+        for (let i = n; i < massum.length - floor; i++) {
+            sum = 0;
+            for (let j = 0; j < n; j++) {
+                sum += massum[i + j - floor];
+            }
+            massum[i] = Math.ceil(sum / n);
+        }
         this.reloadData(this.state.coor, massum);
     }
 

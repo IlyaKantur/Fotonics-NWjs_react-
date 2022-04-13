@@ -11,11 +11,22 @@ const Choice = ({ onAlert, id_item, createTab }) => {
     const id_f_nameF = `${nameF}_${id_f}`
     return (
         <>
-            <h1 className="Zagolov" id={`Zagolov_${id_f_nameF}`}>Выберите режим</h1>
-            <div className="but" id={`but_${id_f_nameF}`}>
-                <button className="DD" id={`D_${id_f_nameF}`} onClick={() => { createTab('method_1D') }}>1D Detection</button>
-                <button className="DD" id={`DD_${id_f_nameF}`} onClick={() => { createTab("method_2D") }}>2D Detection</button>
-                <button onClick={() => { check_version() }}>Check Version</button>
+            <div className="Choice">
+                <h1 className="Zagolov" id={`Zagolov_${id_f_nameF}`}>Выберите режим</h1>
+                <div className="but" id={`but_${id_f_nameF}`}>
+                    <div>
+                        <h2>Методы обработки</h2>
+                        <button className="DD" id={`D_${id_f_nameF}`} onClick={() => { createTab('method_1D') }}>Координатный детектор</button>
+                        <button className="DD" id={`DD_${id_f_nameF}`} onClick={() => { createTab("method_2D") }}>Двумерный детектор</button>
+                    </div>
+                    <div>
+                        <h2>Инструменты</h2>
+                        <button className="DD" id={`PTE_button_${id_f_nameF}`} onClick={() => { createTab("PTE") }}>ПТЭ</button>
+                        <button className="DD" id={`Camera_button_DD_${id_f_nameF}`} onClick={() => { createTab("camera") }}>Камера</button>
+                    </div>
+
+                    {/* <button onClick={() => { check_version() }}>Check Version</button> */}
+                </div>
             </div>
         </>
     )
@@ -54,7 +65,7 @@ const check_version = async () => {
                         console.log("Стоит текущая версия")
 
                         //Удаление установочников
-                        
+
 
                     }
                     else {
@@ -62,30 +73,30 @@ const check_version = async () => {
 
                         //1 версия скачивания
                         const file = fs.createWriteStream('./install.exe')
-                            const req = http.get(`${urlInstaller}(${json.version}).exe`, (response) => {
-                                let load = response.pipe(file)
-                                load.on('finish', () => {
-                                    console.log(`скачена версия: ${json.version}`)
-                                    cp.exec('install.exe', (err, data)=>{
-                                        console.log(err);
+                        const req = http.get(`${urlInstaller}(${json.version}).exe`, (response) => {
+                            let load = response.pipe(file)
+                            load.on('finish', () => {
+                                console.log(`скачена версия: ${json.version}`)
+                                cp.exec('install.exe', (err, data) => {
+                                    console.log(err);
 
-                                        fs.unlink("install.exe", function(err){
-                                            if (err) {
-                                                console.log(err);
-                                            } else {
-                                                console.log("Файл удалён");
-                                            }
-                                        });
-                                    })
+                                    fs.unlink("install.exe", function (err) {
+                                        if (err) {
+                                            console.log(err);
+                                        } else {
+                                            console.log("Файл удалён");
+                                        }
+                                    });
                                 })
                             })
+                        })
 
                         //2 версия скачивания
                         // fetch(`${urlInstaller}(${json.version}).exe`,{
                         //     method: 'GET',
                         //     headers: {}
                         // })
-                        
+
                         // .then(response => response.blob())
                         // .then(blob => {
                         //     const link = document.createElement('a');

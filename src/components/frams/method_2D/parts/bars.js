@@ -1,4 +1,4 @@
-import React, {Component, PureComponent } from 'react';
+import React, { Component, PureComponent } from 'react';
 
 export default class Bars extends Component {
 
@@ -30,6 +30,7 @@ export default class Bars extends Component {
         // this.styles = StyleSheet.create({
         //     visibility
         // })
+        this.stopSave = true;
         this.masVisible = {
             mode: false,
             file: false,
@@ -47,6 +48,7 @@ export default class Bars extends Component {
         reload: false,
         search_name: '',
         search_alert_text: {},
+        text_PauseContinue: "Пауза",
         Levels: {
             kA: true,
             kB: false
@@ -66,17 +68,17 @@ export default class Bars extends Component {
         this.props.search_energe(name_search_el)
     }
 
-    switch_k = (className, checked) =>{
+    switch_k = (className, checked) => {
 
-        let {Levels} = this.state
+        let { Levels } = this.state
 
-        if(checked){
-            switch(className){
-                case 'kA' : 
+        if (checked) {
+            switch (className) {
+                case 'kA':
                     Levels['kA'] = true;
                     Levels['kB'] = false;
                     break;
-                case 'kB' : 
+                case 'kB':
                     Levels['kA'] = false;
                     Levels['kB'] = true;
                     break;
@@ -88,16 +90,32 @@ export default class Bars extends Component {
         })
     }
 
+    PauseContinue = (text_PauseContinue) => {
+        switch (text_PauseContinue) {
+            case 'Пауза':
+                this.props.PauseContinue('Пауза')
+                text_PauseContinue = 'Продолжить'
+                break;
+            case 'Продолжить':
+                this.props.PauseContinue('Продолжить')
+                text_PauseContinue = 'Пауза'
+                break;
+        }
+        this.setState({
+            text_PauseContinue: text_PauseContinue
+        })
+    }
+
     render() {
         const { className, loadFolder, loadFoldImg,
             loadFonImg, startPush, id_item,
             masInformation_2D, stored_value,
-            calibration, search_energe, save, smoothing
+            calibration, search_energe, save, smoothing, Stop
         } = this.props;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
 
-        const {Levels} = this.state
+        const { Levels, text_PauseContinue } = this.state
 
         return (
             <>
@@ -106,7 +124,7 @@ export default class Bars extends Component {
                         <ul style={{ display: this.masVisible['mode'] ? 'block' : 'none' }}>
                             <li>
                                 <label className="container">Наблюдение
-                                <input className="chek_obsorv" id={`chek_obsorv_${id_f_nameF}`}
+                                    <input className="chek_obsorv" id={`chek_obsorv_${id_f_nameF}`}
                                         onChange={(e) => stored_value(e.target.className, e.target.checked)}
                                         type="checkbox"
                                         defaultChecked={masInformation_2D.chek_obsorv}
@@ -124,7 +142,7 @@ export default class Bars extends Component {
                             <li><button id="Fold" onClick={() => loadFoldImg(id_f_nameF)}>Выбор</button></li>
                             <li><button id="Save" onClick={() => save()}>Сохранить</button></li>
                             <li><label className="container">Только последний
-                            <input className="SaveLast" id={`SaveLast_${id_f_nameF}`}
+                                <input className="SaveLast" id={`SaveLast_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
                                     type="checkbox"
                                     defaultChecked={masInformation_2D.SaveLast}
@@ -166,7 +184,7 @@ export default class Bars extends Component {
                     <li><a href="#" onClick={() => this.hide_parametr('filtering')}>Фильтрация</a>
                         <ul style={{ display: this.masVisible['filtering'] ? 'block' : 'none' }}>
                             <li><label className="container">Без Фильтрация
-                            <input className="BF" id={`BF_${id_f_nameF}`}
+                                <input className="BF" id={`BF_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
                                     type="checkbox"
                                     defaultChecked={masInformation_2D.BF}
@@ -174,7 +192,7 @@ export default class Bars extends Component {
                                 <span className="checkmark"></span>
                             </label></li>
                             <li><label className="container">Вычет шума
-                            <input className="Delta" id={`Delta_${id_f_nameF}`}
+                                <input className="Delta" id={`Delta_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
                                     type="checkbox"
                                     defaultChecked={masInformation_2D.Delta}
@@ -182,7 +200,7 @@ export default class Bars extends Component {
                                 <span className="checkmark"></span>
                             </label></li>
                             <li>
-                                <div style={{display: "flex", flexDirection: "row"}}>
+                                <div style={{ display: "flex", flexDirection: "row" }}>
                                     <input className="DFonFrom" id={`DFonFrom_${id_f_nameF}`}
                                         onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                         type="number"
@@ -196,7 +214,7 @@ export default class Bars extends Component {
                                 </div>
                             </li>
                             <li><label className="container">Вычет битого
-                            <input className="BPix" id={`BPix_${id_f_nameF}`}
+                                <input className="BPix" id={`BPix_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
                                     type="checkbox"
                                     defaultChecked={masInformation_2D.BPix}
@@ -217,12 +235,12 @@ export default class Bars extends Component {
                         <ul style={{ display: this.masVisible['gain'] ? 'block' : 'none' }}>
                             <li><label className="container">Усиление_1
                                 <input className="gain1" id={`gain1_${id_f_nameF}`}
-                                        onChange={(e) => stored_value(e.target.className, e.target.checked)}
-                                        type="checkbox"
-                                        defaultChecked={masInformation_2D.gain1}
-                                    />
-                                    <span className="checkmark"></span>
-                                </label></li>
+                                    onChange={(e) => stored_value(e.target.className, e.target.checked)}
+                                    type="checkbox"
+                                    defaultChecked={masInformation_2D.gain1}
+                                />
+                                <span className="checkmark"></span>
+                            </label></li>
                             <li><input className="k_gain1" id={`k_gain1_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
                                 type="number"
@@ -240,7 +258,7 @@ export default class Bars extends Component {
                     <li><a href="#" onClick={() => this.hide_parametr('borders')}>Границы</a>
                         <ul style={{ display: this.masVisible['borders'] ? 'block' : 'none' }}>
                             <li><label className="container">Границы
-                            <input className="Gran" id={`Gran_${id_f_nameF}`}
+                                <input className="Gran" id={`Gran_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
                                     type="checkbox"
                                     defaultChecked={masInformation_2D.Gran}
@@ -277,7 +295,7 @@ export default class Bars extends Component {
                     <li><a href="#" onClick={() => this.hide_parametr('processing')}>Обработка</a>
                         <ul style={{ display: this.masVisible['processing'] ? 'block' : 'none' }}>
                             <li><label className="container">Ограничение
-                            <input className="Iter" id={`Iter_${id_f_nameF}`}
+                                <input className="Iter" id={`Iter_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
                                     type="checkbox"
                                     defaultChecked={masInformation_2D.Iter}
@@ -290,7 +308,7 @@ export default class Bars extends Component {
                                 placeholder='Количество'
                             /></li>
                             <li><label className="container">Суммирование
-                            <input className="SumСolumn" id={`SumСolumn_${id_f_nameF}`}
+                                <input className="SumСolumn" id={`SumСolumn_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
                                     type="checkbox"
                                     defaultChecked={masInformation_2D.SumСolumn}
@@ -303,7 +321,7 @@ export default class Bars extends Component {
                                 placeholder={`Сум. по: ${masInformation_2D.SumСolumnN}`}
                             /></li>
                             <li><label className="container">Инт. Пикселя
-                            <input className="IntPix" id={`IntPix_${id_f_nameF}`}
+                                <input className="IntPix" id={`IntPix_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
                                     type="checkbox"
                                     defaultChecked={masInformation_2D.IntPix}
@@ -316,11 +334,23 @@ export default class Bars extends Component {
                                 placeholder={`Мин. инт: ${masInformation_2D.MinInt}`}
                             /></li>
                             <li><button id="Start" onClick={() => startPush(id_f_nameF)}>Старт</button></li>
+                            <li><button id="PauseContinue" onClick={() => this.PauseContinue(text_PauseContinue)}>{text_PauseContinue}</button></li>
+                            <li style ={{display: 'flex', flexDirection: "row"}}>
+                                <button id="Stop" onClick={() => Stop(this.stopSave)}>Стоп</button>
+                                <label className="container">Сохранить
+                                    <input className="StopSave" id={`StopSave_${id_f_nameF}`}
+                                        onChange={(e) => {this.stopSave = e.target.checked}}
+                                        type="checkbox"
+                                        defaultChecked={this.stopSave}
+                                    />
+                                    <span className="checkmark"></span>
+                                </label>
+                            </li>
                             {/* <li><button id="Restart">Очистка</button></li> */}
                         </ul>
                     </li>
 
-                    
+
 
                     <li><a href="#" onClick={() => this.hide_parametr('smoothing')}>Сглаживание</a>
                         <ul style={{ display: this.masVisible['smoothing'] ? 'block' : 'none' }}>
@@ -336,20 +366,20 @@ export default class Bars extends Component {
                     <li><a href="#" onClick={() => this.hide_parametr('сalibration')}>Калибровка</a>
                         <ul style={{ display: this.masVisible['сalibration'] ? 'block' : 'none' }}>
                             <button id="click_calibration" onClick={calibration}>Калибровка</button>
-                            <div style={{display: 'flex', flexDirection: 'row'}}>
-                                <input 
+                            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                <input
                                     id='inp_ser_energy'
                                     type="search"
                                     placeholder="Поиск, в формате H"
                                     maxLength="2"
-                                    // value={this.state.search_name}
-                                    // onChange={(e) => {
-                                    //     this.chek_name(e)
-                                    // }}
+                                // value={this.state.search_name}
+                                // onChange={(e) => {
+                                //     this.chek_name(e)
+                                // }}
                                 />
-                                <button style={{width: '20%'}} id="but_ser_energy" onClick={() => { this.search_but() }}>🔍</button>
+                                <button style={{ width: '20%' }} id="but_ser_energy" onClick={() => { this.search_but() }}>🔍</button>
                             </div>
-                            
+
                             <input id='en_first_point' type='number' placeholder="Эн. первой точки"
                                 onChange={(e) => stored_value(e.target.id, e.target.value)}
                             // value={en_first_point}

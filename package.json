@@ -1,8 +1,8 @@
 {
-  "name": "Fotonics",
+  "name": "VISUAL PHOTONS",
   "version": "0.11.0",
-  "description": "Fotonics",
-  "descriptions": "Создание Fotonics на основе связки NWjs + react",
+  "description": "VISUAL PHOTONS",
+  "descriptions": "Создание VISUAL PHOTONS на основе связки NWjs + react",
   "main": "main/index.html",
   "window": {
     "width": 1366,
@@ -21,7 +21,7 @@
     "nwVersion": "stable"
   },
   "nwjs-packager": {
-    "appFriendlyName": "Fotonics",
+    "appFriendlyName": "VISUAL PHOTONS",
     "appWinIcon": "main/atom_copy.ico",
     "files": [
       "main/**",
