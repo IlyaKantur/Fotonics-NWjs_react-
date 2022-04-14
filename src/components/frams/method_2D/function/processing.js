@@ -144,9 +144,9 @@ export default class Processing {
         return new Promise((resolve, reject) => {
 
             // if(this.imgnum == 0) console.log(`Начало  ${performance.now() - this.startOb}`)
-            if(this.imgnum != 0){
-                this.loseTime += (performance.now() - this.finishImgTime)/1000
-                console.log((performance.now() - this.finishImgTime)/1000)
+            if (this.imgnum != 0) {
+                this.loseTime += (performance.now() - this.finishImgTime) / 1000
+                console.log((performance.now() - this.finishImgTime) / 1000)
             }
 
             let imgg = this.masImg[this.imgnum];
@@ -366,6 +366,7 @@ export default class Processing {
 
 
             // console.log(`КОНЕЦ ФОТО: ${performance.now() - s}`)
+
 
             console.log(message)
 

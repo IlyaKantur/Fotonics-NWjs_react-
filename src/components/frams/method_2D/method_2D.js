@@ -317,10 +317,11 @@ export default class Method_2D extends PureComponent {
     }
 
     Stop = (stopSave) => {
-        if(stopSave) this.Finished()
-        else{
+        this.Finished()
+        // if(stopSave) 
+        // else{
             
-        }
+        // }
     }
 
     // Сглаживание
