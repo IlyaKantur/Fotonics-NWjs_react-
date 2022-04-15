@@ -188,6 +188,8 @@ export default class Processing {
             }
 
             let x_x = xfin - xbeg, y_y = yfin - ybeg;
+            let length_summcolumn = Math.floor((x_x / (this.sumcolumn ? this.sumcolumnN : 1)) * (y_y))
+            console.log(1360%3)
 
 
             let s = performance.now();
@@ -203,12 +205,13 @@ export default class Processing {
             //SUMCOL
             if (this.sumcolumn || this.gran) {
                 let m = [], mf = [], jj = 0, x = -1; ii = ibeg;
-                for (let i = 0; i < (x_x / (this.sumcolumn ? this.sumcolumnN : 1)) * (y_y); i++) {
+                for (let i = 0; i < length_summcolumn; i++) {
                     m[i] = 0;
                     if (this.fon_load) mf[i] = 0;
                     for (let j = 0; j < (this.sumcolumn ? this.sumcolumnN : 1); j++) {
-                        m[i] += mas0[ii++]; jj++;
-                        if (this.fon_load) mf[i] = masfon[ii++];
+                        m[i] += mas0[ii];
+                        if (this.fon_load) mf[i] += masfon[ii];
+                        jj++; ii++;
                     }
                     if (jj >= x_x && this.gran) { ii += (this.ix - xfin) + xbeg; jj = 0; }
 
@@ -267,12 +270,12 @@ export default class Processing {
             //Накопление
 
             //
-            for (let x = 0; x < ((x_x) / (this.sumcolumn ? this.sumcolumnN : 1)); x++) {
+            for (let x = 0; x < Math.ceil(((x_x) / (this.sumcolumn ? this.sumcolumnN : 1))); x++) {
                 mas[x] = 0;
                 if (this.imgnum == 0) this.masx[x] = x;
             }
             for (let y = 0; y < y_y; y++) {
-                for (let x = 0; x < ((x_x) / (this.sumcolumn ? this.sumcolumnN : 1)); x++) {
+                for (let x = 0; x < Math.ceil(((x_x) / (this.sumcolumn ? this.sumcolumnN : 1))); x++) {
                     if (this.intPix == false) {
                         if (mas0[yy] >= this.minInt) { mas[x] += 1; }
                         else { mas[x] += 0; }
