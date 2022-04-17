@@ -188,8 +188,12 @@ export default class Processing {
             }
 
             let x_x = xfin - xbeg, y_y = yfin - ybeg;
-            let length_summcolumn = Math.floor((x_x / (this.sumcolumn ? this.sumcolumnN : 1)) * (y_y))
-            console.log(1360%3)
+            //
+            const sumcolumnN = (this.sumcolumn ? this.sumcolumnN : 1);
+            const division = Math.floor(x_x / sumcolumnN);
+            const rem_div = x_x % sumcolumnN
+            let length_summcolumn = (division + rem_div) * (y_y)
+            //
 
 
             let s = performance.now();
@@ -204,16 +208,23 @@ export default class Processing {
 
             //SUMCOL
             if (this.sumcolumn || this.gran) {
-                let m = [], mf = [], jj = 0, x = -1; ii = ibeg;
+                let m = [], mf = [], jj = 0; ii = ibeg;
                 for (let i = 0; i < length_summcolumn; i++) {
                     m[i] = 0;
                     if (this.fon_load) mf[i] = 0;
-                    for (let j = 0; j < (this.sumcolumn ? this.sumcolumnN : 1); j++) {
+                    for (let j = 0; j < sumcolumnN; j++) {
                         m[i] += mas0[ii];
                         if (this.fon_load) mf[i] += masfon[ii];
                         jj++; ii++;
                     }
-                    if (jj >= x_x && this.gran) { ii += (this.ix - xfin) + xbeg; jj = 0; }
+                    if(jj == x_x - rem_div){
+                        for(let j = 0; j < rem_div; j++){
+                            m[++i] = mas0[ii];
+                            if (this.fon_load) mf[i] = masfon[ii];
+                            jj++; ii++;
+                        }
+                    }
+                    if (jj == x_x && this.gran) { ii += (this.ix - xfin) + xbeg; jj = 0; }
 
                 }
                 mas0 = m.slice();
@@ -270,12 +281,12 @@ export default class Processing {
             //Накопление
 
             //
-            for (let x = 0; x < Math.ceil(((x_x) / (this.sumcolumn ? this.sumcolumnN : 1))); x++) {
+            for (let x = 0; x < division + rem_div; x++) {
                 mas[x] = 0;
                 if (this.imgnum == 0) this.masx[x] = x;
             }
             for (let y = 0; y < y_y; y++) {
-                for (let x = 0; x < Math.ceil(((x_x) / (this.sumcolumn ? this.sumcolumnN : 1))); x++) {
+                for (let x = 0; x < division + rem_div; x++) {
                     if (this.intPix == false) {
                         if (mas0[yy] >= this.minInt) { mas[x] += 1; }
                         else { mas[x] += 0; }
@@ -340,7 +351,7 @@ export default class Processing {
             }
             ii = 0; let jj = 0;
             for (let i = 0; i < ImgDataH.length; i += 0) {
-                for (let j = 0; j < (this.sumcolumn ? this.sumcolumnN : 1); j++) {
+                for (let j = 0; j < sumcolumnN; j++) {
                     if (ImgClear.data[i] < mas0[ii]) {
                         ImgClear.data[i] += mas0[ii];
                         ImgClear.data[i + 1] += mas0[ii];
