@@ -219,12 +219,13 @@ export default class Processing {
                     }
                     if(jj == x_x - rem_div){
                         for(let j = 0; j < rem_div; j++){
-                            m[++i] = mas0[ii];
+                            i++;
+                            m[i] = mas0[ii] * sumcolumnN;
                             if (this.fon_load) mf[i] = masfon[ii];
                             jj++; ii++;
                         }
                     }
-                    if (jj == x_x && this.gran) { ii += (this.ix - xfin) + xbeg; jj = 0; }
+                    if (jj == x_x) { ii += (this.ix - xfin) + xbeg; jj = 0; }
 
                 }
                 mas0 = m.slice();
