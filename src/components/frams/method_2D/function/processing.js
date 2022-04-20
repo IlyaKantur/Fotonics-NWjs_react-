@@ -258,7 +258,7 @@ export default class Processing {
                         }
                     }
                     //убирать в заданом интервале
-                    if (this.delta && mas0[i] >= this.dfonfrom && mas0[i] <= this.dfonto) {
+                    if (this.delta && mas0[i] >= this.dfonfrom * sumcolumnN && mas0[i] <= this.dfonto * sumcolumnN) {
                         mas0[i] = 0;
                     }
 
@@ -361,7 +361,17 @@ export default class Processing {
                     i += 4; jj++;
                 }
                 ii++;
-                if (jj >= x_x && this.gran) { i += ((this.ix - xfin) + xbeg) * 4; jj = 0; }
+                if(jj == x_x - rem_div){
+                    for(let j = 0; j < rem_div; j++){
+                        if (ImgClear.data[i] < mas0[ii]) {
+                            ImgClear.data[i] += mas0[ii];
+                            ImgClear.data[i + 1] += mas0[ii];
+                            ImgClear.data[i + 2] += mas0[ii];
+                        }
+                        i += 4; jj++; ii++;
+                    }
+                }
+                if (jj == x_x) { i += ((this.ix - xfin) + xbeg) * 4; jj = 0; }
             }
 
 
