@@ -82,7 +82,7 @@ export default class L_P_Panel extends PureComponent {
         return (
             <div id="l_p_panel">
                 <div id="left_Panel" className="panel">
-                    <div id="wrapper">
+                    <div className = "left_switch" id="wrapper">
                         <button id="TabOne" className={button_active_1} target="#TabOne" onClick={() => this.switch_l_t(1)}>P</button>
                         <button id="TabTwo" className={button_active_2} target="#TabTwo" onClick={() => this.switch_l_t(2)}>C</button>
                     </div>

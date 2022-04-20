@@ -437,7 +437,7 @@ export default class Method_1D extends PureComponent {
         })
         return (
             <div id="place_1D">
-                <div id="left_tab_panel_1D">
+                <div className = "left_switch" id="left_tab_panel_1D">
                     <button className={this.button_active_1} onClick={() => { this.switch_tab('Sum_graph') }}>G</button>
                     <button className={this.button_active_2} onClick={() => { this.switch_tab('List_graph') }}>C</button>
                 </div>
@@ -554,21 +554,21 @@ class Sum_graph extends Component {
                         <input id='AxisY' type='text' placeholder="Ось Y"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
-                        <button onClick={click_loadFolder}>Папка</button>
-                        <button onClick={click_loadFile}>Выбрать</button>
-                        <button onClick={click_save}>Сохранить</button>
+                        <button className='just_button' onClick={click_loadFolder}>Папка</button>
+                        <button className='just_button' onClick={click_loadFile}>Выбрать</button>
+                        <button className='just_button' onClick={click_save}>Сохранить</button>
 
                     </div>
                     <h3 onClick={() => this.hide_parametr('processing')}>Обработка</h3>
                     <div style={{ display: this.masVisible['processing'] ? 'block' : 'none' }}>
-                        <button id="click_sum" onClick={click_sum}>Суммировать</button>
+                        <button className='just_button' id="click_sum" onClick={click_sum}>Суммировать</button>
                         <input id='countSum' type='number' placeholder="Сумма по: 1"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
                     </div>
                     <h3 onClick={() => this.hide_parametr('calibration')}>Калибровка</h3>
                     <div style={{ display: this.masVisible['calibration'] ? 'block' : 'none' }}>
-                        <button id="click_calibration" onClick={click_calibration}>Калибровка</button>
+                        <button className='just_button' id="click_calibration" onClick={click_calibration}>Калибровка</button>
                         <input id='en_first_point' type='number' placeholder="Эн. первой точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                             value={masInformation.en_first_point}
@@ -588,7 +588,7 @@ class Sum_graph extends Component {
                     </div>
                     <h3 onClick={() => this.hide_parametr('smoothing')}>Сглаживание</h3>
                     <div style={{ display: this.masVisible['smoothing'] ? 'block' : 'none' }}>
-                        <button id="click_smoothing" onClick={click_smoothing}>Сглаживание</button>
+                        <button className='just_button' id="click_smoothing" onClick={click_smoothing}>Сглаживание</button>
                         <input id='n_smoothing' type='number' placeholder="Точек: 3"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         // value={n_smoothing}

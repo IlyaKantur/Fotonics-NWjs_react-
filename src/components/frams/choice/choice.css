@@ -17,15 +17,7 @@ body {
     justify-content: center;
     align-items:center;
 }
-.but >div> button{
-    position: relative;
-    height: max-content;
-    width: max-content;
-    background-color:rgb(173, 182, 201);
-    border-color: black;
-    border-radius: 5px;
-    font-size: 20px;
-}
+
 .but > div{
     
     margin-left: 20px;
@@ -43,9 +35,6 @@ body {
 }
 .Continue{
     margin: 0px 0px;
-}
-.DD{
-    margin: 20px 0px;
 }
 
 h1{

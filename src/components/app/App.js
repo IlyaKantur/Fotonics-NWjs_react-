@@ -7,7 +7,7 @@ import Frame from '../frams/create_frame.js';
 import Alert from '../alert/alert.js';
 
 import './App.css';
-
+import './style2.css';
 
 export default class App extends PureComponent {
 
@@ -47,6 +47,10 @@ export default class App extends PureComponent {
 
     create_menu = () => {
         CreateMenu(this.createTab)
+    }
+
+    switch_style = () => {
+        
     }
 
     createTab = (text) => {
@@ -347,6 +351,15 @@ const CreateMenu = (create) => {
                 label: 'Пер. таблица',
                 click: () => {
                     create("PTE")
+                }
+            }]
+        },
+        settings: {
+            label: 'Настройки',
+            submenu: [{
+                label: 'Стиль_1',
+                click: () => {
+
                 }
             }]
         }

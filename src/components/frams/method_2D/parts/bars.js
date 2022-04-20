@@ -138,9 +138,9 @@ export default class Bars extends Component {
 
                     <li><a href="#" onClick={() => this.hide_parametr('file')}>Файл</a>
                         <ul style={{ display: this.masVisible['file'] ? 'block' : 'none' }}>
-                            <li><button id="Folder" onClick={() => loadFolder(id_f_nameF)}>Папка</button></li>
-                            <li><button id="Fold" onClick={() => loadFoldImg(id_f_nameF)}>Выбор</button></li>
-                            <li><button id="Save" onClick={() => save()}>Сохранить</button></li>
+                            <li><button className='just_button' id="Folder" onClick={() => loadFolder(id_f_nameF)}>Папка</button></li>
+                            <li><button className='just_button' id="Fold" onClick={() => loadFoldImg(id_f_nameF)}>Выбор</button></li>
+                            <li><button className='just_button' id="Save" onClick={() => save()}>Сохранить</button></li>
                             <li><label className="container">Только последний
                                 <input className="SaveLast" id={`SaveLast_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
@@ -227,7 +227,7 @@ export default class Bars extends Component {
                                 placeholder="Параметр битого: 0"
                             />
                             </li>
-                            <li><button id="Fonfold" onClick={() => loadFonImg(id_f_nameF)}>Фон</button></li>
+                            <li><button className='just_button' id="Fonfold" onClick={() => loadFonImg(id_f_nameF)}>Фон</button></li>
                         </ul>
                     </li>
 
@@ -333,8 +333,8 @@ export default class Bars extends Component {
                                 type="number"
                                 placeholder={`Мин. инт: ${masInformation_2D.MinInt}`}
                             /></li>
-                            <li><button id="Start" onClick={() => startPush(id_f_nameF)}>Старт</button></li>
-                            <li><button id="PauseContinue" onClick={() => this.PauseContinue(text_PauseContinue)}>{text_PauseContinue}</button></li>
+                            <li><button className='just_button' id="Start" onClick={() => startPush(id_f_nameF)}>Старт</button></li>
+                            <li><button className='just_button' id="PauseContinue" onClick={() => this.PauseContinue(text_PauseContinue)}>{text_PauseContinue}</button></li>
                             <li style ={{display: 'flex', flexDirection: "row"}}>
                                 <button id="Stop" onClick={() => Stop(this.stopSave)}>Стоп</button>
                                 <label className="container">Сохранить
@@ -360,12 +360,12 @@ export default class Bars extends Component {
                                 placeholder="3"
                             />
                             </li>
-                            <button onClick={() => smoothing()}>Сглаживание</button>
+                            <button className='just_button' onClick={() => smoothing()}>Сглаживание</button>
                         </ul>
                     </li>
                     <li><a href="#" onClick={() => this.hide_parametr('сalibration')}>Калибровка</a>
                         <ul style={{ display: this.masVisible['сalibration'] ? 'block' : 'none' }}>
-                            <button id="click_calibration" onClick={calibration}>Калибровка</button>
+                            <button className='just_button' id="click_calibration" onClick={calibration}>Калибровка</button>
                             <div style={{ display: 'flex', flexDirection: 'row' }}>
                                 <input
                                     id='inp_ser_energy'

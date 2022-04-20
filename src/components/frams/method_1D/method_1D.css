@@ -21,7 +21,6 @@
 #left_tab_panel_1D {
   width: 50px;
   height: 100%;
-  background: rgb(65, 65, 65);
 }
 
 .button_tab_1D {
@@ -103,8 +102,6 @@
 }
 
 #graph{
-  height: 600px;
-  width: 900px;
   background-color: white
     /* margin-left: -20vw; */
 }

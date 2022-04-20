@@ -12,8 +12,8 @@ export default class Coor extends PureComponent {
                     ></Coordinat>
                 </div>
                 <div id="CPButtom_2D">
-                    <button id="apply_Coor_2D" onClick={applyCoor}>Применить</button>
-                    <button id="return_Coor_2D" onClick={returnCoor}>Отмена</button>
+                    <button className='just_button' id="apply_Coor_2D" onClick={applyCoor}>Применить</button>
+                    <button className='just_button' id="return_Coor_2D" onClick={returnCoor}>Отмена</button>
                 </div>
             </ul>
         )

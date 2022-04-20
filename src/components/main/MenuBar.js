@@ -6,6 +6,7 @@ class MenuBar extends PureComponent {
     state = {
         class1: "listMenu",
         class2: "listMenu",
+        class3: "listMenu",
         class3: "listMenu"
     }
 
@@ -14,7 +15,7 @@ class MenuBar extends PureComponent {
     }
 
     listClick = (id) => {
-        let class1 = "listMenu", class2 = "listMenu", class3 = "listMenu";
+        let class1 = "listMenu", class2 = "listMenu", class3 = "listMenu"; class4 = "listMenu"
         switch (id) {
             case 1: {
                 class1 = "listMenu listMenu_active";
@@ -28,21 +29,27 @@ class MenuBar extends PureComponent {
                 class3 = "listMenu listMenu_active"
                 break;
             }
+            case 4: {
+                class4 = "listMenu listMenu_active"
+                break;
+            }
         }
         this.setState({
             class1: class1,
             class2: class2,
-            class3: class3
+            class3: class3,
+            class4: class4
         })
     }
     render() {
-        const {class1, class2, class3} = this.state
+        const {class1, class2, class3, class4} = this.state
         return (
             <div id = "BAR">
                 <div id="MenuBar">
                     <div className="MenuBar_Button" onClick={() => {this.listClick(1)}}>Файл</div>
                     <div className="MenuBar_Button" onClick={() => {this.listClick(2)}}>Метод</div>
                     <div className="MenuBar_Button" onClick={() => {this.listClick(3)}}>Справка</div>
+                    <div className="MenuBar_Button" onClick={() => {this.listClick(3)}}>Настройка</div>
                 </div>
                 <div id="ListMenu">
                     <div id="ListFile" className={class1}>
@@ -55,6 +62,9 @@ class MenuBar extends PureComponent {
                     </div>
                     <div id="ListInfo" className={class3}>
                         <button className="button_ListMenu">PTE</button>
+                    </div>
+                    <div id="ListInfo" className={class4}>
+                        <button className="button_ListMenu">Settings</button>
                     </div>
                 </div>
             </div>
