@@ -5,9 +5,10 @@ import Menu from '../main/manu.js';
 import TabWP from '../tab/create_tab.js';
 import Frame from '../frams/create_frame.js';
 import Alert from '../alert/alert.js';
+import styled from 'styled-components';
 
 import './App.css';
-import './style2.css';
+import './style1.css';
 
 export default class App extends PureComponent {
 
@@ -33,7 +34,13 @@ export default class App extends PureComponent {
         ],
         activeFrame: { name: "choice", id: '1' },
         activeAlert: [],
-        baseElement: []
+        baseElement: [],
+        style: {
+            left_switch: 'rgb(65, 65, 65)',
+            navbar_a: '#181818cb',
+            body: '#5f6e77e7',
+            button: 'rgb(223, 223, 223)'
+        }
     }
 
     componentDidMount() {
@@ -46,11 +53,40 @@ export default class App extends PureComponent {
     }
 
     create_menu = () => {
-        CreateMenu(this.createTab)
+        CreateMenu(this.createTab, this.switch_style)
     }
 
-    switch_style = () => {
-        
+    switch_style = (number) => {
+        let style;
+        switch (number) {
+            case 1:
+                style = {
+                    left_switch: 'rgb(65, 65, 65)',
+                    navbar_a: '#181818cb',
+                    body: '#5f6e77e7',
+                    button: 'rgb(223, 223, 223)'
+                }
+                break;
+            case 2:
+                style = {
+                    left_switch: '#1E1F26',
+                    navbar_a: '#283655',
+                    body: '#4D648D',
+                    button: '#D0E1F9'
+                }
+                break;
+            case 3:
+                style = {
+                    left_switch: '#2F2E33',
+                    navbar_a: '#3A5199',
+                    body: '#D5D6D2',
+                    button: '#a8a8a8'
+                }
+                break;
+        }
+        this.setState({
+            style: style
+        })
     }
 
     createTab = (text) => {
@@ -96,7 +132,7 @@ export default class App extends PureComponent {
                         str = str.substring(from + 1, str.length)
                         result[i] = str;
                     })
-                    
+
                     result[14] = result[14].trim();
                     result[15] = result[15].trim();
 
@@ -109,7 +145,7 @@ export default class App extends PureComponent {
                     l_r_el = result[2].trim();
                     length_wave = result[14].split(' ');
                     energy_foto = result[15].split(' ');
-                    
+
                     baseElement[i] = {
                         row_el: row_el,
                         class_el: class_el,
@@ -233,30 +269,33 @@ export default class App extends PureComponent {
     }
 
     render() {
-        const { tab, frame, activeFrame, activeAlert, baseElement } = this.state
+        const { tab, frame, activeFrame, activeAlert, baseElement, style } = this.state
         return (
             <>
-                <Alert activeAlert={activeAlert} closeAlert={this.closeAlert} />
-                {/* <MenuBar /> */}
-                <div id="work_place" className="panel">
-                    <div id="panel_WP">
-                        <TabWP
-                            posts={tab}
-                            onSwitch={this.onSwitch}
-                            onClose={this.onClose}
-                            activeFrame={activeFrame}
-                        ></TabWP>
+                <Container bg={style.body}>
+                    <Alert activeAlert={activeAlert} closeAlert={this.closeAlert} />
+                    {/* <MenuBar /> */}
+                    <div id="work_place" className="panel">
+                        <div style={{ background: style.button }} id="panel_WP">
+                            <TabWP
+                                posts={tab}
+                                onSwitch={this.onSwitch}
+                                onClose={this.onClose}
+                                activeFrame={activeFrame}
+                            ></TabWP>
+                        </div>
+                        <div id="frames">
+                            <Frame
+                                posts={frame}
+                                activeFrame={activeFrame}
+                                onAlert={this.onAlert}
+                                baseElement={baseElement}
+                                createTab={this.createTab}
+                                style={style}
+                            ></Frame>
+                        </div>
                     </div>
-                    <div id="frames">
-                        <Frame
-                            posts={frame}
-                            activeFrame={activeFrame}
-                            onAlert={this.onAlert}
-                            baseElement={baseElement}
-                            createTab={this.createTab}
-                        ></Frame>
-                    </div>
-                </div>
+                </Container>
             </>
         )
 
@@ -264,7 +303,14 @@ export default class App extends PureComponent {
 
 }
 
-const CreateMenu = (create) => {
+const Container = styled.body`
+    background-color: ${props => props.bg};
+`
+const Button = styled.button`
+    background-color: ${props => props.bg_button};
+`
+
+const CreateMenu = (create, switch_style) => {
     let menuBar = Menu().create;
 
     let MENU = {
@@ -285,7 +331,7 @@ const CreateMenu = (create) => {
                         // let win = nw.Window.get();
                         // let iframeWin = win(iframe.contentWindow);
                         // console.log(iframeWin === win)
-                        nw.Window.open('E:/Old_taple/Fotonics(NWjs_react)/src/html/test.html#root_2', {}, function(new_win){
+                        nw.Window.open('E:/Old_taple/Fotonics(NWjs_react)/src/html/test.html#root_2', {}, function (new_win) {
                             window.blur();
                             new_win.focus()
                             console.log(new_win)
@@ -356,12 +402,26 @@ const CreateMenu = (create) => {
         },
         settings: {
             label: 'Настройки',
-            submenu: [{
-                label: 'Стиль_1',
-                click: () => {
-
+            submenu: [
+                {
+                    label: 'Стиль_1',
+                    click: () => {
+                        switch_style(1)
+                    },
+                },
+                {
+                    label: 'Стиль_2',
+                    click: () => {
+                        switch_style(2)
+                    },
+                },
+                {
+                    label: 'Стиль_3',
+                    click: () => {
+                        switch_style(3)
+                    },
                 }
-            }]
+            ]
         }
     };
     menuBar(MENU);

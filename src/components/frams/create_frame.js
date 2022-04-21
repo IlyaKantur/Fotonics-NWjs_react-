@@ -11,7 +11,7 @@ import Plot from 'react-plotly.js';
 
 import './frames.css'
 
-const CreateFrame = ({ posts, activeFrame, onAlert, baseElement, createTab }) => {
+const CreateFrame = ({ posts, activeFrame, onAlert, baseElement, createTab, style }) => {
     const elements = posts.map((item) => {
         const { id_f, nameF } = item;
         const { id, name } = activeFrame;
@@ -25,6 +25,7 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement, createTab }) =>
                     onAlert={onAlert}
                     id_item = {item}
                     createTab= {createTab}
+                    style={style}
                     ></Choice>
                 break;
             case 'method_1D':
@@ -33,6 +34,7 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement, createTab }) =>
                     id_item = {item}
                     Plot = {Plot}
                     baseElement = {baseElement}
+                    style={style}
                 >
                 </Method_1D>
                 break;
@@ -43,6 +45,7 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement, createTab }) =>
                     id_item = {item}
                     Plot = {Plot}
                     baseElement = {baseElement}
+                    style={style}
                     ></Method_2D>
                 break;
             case 'PTE':
@@ -52,9 +55,9 @@ const CreateFrame = ({ posts, activeFrame, onAlert, baseElement, createTab }) =>
                 ></PTE>
                 break;
             case 'camera': 
-                element = <Camera>
-
-                </Camera>
+                element = <Camera
+                    style={style}
+                ></Camera>
                 break;
         }
         return (

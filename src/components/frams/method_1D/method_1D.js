@@ -413,6 +413,7 @@ export default class Method_1D extends PureComponent {
                         massum={massum}
                         masInformation={this.masInformation}
                         switch_k={this.switch_k}
+                        style={this.props.style}
                     />
                     break;
                 case 'List_graph':
@@ -426,6 +427,7 @@ export default class Method_1D extends PureComponent {
                         Сompound={this.masInformation.Сompound}
                         AxisX={this.masInformation.AxisX}
                         AxisY={this.masInformation.AxisY}
+                        style={this.props.style}
                     />
                     break;
             }
@@ -437,7 +439,7 @@ export default class Method_1D extends PureComponent {
         })
         return (
             <div id="place_1D">
-                <div className = "left_switch" id="left_tab_panel_1D">
+                <div style={{background: this.props.style.left_switch}} className = "left_switch" id="left_tab_panel_1D">
                     <button className={this.button_active_1} onClick={() => { this.switch_tab('Sum_graph') }}>G</button>
                     <button className={this.button_active_2} onClick={() => { this.switch_tab('List_graph') }}>C</button>
                 </div>
@@ -515,7 +517,7 @@ class Sum_graph extends Component {
     render() {
         const { click_loadFolder, click_loadFile, click_save, click_sum,
             stored_value, click_calibration, click_smoothing,
-            data, revision, coor, massum, masInformation
+            data, revision, coor, massum, masInformation, style
             // options
         } = this.props;
 
@@ -524,7 +526,7 @@ class Sum_graph extends Component {
         return (
             <div id="sum_graph">
                 <div id="control_panel">
-                    <h3 onClick={() => this.hide_parametr('file')}>Файл</h3>
+                    <h3 style={{background: style.navbar_a}} onClick={() => this.hide_parametr('file')}>Файл</h3>
                     <div style={{ display: this.masVisible['file'] ? 'block' : 'none' }}>
                         <input id='Сompound' type='text' placeholder="Соединение"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
@@ -554,21 +556,21 @@ class Sum_graph extends Component {
                         <input id='AxisY' type='text' placeholder="Ось Y"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
-                        <button className='just_button' onClick={click_loadFolder}>Папка</button>
-                        <button className='just_button' onClick={click_loadFile}>Выбрать</button>
-                        <button className='just_button' onClick={click_save}>Сохранить</button>
+                        <button style={{background: style.button}} className='just_button' onClick={click_loadFolder}>Папка</button>
+                        <button style={{background: style.button}} className='just_button' onClick={click_loadFile}>Выбрать</button>
+                        <button style={{background: style.button}} className='just_button' onClick={click_save}>Сохранить</button>
 
                     </div>
-                    <h3 onClick={() => this.hide_parametr('processing')}>Обработка</h3>
+                    <h3 style={{background: style.navbar_a}} onClick={() => this.hide_parametr('processing')}>Обработка</h3>
                     <div style={{ display: this.masVisible['processing'] ? 'block' : 'none' }}>
-                        <button className='just_button' id="click_sum" onClick={click_sum}>Суммировать</button>
+                        <button  style={{background: style.button}} className='just_button' id="click_sum" onClick={click_sum}>Суммировать</button>
                         <input id='countSum' type='number' placeholder="Сумма по: 1"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
                     </div>
-                    <h3 onClick={() => this.hide_parametr('calibration')}>Калибровка</h3>
+                    <h3 style={{background: style.navbar_a}} onClick={() => this.hide_parametr('calibration')}>Калибровка</h3>
                     <div style={{ display: this.masVisible['calibration'] ? 'block' : 'none' }}>
-                        <button className='just_button' id="click_calibration" onClick={click_calibration}>Калибровка</button>
+                        <button style={{background: style.button}} className='just_button' id="click_calibration" onClick={click_calibration}>Калибровка</button>
                         <input id='en_first_point' type='number' placeholder="Эн. первой точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                             value={masInformation.en_first_point}
@@ -586,15 +588,15 @@ class Sum_graph extends Component {
                         // value={n_second_point}
                         ></input>
                     </div>
-                    <h3 onClick={() => this.hide_parametr('smoothing')}>Сглаживание</h3>
+                    <h3 style={{background: style.navbar_a}} onClick={() => this.hide_parametr('smoothing')}>Сглаживание</h3>
                     <div style={{ display: this.masVisible['smoothing'] ? 'block' : 'none' }}>
-                        <button className='just_button' id="click_smoothing" onClick={click_smoothing}>Сглаживание</button>
+                        <button style={{background: style.button}} className='just_button' id="click_smoothing" onClick={click_smoothing}>Сглаживание</button>
                         <input id='n_smoothing' type='number' placeholder="Точек: 3"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         // value={n_smoothing}
                         ></input>
                     </div>
-                    <h3 onClick={() => this.hide_parametr('processing')}>Детали экспермента</h3>
+                    <h3 style={{background: style.navbar_a}} onClick={() => this.hide_parametr('processing')}>Детали экспермента</h3>
                     <div style={{ display: this.masVisible['processing'] ? 'block' : 'none' }}>
                         <textarea id='add_information' placeholder="Дополнительная информация"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}

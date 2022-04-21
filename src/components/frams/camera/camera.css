@@ -13,6 +13,13 @@
     justify-content: start;
     border-right: 1px solid black;
 }
+#camera_button{
+    display: flex;
+    flex-direction: column; 
+}
+#camera_button > button{
+    margin-bottom: 5px;
+}
 #place_cam_snap{
     height: 100vh;
     display: flex;

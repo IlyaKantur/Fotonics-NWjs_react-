@@ -110,7 +110,7 @@ export default class Bars extends Component {
         const { className, loadFolder, loadFoldImg,
             loadFonImg, startPush, id_item,
             masInformation_2D, stored_value,
-            calibration, search_energe, save, smoothing, Stop
+            calibration, search_energe, save, smoothing, Stop, style
         } = this.props;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
@@ -120,7 +120,7 @@ export default class Bars extends Component {
         return (
             <>
                 <ul id="navbar" className={`bar ${className}`}>
-                    <li><a href="#" onClick={() => this.hide_parametr('mode')}>Режим</a>
+                    <li><a href="#" style={{background: style.navbar_a}} onClick={() => this.hide_parametr('mode')}>Режим</a>
                         <ul style={{ display: this.masVisible['mode'] ? 'block' : 'none' }}>
                             <li>
                                 <label className="container">Наблюдение
@@ -136,11 +136,11 @@ export default class Bars extends Component {
                         </ul>
                     </li>
 
-                    <li><a href="#" onClick={() => this.hide_parametr('file')}>Файл</a>
+                    <li><a style={{background: style.navbar_a}} href="#" onClick={() => this.hide_parametr('file')}>Файл</a>
                         <ul style={{ display: this.masVisible['file'] ? 'block' : 'none' }}>
-                            <li><button className='just_button' id="Folder" onClick={() => loadFolder(id_f_nameF)}>Папка</button></li>
-                            <li><button className='just_button' id="Fold" onClick={() => loadFoldImg(id_f_nameF)}>Выбор</button></li>
-                            <li><button className='just_button' id="Save" onClick={() => save()}>Сохранить</button></li>
+                            <li><button style={{background: style.button}} className='just_button' id="Folder" onClick={() => loadFolder(id_f_nameF)}>Папка</button></li>
+                            <li><button style={{background: style.button}} className='just_button' id="Fold" onClick={() => loadFoldImg(id_f_nameF)}>Выбор</button></li>
+                            <li><button style={{background: style.button}} className='just_button' id="Save" onClick={() => save()}>Сохранить</button></li>
                             <li><label className="container">Только последний
                                 <input className="SaveLast" id={`SaveLast_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}
@@ -181,7 +181,7 @@ export default class Bars extends Component {
                         </ul>
                     </li>
 
-                    <li><a href="#" onClick={() => this.hide_parametr('filtering')}>Фильтрация</a>
+                    <li><a style={{background: style.navbar_a}} href="#" onClick={() => this.hide_parametr('filtering')}>Фильтрация</a>
                         <ul style={{ display: this.masVisible['filtering'] ? 'block' : 'none' }}>
                             <li><label className="container">Без Фильтрация
                                 <input className="BF" id={`BF_${id_f_nameF}`}
@@ -227,11 +227,11 @@ export default class Bars extends Component {
                                 placeholder="Параметр битого: 0"
                             />
                             </li>
-                            <li><button className='just_button' id="Fonfold" onClick={() => loadFonImg(id_f_nameF)}>Фон</button></li>
+                            <li><button style={{background: style.button}} className='just_button' id="Fonfold" onClick={() => loadFonImg(id_f_nameF)}>Фон</button></li>
                         </ul>
                     </li>
 
-                    <li><a href="#" onClick={() => this.hide_parametr('gain')}>Усиление</a>
+                    <li><a href="#" style={{background: style.navbar_a}} onClick={() => this.hide_parametr('gain')}>Усиление</a>
                         <ul style={{ display: this.masVisible['gain'] ? 'block' : 'none' }}>
                             <li><label className="container">Усиление_1
                                 <input className="gain1" id={`gain1_${id_f_nameF}`}
@@ -255,7 +255,7 @@ export default class Bars extends Component {
                             </li>
                         </ul>
                     </li>
-                    <li><a href="#" onClick={() => this.hide_parametr('borders')}>Границы</a>
+                    <li><a href="#" style={{background: style.navbar_a}} onClick={() => this.hide_parametr('borders')}>Границы</a>
                         <ul style={{ display: this.masVisible['borders'] ? 'block' : 'none' }}>
                             <li><label className="container">Границы
                                 <input className="Gran" id={`Gran_${id_f_nameF}`}
@@ -292,7 +292,7 @@ export default class Bars extends Component {
                         </ul>
                     </li>
 
-                    <li><a href="#" onClick={() => this.hide_parametr('processing')}>Обработка</a>
+                    <li><a href="#" style={{background: style.navbar_a}} onClick={() => this.hide_parametr('processing')}>Обработка</a>
                         <ul style={{ display: this.masVisible['processing'] ? 'block' : 'none' }}>
                             <li><label className="container">Ограничение
                                 <input className="Iter" id={`Iter_${id_f_nameF}`}
@@ -333,8 +333,8 @@ export default class Bars extends Component {
                                 type="number"
                                 placeholder={`Мин. инт: ${masInformation_2D.MinInt}`}
                             /></li>
-                            <li><button className='just_button' id="Start" onClick={() => startPush(id_f_nameF)}>Старт</button></li>
-                            <li><button className='just_button' id="PauseContinue" onClick={() => this.PauseContinue(text_PauseContinue)}>{text_PauseContinue}</button></li>
+                            <li><button style={{background: style.button}} className='just_button' id="Start" onClick={() => startPush(id_f_nameF)}>Старт</button></li>
+                            <li><button style={{background: style.button}} className='just_button' id="PauseContinue" onClick={() => this.PauseContinue(text_PauseContinue)}>{text_PauseContinue}</button></li>
                             <li style ={{display: 'flex', flexDirection: "row"}}>
                                 <button id="Stop" onClick={() => Stop(this.stopSave)}>Стоп</button>
                                 <label className="container">Сохранить
@@ -352,7 +352,7 @@ export default class Bars extends Component {
 
 
 
-                    <li><a href="#" onClick={() => this.hide_parametr('smoothing')}>Сглаживание</a>
+                    <li><a href="#" style={{background: style.navbar_a}} onClick={() => this.hide_parametr('smoothing')}>Сглаживание</a>
                         <ul style={{ display: this.masVisible['smoothing'] ? 'block' : 'none' }}>
                             <li><input className="n_smoothing" id={`n_smoothing_${id_f_nameF}`}
                                 onChange={(e) => stored_value(e.target.className, +e.target.value)}
@@ -360,12 +360,12 @@ export default class Bars extends Component {
                                 placeholder="3"
                             />
                             </li>
-                            <button className='just_button' onClick={() => smoothing()}>Сглаживание</button>
+                            <button style={{background: style.button}} className='just_button' onClick={() => smoothing()}>Сглаживание</button>
                         </ul>
                     </li>
-                    <li><a href="#" onClick={() => this.hide_parametr('сalibration')}>Калибровка</a>
+                    <li><a href="#" style={{background: style.navbar_a}} onClick={() => this.hide_parametr('сalibration')}>Калибровка</a>
                         <ul style={{ display: this.masVisible['сalibration'] ? 'block' : 'none' }}>
-                            <button className='just_button' id="click_calibration" onClick={calibration}>Калибровка</button>
+                            <button style={{background: style.button}} className='just_button' id="click_calibration" onClick={calibration}>Калибровка</button>
                             <div style={{ display: 'flex', flexDirection: 'row' }}>
                                 <input
                                     id='inp_ser_energy'
@@ -398,7 +398,7 @@ export default class Bars extends Component {
                             ></input>
                         </ul>
                     </li>
-                    <li><a href="#" onClick={() => this.hide_parametr('details')}>Детали экспермента</a>
+                    <li><a href="#" style={{background: style.navbar_a}} onClick={() => this.hide_parametr('details')}>Детали экспермента</a>
                         <ul style={{ display: this.masVisible['details'] ? 'block' : 'none' }}>
                             <li>
                                 <textarea id='add_information' placeholder="Дополнительная информация"

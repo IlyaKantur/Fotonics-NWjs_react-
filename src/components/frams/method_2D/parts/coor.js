@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 export default class Coor extends PureComponent {
     render() {
-        const { className, masx, massum, applyCoor, returnCoor } = this.props;
+        const { className, masx, massum, applyCoor, returnCoor, style } = this.props;
         return (
             <ul id="coor_2D" className={`bar ${className}`}>
                 <div id="coordinatesPanel">
@@ -12,8 +12,8 @@ export default class Coor extends PureComponent {
                     ></Coordinat>
                 </div>
                 <div id="CPButtom_2D">
-                    <button className='just_button' id="apply_Coor_2D" onClick={applyCoor}>Применить</button>
-                    <button className='just_button' id="return_Coor_2D" onClick={returnCoor}>Отмена</button>
+                    <button style={{background: style.button}} className='just_button' id="apply_Coor_2D" onClick={applyCoor}>Применить</button>
+                    <button style={{background: style.button}} className='just_button' id="return_Coor_2D" onClick={returnCoor}>Отмена</button>
                 </div>
             </ul>
         )

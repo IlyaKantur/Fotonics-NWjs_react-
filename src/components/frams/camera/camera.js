@@ -80,9 +80,8 @@ export default class Camera extends PureComponent {
   capture = () => {
     this.n_snapshot = 0;
     if (!this.iter) {
-      if(this.masInformation.recordingTime)
-      {
-        let {recordingTime, delayTime} = this.masInformation
+      if (this.masInformation.recordingTime) {
+        let { recordingTime, delayTime } = this.masInformation
         this.masInformation.countSnapshot = Math.floor(recordingTime / delayTime)
       }
       this.iter = setInterval(() => {
@@ -97,7 +96,7 @@ export default class Camera extends PureComponent {
       imgSrc: imageSrc
     })
     const base64Data = imageSrc.replace(/data:image\/png;base64,/, "");
-    let folder = this.folder_storage || 'result/image' ;
+    let folder = this.folder_storage || 'result/image';
     let name = this.masInformation.nameSnapshot || 'image'
     fs.writeFile(`${folder}/${name}_${this.n_snapshot++}.jpg`, base64Data, 'base64', err => { if (err !== null) console.log(err) })
     if (this.n_snapshot == (this.masInformation.countSnapshot || 1)) {
@@ -121,8 +120,8 @@ export default class Camera extends PureComponent {
             <Webcam
               audio={false}
               ref={this.webcamRef}
-              videoConstraints={{deviceId: deviceId}}
-              screenshotQuality={{screenshotQuality: 1}}
+              videoConstraints={{ deviceId: deviceId }}
+              screenshotQuality={{ screenshotQuality: 1 }}
               screenshotFormat="image/png"
               width={width}
               height={height}
@@ -149,14 +148,16 @@ export default class Camera extends PureComponent {
     return (
       <div id='camera_place'>
         <div id="control_camera">
-          <h3>Спосок подключенных камер</h3>
+          <h3 style={{background: this.props.style.navbar_a}}>Спосок подключенных камер</h3>
           <div id="list_camera">
             {camera}
           </div>
-          <h3>Управление</h3>
-          <button onClick={this.active_cam}>Камера</button>
-          <button onClick={this.choice_folder}>Папка</button>
-          <button onClick={this.capture}>Накопление</button>
+          <h3 style={{background: this.props.style.navbar_a}}>Управление</h3>
+          <div id='camera_button'>
+            <button style={{ background: this.props.style.button }} className='just_button' onClick={this.active_cam}>Камера</button>
+            <button style={{ background: this.props.style.button }} className='just_button' onClick={this.choice_folder}>Папка</button>
+            <button style={{ background: this.props.style.button }} className='just_button' onClick={this.capture}>Накопление</button>
+          </div>
           <input id='nameSnapshot' type='text' placeholder="Название"
             onChange={(e) => this.stored_value(e.target.id, e.target.value)}
           ></input>

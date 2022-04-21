@@ -508,7 +508,7 @@ export default class Method_2D extends PureComponent {
     }
 
     render() {
-        const { id_item, Plot } = this.props;
+        const { id_item, Plot, style } = this.props;
         const { data, revision, consoleMessage, coor_massum, coor_masx } = this.state
         return (
             <L_P_Panel
@@ -536,6 +536,7 @@ export default class Method_2D extends PureComponent {
                 switch_k={this.switch_k}
                 PauseContinue={this.PauseContinue}
                 Stop={this.Stop}
+                style={style}
             ></L_P_Panel>
         )
     }

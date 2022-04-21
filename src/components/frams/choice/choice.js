@@ -6,7 +6,7 @@ const fs = window.require('fs');
 const http = window.require('http')
 const cp = window.require('child_process');
 
-const Choice = ({ onAlert, id_item, createTab }) => {
+const Choice = ({ onAlert, id_item, createTab, style }) => {
     const { id_f, nameF } = id_item;
     const id_f_nameF = `${nameF}_${id_f}`
     return (
@@ -16,13 +16,13 @@ const Choice = ({ onAlert, id_item, createTab }) => {
                 <div className="but" id={`but_${id_f_nameF}`}>
                     <div>
                         <h2>Методы обработки</h2>
-                        <button className="DD" id={`D_${id_f_nameF}`} onClick={() => { createTab('method_1D') }}>Координатный детектор</button>
-                        <button className="DD" id={`DD_${id_f_nameF}`} onClick={() => { createTab("method_2D") }}>Двумерный детектор</button>
+                        <button style={{background: style.button}} className="DD" id={`D_${id_f_nameF}`} onClick={() => { createTab('method_1D') }}>Координатный детектор</button>
+                        <button style={{background: style.button}} className="DD" id={`DD_${id_f_nameF}`} onClick={() => { createTab("method_2D") }}>Двумерный детектор</button>
                     </div>
                     <div>
                         <h2>Инструменты</h2>
-                        <button className="DD" id={`PTE_button_${id_f_nameF}`} onClick={() => { createTab("PTE") }}>ПТЭ</button>
-                        <button className="DD" id={`Camera_button_DD_${id_f_nameF}`} onClick={() => { createTab("camera") }}>Камера</button>
+                        <button style={{background: style.button}} className="DD" id={`PTE_button_${id_f_nameF}`} onClick={() => { createTab("PTE") }}>ПТЭ</button>
+                        <button style={{background: style.button}} className="DD" id={`Camera_button_DD_${id_f_nameF}`} onClick={() => { createTab("camera") }}>Камера</button>
                     </div>
 
                     {/* <button onClick={() => { check_version() }}>Check Version</button> */}

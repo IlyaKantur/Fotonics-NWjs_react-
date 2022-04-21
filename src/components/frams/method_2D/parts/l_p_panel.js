@@ -29,7 +29,7 @@ export default class L_P_Panel extends PureComponent {
             revision, consoleMessage, onConsoleMessage,
             id_item, finished, masInformation_2D, stored_value,
             calibration, search_energe, save, smoothing, coor_massum, coor_masx,
-            switch_k, Levels, PauseContinue, Stop
+            switch_k, Levels, PauseContinue, Stop, style
         } = this.props;
         let { Plot } = this.props;
         const { active_l_t } = this.state;
@@ -68,6 +68,7 @@ export default class L_P_Panel extends PureComponent {
                     switch_k={switch_k}
                     PauseContinue={PauseContinue}
                     Stop={Stop}
+                    style={style}
                 ></Bars>;
                 <Coor
                     className={z2}
@@ -76,13 +77,14 @@ export default class L_P_Panel extends PureComponent {
                     applyCoor={applyCoor}
                     returnCoor={returnCoor}
                     id_item={id_item}
+                    style={style}
                 >
                 </Coor>
             </>
         return (
             <div id="l_p_panel">
                 <div id="left_Panel" className="panel">
-                    <div className = "left_switch" id="wrapper">
+                    <div style={{background: style.left_switch}} className = "left_switch" id="wrapper">
                         <button id="TabOne" className={button_active_1} target="#TabOne" onClick={() => this.switch_l_t(1)}>P</button>
                         <button id="TabTwo" className={button_active_2} target="#TabTwo" onClick={() => this.switch_l_t(2)}>C</button>
                     </div>

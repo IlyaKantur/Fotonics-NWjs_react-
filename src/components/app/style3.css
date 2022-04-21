@@ -1,32 +1,30 @@
 .left_switch{
-    /* background: rgb(65, 65, 65); */
+    background-color:#2F2E33
 }
 
 #navbar a{
-    /* background-color: #181818cb; */
-    margin-bottom: 5px;
+    background-color: #3A5199;
 }
 
 body {
     font-family: -apple-system, "Helvetica Neue", Helvetica, sans-serif;
-    /* background-color: #5f6e77e7; */
+    background-color: #D5D6D2;
     overflow: hidden;
     width: 100%;
     height: 100%;
 }
 
 #panel_WP{
-    /* background-color: rgb(223, 223, 223); */
+    /* background-color: #a8a8a8; */
 }
 
 .just_button{
-    /* background-color: rgb(223, 223, 223); */
+    /* background-color: #a8a8a8; */
     border: 0px;
-    cursor: pointer;
 }
 
 .DD{
-    /* background-color:rgb(223, 223, 223); */
+    /* background-color:#a8a8a8; */
     margin: 20px 0px;
     position: relative;
     height: max-content;
