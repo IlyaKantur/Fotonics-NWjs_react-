@@ -5,8 +5,8 @@
   "descriptions": "Создание VISUAL PHOTONS на основе связки NWjs + react",
   "main": "main/index.html",
   "window": {
-    "width": 1366,
-    "height": 768,
+    "min_width": 1366,
+    "min_height": 768,
     "icon": "main/atom_copy.ico"
   },
   "scripts": {
