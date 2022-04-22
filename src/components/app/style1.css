@@ -16,17 +16,17 @@ body {
 }
 
 #panel_WP{
-    /* background-color: rgb(223, 223, 223); */
+    /* background-color: rgb(180, 180, 180); */
 }
 
 .just_button{
-    /* background-color: rgb(223, 223, 223); */
+    /* background-color: rgb(180, 180, 180); */
     border: 0px;
     cursor: pointer;
 }
 
 .DD{
-    /* background-color:rgb(223, 223, 223); */
+    /* background-color: rgb(180, 180, 180); */
     margin: 20px 0px;
     position: relative;
     height: max-content;

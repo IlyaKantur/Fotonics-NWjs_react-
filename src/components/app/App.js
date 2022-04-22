@@ -39,7 +39,7 @@ export default class App extends PureComponent {
             left_switch: 'rgb(65, 65, 65)',
             navbar_a: '#181818cb',
             body: '#5f6e77e7',
-            button: 'rgb(223, 223, 223)'
+            button: 'rgb(180, 180, 180)'
         }
     }
 
@@ -64,7 +64,7 @@ export default class App extends PureComponent {
                     left_switch: 'rgb(65, 65, 65)',
                     navbar_a: '#181818cb',
                     body: '#5f6e77e7',
-                    button: 'rgb(223, 223, 223)'
+                    button: 'rgb(180, 180, 180)'
                 }
                 break;
             case 2:
@@ -303,11 +303,10 @@ export default class App extends PureComponent {
 
 }
 
-const Container = styled.body`
+const Container = styled.div`
     background-color: ${props => props.bg};
-`
-const Button = styled.button`
-    background-color: ${props => props.bg_button};
+    width: 100%;
+    height: 100%;
 `
 
 const CreateMenu = (create, switch_style) => {
