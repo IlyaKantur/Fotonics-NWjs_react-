@@ -9,7 +9,7 @@
             "type": "nwjs",
             "request": "launch",
             "name": "Launch NWjs",
-            "nwjsVersion": "any",
+            "nwjsVersion": "0.62.0",
             "webRoot": "${workspaceFolder}",
             "reloadAfterAttached": true
         }
