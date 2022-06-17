@@ -69,6 +69,7 @@ export default class Processing {
         this.masx = [];
         this.oldX = [];
         this.oldY = [];
+        this.masfongraph = []
 
         //Входные данные
         this.masImg = masImg;
@@ -202,7 +203,7 @@ export default class Processing {
             //Перевод снимка
             for (let i = 0; i < ImgDataH.length; i += 4) {
                 mas0[ii] = ImgDataH[i];
-                if (this.fon_load) masfon[ii] = this.ImgFon[i]
+                if (this.fon_load && this.imgnum == 0) masfon[ii] = this.ImgFon[i]
                 ii++;
             }
 
@@ -211,17 +212,17 @@ export default class Processing {
                 let m = [], mf = [], jj = 0; ii = ibeg;
                 for (let i = 0; i < length_summcolumn; i++) {
                     m[i] = 0;
-                    if (this.fon_load) mf[i] = 0;
+                    if (this.fon_load && this.imgnum == 0) mf[i] = 0;
                     for (let j = 0; j < sumcolumnN; j++) {
                         m[i] += mas0[ii];
-                        if (this.fon_load) mf[i] += masfon[ii];
+                        if (this.fon_load && this.imgnum == 0) mf[i] += masfon[ii];
                         jj++; ii++;
                     }
                     if(jj == x_x - rem_div){
                         for(let j = 0; j < rem_div; j++){
                             i++;
                             m[i] = mas0[ii] * sumcolumnN;
-                            if (this.fon_load) mf[i] = masfon[ii];
+                            if (this.fon_load && this.imgnum == 0) mf[i] = masfon[ii];
                             jj++; ii++;
                         }
                     }
@@ -244,10 +245,10 @@ export default class Processing {
                 for (let i = 0; i < mas0.length; i++) {
 
                     //вычитание фонового изображения
-                    if (this.fon_load) {
-                        if (mas0[i] > masfon[i] && mas0[i - 1] < masfon[i] && mas0[i + 1] < masfon[i]) mas0[i] = 0
-                        else mas0[i] -= masfon[i];
-                    }
+                    // if (this.fon_load) {
+                    //     if (mas0[i] > masfon[i] && mas0[i - 1] < masfon[i] && mas0[i + 1] < masfon[i]) mas0[i] = 0
+                    //     else mas0[i] -= masfon[i];
+                    // }
                     //очистка от артифактов
                     if (this.bpix) {
                         let del = +((((mas0[i - 1] == undefined ? 0 : mas0[i - 1]) + (mas0[i + x_x] == undefined ? 0 : mas0[i + x_x])
@@ -284,6 +285,7 @@ export default class Processing {
             //
             for (let x = 0; x < division + rem_div; x++) {
                 mas[x] = 0;
+                this.masfongraph[x] = 0
                 if (this.imgnum == 0) this.masx[x] = x;
             }
             for (let y = 0; y < y_y; y++) {
@@ -293,6 +295,7 @@ export default class Processing {
                         else { mas[x] += 0; }
                     }
                     else { mas[x] += mas0[yy]; }
+                    if(this.fon_load && this.imgnum == 0) {this.masfongraph[x] += masfon[yy]}
                     yy++;
                 }
                 // if(this.gran) {
@@ -300,6 +303,10 @@ export default class Processing {
                 // }
             }
 
+            if (this.fon_load && !this.bf) {
+                for(let i = 0; i < mas.length; i++){mas[i] -= this.masfongraph[i]}
+                // if(mas[i] < 0) mas[i]
+            }
             //
 
             if (this.imgnum == 0) this.oldX = this.masx.slice();
