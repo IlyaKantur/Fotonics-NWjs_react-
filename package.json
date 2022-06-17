@@ -18,7 +18,7 @@
     "nwjs-packager-run": "nwp -r"
   },
   "build": {
-    "nwVersion": "stable"
+    "nwVersion": "0.62.0"
   },
   "nwjs-packager": {
     "appFriendlyName": "VISUAL PHOTONS",
