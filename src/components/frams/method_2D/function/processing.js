@@ -285,8 +285,11 @@ export default class Processing {
             //
             for (let x = 0; x < division + rem_div; x++) {
                 mas[x] = 0;
-                this.masfongraph[x] = 0
-                if (this.imgnum == 0) this.masx[x] = x;
+                
+                if (this.imgnum == 0) {
+                    this.masx[x] = x;
+                    this.masfongraph[x] = 0
+                }
             }
             for (let y = 0; y < y_y; y++) {
                 for (let x = 0; x < division + rem_div; x++) {
@@ -304,7 +307,10 @@ export default class Processing {
             }
 
             if (this.fon_load && !this.bf) {
-                for(let i = 0; i < mas.length; i++){mas[i] -= this.masfongraph[i]}
+                for(let i = 0; i < mas.length; i++){
+                    mas[i] -= this.masfongraph[i]
+                    if(mas[i] < 0) {mas[i] = 0}
+                }
                 // if(mas[i] < 0) mas[i]
             }
             //
