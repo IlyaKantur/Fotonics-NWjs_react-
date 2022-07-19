@@ -370,14 +370,16 @@ export default class Method_2D extends PureComponent {
             const { baseElement } = this.props;
             const { masx, massum } = this.state;
 
-            const id = baseElement.findIndex((item) => item.name_el == this.masInformation_2D.nameElement)
-            if (this.masInformation_2D.Levels.kA) {
-                this.masInformation_2D.en_first_point = +baseElement[id].energy_foto[0] * 1000;
-                this.masInformation_2D.en_second_point = +baseElement[id].energy_foto[1] * 1000;
-            }
-            else {
-                this.masInformation_2D.en_first_point = +baseElement[id].energy_foto[3] * 1000;
-                this.masInformation_2D.en_second_point = +baseElement[id].energy_foto[5] * 1000;
+            if(!this.masInformation_2D.en_first_point && !this.masInformation_2D.en_second_poin){
+                const id = baseElement.findIndex((item) => item.name_el == this.masInformation_2D.nameElement)
+                if (this.masInformation_2D.Levels.kA) {
+                    this.masInformation_2D.en_first_point = +baseElement[id].energy_foto[0] * 1000;
+                    this.masInformation_2D.en_second_point = +baseElement[id].energy_foto[1] * 1000;
+                }
+                else {
+                    this.masInformation_2D.en_first_point = +baseElement[id].energy_foto[3] * 1000;
+                    this.masInformation_2D.en_second_point = +baseElement[id].energy_foto[5] * 1000;
+                }
             }
 
             let del_en = (this.masInformation_2D.en_second_point - this.masInformation_2D.en_first_point) /
