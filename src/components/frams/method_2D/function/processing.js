@@ -306,6 +306,8 @@ export default class Processing {
                 // }
             }
 
+
+            //вычетание фона из данных по оси Х
             if (this.fon_load && !this.bf) {
                 for(let i = 0; i < mas.length; i++){
                     mas[i] -= this.masfongraph[i]
@@ -353,6 +355,7 @@ export default class Processing {
             }
 
 
+            //подготовка для вывода
             for (let i = 0; i < ImgDataH.length; i += 4) {
                 if (i % 4 == 3) {
                     continue;
@@ -446,7 +449,7 @@ export default class Processing {
                 if (Сompound != 'Сompound') {
                     path_save += `${Сompound}/`;
                     name_file = `${Сompound}_${nameElement}_${Levels}_${timeProtocol}`
-                    fs.mkdirSync(path_save, (err) => { })
+                    fs.mkdir(path_save, (err) => {if (err != null) { console.log(err) }; })
                 }
                 path_save += `${nameElement}/`;
 
