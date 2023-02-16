@@ -40,8 +40,8 @@ export default class Method_2D extends PureComponent {
                 kA: true,
                 kB: false
             },
-            AxisX: 'Энергия фотонов, эВ',
-            AxisY: 'Интенсивность, у.е.',
+            AxisX: 'Энергия фотонов (эВ)',
+            AxisY: 'Интенсивность (отн.ед.)',
             Iter: false,
             IterN: 0,
             IntPix: true,
@@ -68,10 +68,14 @@ export default class Method_2D extends PureComponent {
             Yy: 100,
             YY: 900,
             add_information: '',
+            Levels: {
+                kA: true,
+                kB: false
+            }
         }
         this.nameInformation_2D =
             [
-                "Название метода:", "*Режим наблюдения:", "*Сохранить последний:", "Название элемента:",
+                "Название метода:", "*Режим наблюдения:", "*Сохранить последний:", "Соединение:", "Элемент:",
                 "ОсьХ:", "ОсьY:", "*Ограниченное количество:", "Количество:", "*Без фильтрации:", "*Вычесть дельта:",
                 "Дельта:", "*Вычет битого пикселя:", "*Включить границы:", "Начало по горизонтале:", "Конец по горизонтали",
                 "Начало по вертикали:", "Конец по вертикали:", `Дополнительная информация \n`
@@ -412,12 +416,12 @@ export default class Method_2D extends PureComponent {
         Levels = Object.keys(Levels).filter(key => { return Levels[key] })
 
         let path_save = `./result/protocol/2D/`;
-        let name_file = `Protocol_${nameElement}_${Levels}_${timeProtocol}.dat`
+        let name_file = `Protocol_${nameElement}${Levels}_${timeProtocol}.dat`
 
         if (Сompound != 'Сompound') {
             path_save += `${Сompound}/`;
-            name_file = `Protocol_${Сompound}_${nameElement}_${Levels}_${timeProtocol}.dat`
-            fs.mkdirSync(path_save, (err) => { })
+            name_file = `Protocol_${Сompound}_${nameElement}${Levels}_${timeProtocol}.dat`
+            fs.mkdir(path_save, (err) => {if (err != null) { console.log(err) }})
         }
         path_save += `${nameElement}/`;
 

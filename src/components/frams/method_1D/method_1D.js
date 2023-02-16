@@ -19,23 +19,23 @@ export default class Method_1D extends PureComponent {
             method: 'Однокоординатный',
             Сompound: '',
             nameElement: '',
-            Levels: {
-                kA: true,
-                kB: false
-            },
-            AxisX: 'Энергия фотонов, эВ',
-            AxisY: 'Интенсивность, у.е.',
+            AxisX: 'Энергия фотонов (эВ)',
+            AxisY: 'Интенсивность (отн.ед.)',
             countSum: 1,
             en_first_point: null,
             en_second_point: null,
             n_first_point: 0,
             n_second_point: 0,
             n_smoothing: 3,
-            add_information: ''
+            add_information: '',
+            Levels: {
+                kA: true,
+                kB: false
+            },
         }
         this.nameInformation =
             [
-                "Название метода:", "Название элемента:", "ОсьХ:", "ОсьY:", "Суммировать по:",
+                "Название метода:", "Соединение:", "Элемент:", "ОсьХ:", "ОсьY:", "Суммировать по:",
                 "Эпергия первой точки:", "Энергия второй точки:", "Номер первой точки:",
                 "Номер второй точки:", "Сглаживание по n точек:", `Дополнительная информация: \n`
             ]
@@ -210,23 +210,23 @@ export default class Method_1D extends PureComponent {
 
     click_save = () => {
         const { coor, massum } = this.state;
-        let { Сompound, nameElement, Levels} = this.masInformation;
+        let { Сompound, nameElement, Levels } = this.masInformation;
 
         const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`;
 
-        Сompound = Сompound || 'Сompound';
+        Compound = Сompound || 'Сompound';
         nameElement = nameElement || 'Element';
-        Levels = Object.keys(Levels).filter(key => {return Levels[key]})
+        Levels = Object.keys(Levels).filter(key => { return Levels[key] })
 
         let path_save = `./result/Processed/1D/`;
         let name_file = `${nameElement}_${Levels}_${timeProtocol}.dat`
 
-        if(Сompound != 'Сompound'){
+        if (Сompound != 'Сompound') {
             path_save += `${Сompound}/`;
             name_file = `${Сompound}_${nameElement}_${Levels}_${timeProtocol}.dat`
-            fs.mkdirSync(path_save, (err) => {})
+            fs.mkdir(path_save, (err) => { if (err != null) { console.log(err) }; })
         }
 
         path_save += `${nameElement}/`;
@@ -236,10 +236,10 @@ export default class Method_1D extends PureComponent {
             fs.mkdir(path_save, (err) => {
                 if (err != null) { console.log(err) };
                 path_save += `${dataProtocol}/`;
-                fs.mkdir(path_save, (err) =>{
+                fs.mkdir(path_save, (err) => {
                     if (err != null) { console.log(err) };
                     const file = fs.createWriteStream(`${path_save}/${name_file}`);
-                    file.on('error', function (err) { console.log(err) })
+                    // file.on('error', function (err) { console.log(err) })
                     coor.forEach((item, i) => file.write(`${item} ${massum[i]} \n`));
                     file.end();
                 })
@@ -273,24 +273,46 @@ export default class Method_1D extends PureComponent {
     }
 
     save_protocol = () => {
-        const nameFolderProtocol = this.masInformation.Сompound || 'Compound';
+        const {Compound, nameElement, Levels } = this.masInformation
+        // let level = Object.keys(Levels).filter(key => {return Levels[key]})
+
         const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
-        const dir = `result/protocol/${nameFolderProtocol}`
-        fs.mkdir(dir, err => {
-            if (err.code != "EEXIST") { console.log(err); throw err };
-            fs.mkdir(`${dir}/${dataProtocol}`, err => {
-                if (err.code != "EEXIST") { console.log(err); throw err };
-                let file = fs.createWriteStream(`./${dir}/${dataProtocol}/1D_${timeProtocol}.dat`);
-                file.on('error', function (err) { console.log(err) })
-                // const keys = Object.keys(this.masInformation);
-                const values = Object.values(this.masInformation);
-                file.write(
-                    `Дата записи: ${dataProtocol}\nВремя записи: ${timeProtocol}\n`
-                )
-                this.nameInformation.forEach((item, i) => { file.write(`${item} ${values[i]} \n`) })
-                file.end();
+
+        let compound = Compound || 'Сompound';
+        let nElement = nameElement || 'Element';
+        let levels = Object.keys(Levels).filter(key => { return Levels[key] })
+
+        let path_save = `result/protocol/${compound}`
+        let name_file = `Protocol_${nElement}${levels}_${timeProtocol}.dat`
+
+        if (compound != 'Сompound') {
+            path_save += `${compound}/`;
+            name_file = `Protocol_${compound}_${nElement}${levels}_${timeProtocol}.dat`
+            fs.mkdir(path_save, (err) => {if (err != null) { console.log(err) }})
+        }
+        path_save += `${nElement}/`;
+
+        fs.mkdir(path_save, (err) => {
+            if (err != null) { console.log(err) };
+            path_save += `${Levels[0]}/`
+            fs.mkdir(path_save, err => {
+                if (err != null) { console.log(err) };
+                path_save += `${dataProtocol}/`;
+                fs.mkdir(path_save, err => {
+                    let file = fs.createWriteStream(`${path_save}/${name_file}`);
+                    file.on('error', (err) => { console.log(err) })
+                    const values = Object.values(this.masInformation);
+                    file.write(
+                        `Дата записи: ${dataProtocol}\nВремя записи: ${timeProtocol}\n`
+                    )
+                    for (let i = 0; i < this.nameInformation.lengh; i++) {
+                        file.write(`${this.nameInformation(i)} ${values[i]} \n`)
+                    }
+                    // this.nameInformation.forEach((item, i) => { file.write(`${item} ${values[i]} \n`)})
+                    file.end();
+                })
             })
         })
     }
@@ -439,7 +461,7 @@ export default class Method_1D extends PureComponent {
         })
         return (
             <div id="place_1D">
-                <div style={{background: this.props.style.left_switch}} className = "left_switch" id="left_tab_panel_1D">
+                <div style={{ background: this.props.style.left_switch }} className="left_switch" id="left_tab_panel_1D">
                     <button className={this.button_active_1} onClick={() => { this.switch_tab('Sum_graph') }}>G</button>
                     <button className={this.button_active_2} onClick={() => { this.switch_tab('List_graph') }}>C</button>
                 </div>
@@ -526,7 +548,7 @@ class Sum_graph extends Component {
         return (
             <div id="sum_graph">
                 <div id="control_panel">
-                    <h3 style={{background: style.navbar_a}} onClick={() => this.hide_parametr('file')}>Файл</h3>
+                    <h3 style={{ background: style.navbar_a }} onClick={() => this.hide_parametr('file')}>Файл</h3>
                     <div style={{ display: this.masVisible['file'] ? 'block' : 'none' }}>
                         <input id='Сompound' type='text' placeholder="Соединение"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
@@ -556,28 +578,28 @@ class Sum_graph extends Component {
                         <input id='AxisY' type='text' placeholder="Ось Y"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
-                        <button style={{background: style.button}} className='just_button' onClick={click_loadFolder}>Папка</button>
-                        <button style={{background: style.button}} className='just_button' onClick={click_loadFile}>Выбрать</button>
-                        <button style={{background: style.button}} className='just_button' onClick={click_save}>Сохранить</button>
+                        <button style={{ background: style.button }} className='just_button' onClick={click_loadFolder}>Папка</button>
+                        <button style={{ background: style.button }} className='just_button' onClick={click_loadFile}>Выбрать</button>
+                        <button style={{ background: style.button }} className='just_button' onClick={click_save}>Сохранить</button>
 
                     </div>
-                    <h3 style={{background: style.navbar_a}} onClick={() => this.hide_parametr('processing')}>Обработка</h3>
+                    <h3 style={{ background: style.navbar_a }} onClick={() => this.hide_parametr('processing')}>Обработка</h3>
                     <div style={{ display: this.masVisible['processing'] ? 'block' : 'none' }}>
-                        <button  style={{background: style.button}} className='just_button' id="click_sum" onClick={click_sum}>Суммировать</button>
+                        <button style={{ background: style.button }} className='just_button' id="click_sum" onClick={click_sum}>Суммировать</button>
                         <input id='countSum' type='number' placeholder="Сумма по: 1"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         ></input>
                     </div>
-                    <h3 style={{background: style.navbar_a}} onClick={() => this.hide_parametr('calibration')}>Калибровка</h3>
+                    <h3 style={{ background: style.navbar_a }} onClick={() => this.hide_parametr('calibration')}>Калибровка</h3>
                     <div style={{ display: this.masVisible['calibration'] ? 'block' : 'none' }}>
-                        <button style={{background: style.button}} className='just_button' id="click_calibration" onClick={click_calibration}>Калибровка</button>
+                        <button style={{ background: style.button }} className='just_button' id="click_calibration" onClick={click_calibration}>Калибровка</button>
                         <input id='en_first_point' type='number' placeholder="Эн. первой точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
-                            value={masInformation.en_first_point}
+                            value={masInformation.en_first_point ? masInformation.en_first_point : ''}
                         ></input>
                         <input id='en_second_point' type='number' placeholder="Эн. второй точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
-                            value={masInformation.en_second_point}
+                            value={masInformation.en_first_point ? masInformation.en_first_point : ''}
                         ></input>
                         <input id='n_first_point' type='number' placeholder="N первой точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
@@ -588,15 +610,15 @@ class Sum_graph extends Component {
                         // value={n_second_point}
                         ></input>
                     </div>
-                    <h3 style={{background: style.navbar_a}} onClick={() => this.hide_parametr('smoothing')}>Сглаживание</h3>
+                    <h3 style={{ background: style.navbar_a }} onClick={() => this.hide_parametr('smoothing')}>Сглаживание</h3>
                     <div style={{ display: this.masVisible['smoothing'] ? 'block' : 'none' }}>
-                        <button style={{background: style.button}} className='just_button' id="click_smoothing" onClick={click_smoothing}>Сглаживание</button>
+                        <button style={{ background: style.button }} className='just_button' id="click_smoothing" onClick={click_smoothing}>Сглаживание</button>
                         <input id='n_smoothing' type='number' placeholder="Точек: 3"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
                         // value={n_smoothing}
                         ></input>
                     </div>
-                    <h3 style={{background: style.navbar_a}} onClick={() => this.hide_parametr('processing')}>Детали экспермента</h3>
+                    <h3 style={{ background: style.navbar_a }} onClick={() => this.hide_parametr('processing')}>Детали экспермента</h3>
                     <div style={{ display: this.masVisible['processing'] ? 'block' : 'none' }}>
                         <textarea id='add_information' placeholder="Дополнительная информация"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
