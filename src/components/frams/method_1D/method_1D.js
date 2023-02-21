@@ -216,23 +216,23 @@ export default class Method_1D extends PureComponent {
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`;
 
-        Compound = Сompound || 'Сompound';
-        nameElement = nameElement || 'Element';
-        Levels = Object.keys(Levels).filter(key => { return Levels[key] })
+        let compound = Сompound || 'Сompound';
+        let nElement = nameElement || 'Element';
+        let levels = Object.keys(Levels).filter(key => { return Levels[key] })
 
         let path_save = `./result/Processed/1D/`;
-        let name_file = `${nameElement}_${Levels}_${timeProtocol}.dat`
+        let name_file = `${nElement}_${levels}_${timeProtocol}.dat`
 
-        if (Сompound != 'Сompound') {
-            path_save += `${Сompound}/`;
-            name_file = `${Сompound}_${nameElement}_${Levels}_${timeProtocol}.dat`
+        if (compound != 'Сompound') {
+            path_save += `${compound}/`;
+            name_file = `${compound}_${nElement}_${levels}_${timeProtocol}.dat`
             fs.mkdir(path_save, (err) => { if (err != null) { console.log(err) }; })
         }
 
-        path_save += `${nameElement}/`;
+        path_save += `${nElement}/`;
         fs.mkdir(path_save, (err) => {
             if (err != null) { console.log(err) };
-            path_save += `${Levels[0]}/`
+            path_save += `${levels}/`
             fs.mkdir(path_save, (err) => {
                 if (err != null) { console.log(err) };
                 path_save += `${dataProtocol}/`;
