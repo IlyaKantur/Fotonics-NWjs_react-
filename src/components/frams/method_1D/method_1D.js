@@ -226,25 +226,78 @@ export default class Method_1D extends PureComponent {
         if (compound != 'Сompound') {
             path_save += `${compound}/`;
             name_file = `${compound}_${nElement}_${levels}_${timeProtocol}.dat`
-            fs.mkdir(path_save, (err) => { if (err != null) { console.log(err) }; })
+            fs.mkdir(path_save, (err) => {
+                if (err != null) {
+                    console.log(err);
+                    this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, coor, massum, false)
+                };
+            })
         }
 
         path_save += `${nElement}/`;
+        this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, coor, massum, false);
+    }
+
+    save_protocol = () => {
+        const { Compound, nameElement, Levels } = this.masInformation
+        // let level = Object.keys(Levels).filter(key => {return Levels[key]})
+
+        const date = new Date();
+        const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+        const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
+
+        let compound = Compound || 'Сompound';
+        let nElement = nameElement || 'Element';
+        let levels = Object.keys(Levels).filter(key => { return Levels[key] })
+
+        let path_save = `result/protocol/${compound}`
+        let name_file = `Protocol_${nElement}${levels}_${timeProtocol}.dat`
+
+        if (compound != 'Сompound') {
+            path_save += `${compound}/`;
+            name_file = `Protocol_${compound}_${nElement}${levels}_${timeProtocol}.dat`
+            fs.mkdir(path_save, (err) => { 
+                if (err != null) { 
+                    console.log(err) 
+                    this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, [], [], true);
+                } 
+            })
+        }
+        path_save += `${nElement}/`;
+
+        this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, [], [], true);
+    }
+
+    makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, coor, massum, protocol) {
         fs.mkdir(path_save, (err) => {
-            if (err != null) { console.log(err) };
-            path_save += `${levels}/`
+            if (err != null) { console.log(err); };
+            path_save += `${levels}/`;
             fs.mkdir(path_save, (err) => {
-                if (err != null) { console.log(err) };
+                if (err != null) { console.log(err); };
                 path_save += `${dataProtocol}/`;
                 fs.mkdir(path_save, (err) => {
-                    if (err != null) { console.log(err) };
+                    if (err != null) { console.log(err); };
+
                     const file = fs.createWriteStream(`${path_save}/${name_file}`);
-                    // file.on('error', function (err) { console.log(err) })
-                    coor.forEach((item, i) => file.write(`${item} ${massum[i]} \n`));
+                    if (protocol){
+                        file.on('error', (err) => { console.log(err) })
+                        const values = Object.values(this.masInformation);
+                        file.write(
+                            `Дата записи: ${dataProtocol}\nВремя записи: ${timeProtocol}\n`
+                        )
+                        for (let i = 0; i < this.nameInformation.lengh; i++) {
+                            file.write(`${this.nameInformation(i)} ${values[i]} \n`)
+                        }
+                        // this.nameInformation.forEach((item, i) => { file.write(`${item} ${values[i]} \n`)})
+                    }
+                    else{
+                        // file.on('error', function (err) { console.log(err) })
+                        coor.forEach((item, i) => file.write(`${item} ${massum[i]} \n`));
+                    }
                     file.end();
-                })
-            })
-        })
+                });
+            });
+        });
     }
 
     click_sum = () => {
@@ -270,51 +323,6 @@ export default class Method_1D extends PureComponent {
             this.save_protocol()
             // console.log("время обработки: "+(new Date().getTime()-date_start)/1000)
         }
-    }
-
-    save_protocol = () => {
-        const {Compound, nameElement, Levels } = this.masInformation
-        // let level = Object.keys(Levels).filter(key => {return Levels[key]})
-
-        const date = new Date();
-        const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-        const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
-
-        let compound = Compound || 'Сompound';
-        let nElement = nameElement || 'Element';
-        let levels = Object.keys(Levels).filter(key => { return Levels[key] })
-
-        let path_save = `result/protocol/${compound}`
-        let name_file = `Protocol_${nElement}${levels}_${timeProtocol}.dat`
-
-        if (compound != 'Сompound') {
-            path_save += `${compound}/`;
-            name_file = `Protocol_${compound}_${nElement}${levels}_${timeProtocol}.dat`
-            fs.mkdir(path_save, (err) => {if (err != null) { console.log(err) }})
-        }
-        path_save += `${nElement}/`;
-
-        fs.mkdir(path_save, (err) => {
-            if (err != null) { console.log(err) };
-            path_save += `${Levels[0]}/`
-            fs.mkdir(path_save, err => {
-                if (err != null) { console.log(err) };
-                path_save += `${dataProtocol}/`;
-                fs.mkdir(path_save, err => {
-                    let file = fs.createWriteStream(`${path_save}/${name_file}`);
-                    file.on('error', (err) => { console.log(err) })
-                    const values = Object.values(this.masInformation);
-                    file.write(
-                        `Дата записи: ${dataProtocol}\nВремя записи: ${timeProtocol}\n`
-                    )
-                    for (let i = 0; i < this.nameInformation.lengh; i++) {
-                        file.write(`${this.nameInformation(i)} ${values[i]} \n`)
-                    }
-                    // this.nameInformation.forEach((item, i) => { file.write(`${item} ${values[i]} \n`)})
-                    file.end();
-                })
-            })
-        })
     }
 
     click_calibration = () => {
