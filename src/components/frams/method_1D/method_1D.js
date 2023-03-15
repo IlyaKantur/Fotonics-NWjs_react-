@@ -229,8 +229,8 @@ export default class Method_1D extends PureComponent {
             fs.mkdir(path_save, (err) => {
                 if (err != null) {
                     console.log(err);
-                    this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, coor, massum, false)
                 };
+                this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, coor, massum, false)
             })
         }
 
@@ -257,18 +257,18 @@ export default class Method_1D extends PureComponent {
             path_save += `${compound}/`;
             name_file = `Protocol_${compound}_${nElement}${levels}_${timeProtocol}.dat`
             fs.mkdir(path_save, (err) => { 
-                if (err != null) { 
-                    console.log(err) 
-                    this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, [], [], true);
-                } 
+                if (err != null) {console.log(err)}
+                this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, [], [], true);
             })
         }
-        path_save += `${nElement}/`;
+        else{
+            path_save += `${nElement}/`;
 
-        this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, [], [], true);
+            this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, [], [], true);
+        }
     }
 
-    makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, coor, massum, protocol) {
+    makeDir = (path_save, levels, dataProtocol, timeProtocol, name_file, coor, massum, protocol) => {
         fs.mkdir(path_save, (err) => {
             if (err != null) { console.log(err); };
             path_save += `${levels}/`;
