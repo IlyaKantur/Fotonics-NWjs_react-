@@ -250,7 +250,7 @@ export default class Method_1D extends PureComponent {
         let nElement = nameElement || 'Element';
         let levels = Object.keys(Levels).filter(key => { return Levels[key] })
 
-        let path_save = `result/protocol/${compound}`
+        let path_save = `result/protocol/1D/`
         let name_file = `Protocol_${nElement}${levels}_${timeProtocol}.dat`
 
         if (compound != 'Сompound') {

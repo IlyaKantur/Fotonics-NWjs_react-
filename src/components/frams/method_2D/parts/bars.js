@@ -110,7 +110,7 @@ export default class Bars extends Component {
         const { className, loadFolder, loadFoldImg,
             loadFonImg, startPush, id_item,
             masInformation_2D, stored_value,
-            calibration, search_energe, save, smoothing, Stop, style
+            calibration, search_energe, click_save, smoothing, Stop, style
         } = this.props;
         const { id_f, nameF } = id_item;
         const id_f_nameF = `${nameF}_${id_f}`;
@@ -140,7 +140,7 @@ export default class Bars extends Component {
                         <ul style={{ display: this.masVisible['file'] ? 'block' : 'none' }}>
                             <li><button style={{background: style.button}} className='just_button' id="Folder" onClick={() => loadFolder(id_f_nameF)}>Папка</button></li>
                             <li><button style={{background: style.button}} className='just_button' id="Fold" onClick={() => loadFoldImg(id_f_nameF)}>Выбор</button></li>
-                            <li><button style={{background: style.button}} className='just_button' id="Save" onClick={() => save()}>Сохранить</button></li>
+                            <li><button style={{background: style.button}} className='just_button' id="Save" onClick={() => click_save()}>Сохранить</button></li>
                             <li><label className="container">Только последний
                                 <input className="SaveLast" id={`SaveLast_${id_f_nameF}`}
                                     onChange={(e) => stored_value(e.target.className, e.target.checked)}

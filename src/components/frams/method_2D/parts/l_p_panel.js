@@ -28,7 +28,7 @@ export default class L_P_Panel extends PureComponent {
             startPush, applyCoor, returnCoor, data,
             revision, consoleMessage, onConsoleMessage,
             id_item, finished, masInformation_2D, stored_value,
-            calibration, search_energe, save, smoothing, coor_massum, coor_masx,
+            calibration, search_energe, click_save, smoothing, coor_massum, coor_masx,
             switch_k, Levels, PauseContinue, Stop, style
         } = this.props;
         let { Plot } = this.props;
@@ -63,7 +63,7 @@ export default class L_P_Panel extends PureComponent {
                     id_item={id_item}
                     masInformation_2D={masInformation_2D}
                     stored_value={stored_value}
-                    save={save}
+                    click_save={click_save}
                     smoothing={smoothing}
                     switch_k={switch_k}
                     PauseContinue={PauseContinue}

@@ -401,50 +401,96 @@ export default class Method_2D extends PureComponent {
         }
     }
 
+    click_save = () => {
+        const { coor_masx, coor_massum } = this.state;
+        let { Сompound, nameElement, Levels } = this.masInformation_2D;
 
+        const date = new Date();
+        const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+        const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`;
+
+        let compound = Сompound || 'Сompound';
+        let nElement = nameElement || 'Element';
+        let levels = Object.keys(Levels).filter(key => { return Levels[key] })
+
+        let path_save = `./result/Processed/2D/`;
+        let name_file = `${nElement}_${levels}_${timeProtocol}.dat`
+
+        if (compound != 'Сompound') {
+            path_save += `${compound}/`;
+            name_file = `${compound}_${nElement}_${levels}_${timeProtocol}.dat`
+            fs.mkdir(path_save, (err) => {
+                if (err != null) {
+                    console.log(err);
+                };
+                this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, coor_masx, coor_massum, false)
+            })
+        }
+
+        path_save += `${nElement}/`;
+        this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, coor_masx, coor_massum, false);
+    }
 
     save_protocol = () => {
-
-        let { Сompound, nameElement, Levels } = this.masInformation_2D;
+        const { Compound, nameElement, Levels } = this.masInformation_2D
+        // let level = Object.keys(Levels).filter(key => {return Levels[key]})
 
         const date = new Date();
         const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`
 
-        Сompound = Сompound || 'Сompound';
-        nameElement = nameElement || 'Element';
-        Levels = Object.keys(Levels).filter(key => { return Levels[key] })
+        let compound = Compound || 'Сompound';
+        let nElement = nameElement || 'Element';
+        let levels = Object.keys(Levels).filter(key => { return Levels[key] })
 
-        let path_save = `./result/protocol/2D/`;
-        let name_file = `Protocol_${nameElement}${Levels}_${timeProtocol}.dat`
+        let path_save = `result/protocol/2D/`
+        let name_file = `Protocol_${nElement}${levels}_${timeProtocol}.dat`
 
-        if (Сompound != 'Сompound') {
-            path_save += `${Сompound}/`;
-            name_file = `Protocol_${Сompound}_${nameElement}${Levels}_${timeProtocol}.dat`
-            fs.mkdir(path_save, (err) => {if (err != null) { console.log(err) }})
-        }
-        path_save += `${nameElement}/`;
-
-
-        fs.mkdir(path_save, (err) => {
-            if (err != null) { console.log(err) };
-            path_save += `${Levels[0]}/`
-            fs.mkdir(path_save, err => {
-                if (err != null) { console.log(err) };
-                path_save += `${dataProtocol}/`;
-                fs.mkdir(path_save, err => {
-                    let file = fs.createWriteStream(`${path_save}/${name_file}`);
-                    file.on('error', (err) => { console.log(err) })
-                    // const keys = Object.keys(this.masInformation);
-                    const values = Object.values(this.masInformation_2D);
-                    file.write(
-                        `Дата записи: ${dataProtocol}\nВремя записи: ${timeProtocol}\n`
-                    )
-                    this.nameInformation_2D.forEach((item, i) => { file.write(`${item} ${values[i]} \n`) })
-                    file.end();
-                })
+        if (compound != 'Сompound') {
+            path_save += `${compound}/`;
+            name_file = `Protocol_${compound}_${nElement}${levels}_${timeProtocol}.dat`
+            fs.mkdir(path_save, (err) => { 
+                if (err != null) {console.log(err)}
+                this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, [], [], true);
             })
-        })
+        }
+        else{
+            path_save += `${nElement}/`;
+
+            this.makeDir(path_save, levels, dataProtocol, timeProtocol, name_file, [], [], true);
+        }
+    }
+
+    makeDir = (path_save, levels, dataProtocol, timeProtocol, name_file, coor, massum, protocol) => {
+        fs.mkdir(path_save, (err) => {
+            if (err != null) { console.log(err); };
+            path_save += `${levels}/`;
+            fs.mkdir(path_save, (err) => {
+                if (err != null) { console.log(err); };
+                path_save += `${dataProtocol}/`;
+                fs.mkdir(path_save, (err) => {
+                    if (err != null) { console.log(err); };
+
+                    const file = fs.createWriteStream(`${path_save}/${name_file}`);
+                    if (protocol){
+                        file.on('error', (err) => { console.log(err) })
+                        const values = Object.values(this.masInformation_2D);
+                        file.write(
+                            `Дата записи: ${dataProtocol}\nВремя записи: ${timeProtocol}\n`
+                        )
+                        for (let i = 0; i < this.nameInformation.lengh; i++) {
+                            file.write(`${this.nameInformation(i)} ${values[i]} \n`)
+                        }
+                        // this.nameInformation.forEach((item, i) => { file.write(`${item} ${values[i]} \n`)})
+                    }
+                    else{
+                        // file.on('error', function (err) { console.log(err) })
+                        coor.forEach((item, i) => file.write(`${item} ${massum[i]} \n`));
+                    }
+                    file.end();
+                });
+            });
+        });
     }
 
     onConsoleMessage = (message, work) => {
@@ -470,45 +516,7 @@ export default class Method_2D extends PureComponent {
         })
     }
 
-    save = () => {
-        const { coor_masx, coor_massum } = this.state;
-        let { Сompound, nameElement, Levels } = this.masInformation_2D;
-
-        const date = new Date();
-        const dataProtocol = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-        const timeProtocol = `${date.getHours()}.${date.getMinutes()}.${date.getSeconds()}`;
-
-        Сompound = Сompound || 'Сompound';
-        nameElement = nameElement || 'Element';
-        Levels = Object.keys(Levels).filter(key => { return Levels[key] })
-
-        let path_save = `./result/Processed/2D/`;
-        let name_file = `${nameElement}_${Levels}_${timeProtocol}.dat`
-
-        if (Сompound != 'Сompound') {
-            path_save += `${Сompound}/`;
-            name_file = `${Сompound}_${nameElement}_${Levels}_${timeProtocol}.dat`
-            fs.mkdirSync(path_save, (err) => { })
-        }
-
-        path_save += `${nameElement}/`;
-        fs.mkdir(path_save, (err) => {
-            if (err != null) { console.log(err) };
-            path_save += `${Levels[0]}/`
-            fs.mkdir(path_save, (err) => {
-                if (err != null) { console.log(err) };
-                path_save += `${dataProtocol}/`;
-                fs.mkdir(path_save, (err) => {
-                    if (err != null) { console.log(err) };
-                    const file = fs.createWriteStream(`${path_save}/${name_file}`);
-                    file.on('error', function (err) { console.log(err) })
-                    coor_masx.forEach((item, i) => file.write(`${item} ${coor_massum[i]} \n`));
-                    file.end();
-                })
-            })
-        })
-    }
-
+    
     switch_k = (Levels) => {
         this.masInformation_2D.Levels = Levels
     }
@@ -537,7 +545,7 @@ export default class Method_2D extends PureComponent {
                 Plot={Plot}
                 masInformation_2D={this.masInformation_2D}
                 stored_value={this.stored_value}
-                save={this.save}
+                click_save={this.click_save}
                 smoothing={this.smoothing}
                 switch_k={this.switch_k}
                 PauseContinue={this.PauseContinue}
