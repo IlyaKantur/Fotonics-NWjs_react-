@@ -553,6 +553,8 @@ class Sum_graph extends Component {
 
         const { Levels } = this.state
 
+        // let en_first_point = masInformation.en_first_point ? masInformation.en_first_point : ''
+
         return (
             <div id="sum_graph">
                 <div id="control_panel">
@@ -603,11 +605,11 @@ class Sum_graph extends Component {
                         <button style={{ background: style.button }} className='just_button' id="click_calibration" onClick={click_calibration}>Калибровка</button>
                         <input id='en_first_point' type='number' placeholder="Эн. первой точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
-                            value={masInformation.en_first_point ? masInformation.en_first_point : ''}
+                            // value={en_first_point}
                         ></input>
                         <input id='en_second_point' type='number' placeholder="Эн. второй точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
-                            value={masInformation.en_first_point ? masInformation.en_first_point : ''}
+                            // value={masInformation.en_first_point ? masInformation.en_first_point : ''}
                         ></input>
                         <input id='n_first_point' type='number' placeholder="N первой точки"
                             onChange={(e) => stored_value(e.target.id, e.target.value)}
